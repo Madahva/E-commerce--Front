@@ -1,5 +1,7 @@
 const DetailsPage = () => {
-  return null;
+  return (
+    <div>Details Page</div>
+  )
 };
 
 export default DetailsPage;
