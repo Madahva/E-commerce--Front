@@ -1,5 +1,5 @@
 const Carousel = () => {
-  return null;
+  return <div>Carousel</div>;
 };
 
 export default Carousel;
