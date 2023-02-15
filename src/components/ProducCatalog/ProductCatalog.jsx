@@ -1,5 +1,7 @@
 const ProductCatalog = () => {
-  return null;
+  return (
+    <div>Products Catalog</div>
+  )
 };
 
 export default ProductCatalog;
