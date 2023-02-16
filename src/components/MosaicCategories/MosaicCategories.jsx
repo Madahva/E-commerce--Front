@@ -8,16 +8,20 @@ import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
 
 const MosaicCategories = ({ categories }) => {
-  const image =
-    "https://images.samsung.com/is/image/samsung/assets/co/smartphones/galaxy-z-flip3-5g/buy/ZFlip3_Carousel_FoldUnfoldCombo_Lavender_MO.jpg";
-
   return (
-    <Grid sx={{ flexGrow: 1 }} container spacing={2}>
+    <Grid
+      sx={{ flexGrow: 1 }}
+      container
+      direction="row"
+      justifyContent="center"
+      alignItems="center"
+      spacing={2}
+    >
       {categories.map((el) => {
         return (
-          <Grid item xs>
+          <Grid item xs={12} sm={4}>
             <Link to={`/categories/${el.title}`}>
-              <Card sx={{ maxWidth: 345 }}>
+              <Card sx={{ maxWidth: 920 }}>
                 <CardActionArea>
                   <CardMedia
                     component="img"
