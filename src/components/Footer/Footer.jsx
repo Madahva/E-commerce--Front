@@ -6,8 +6,8 @@ const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.grey[0],
     color: "#999",
-    padding: theme.spacing(1),
     fontFamily: "Proxima Nova,-apple-system,Roboto,Arial,sans-serif",
+    padding:"2rem",
   },
   container: {
     margin: "0 auto",
@@ -23,7 +23,10 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     listStyle: "none",
     margin: 0,
-    justifyContent: "flex-end",
+    justifyContent: "space-between",
+    gap:"1rem",
+    padding:"2rem 0",
+    flexWrap:"wrap",
   },
   navItem: {
     padding: "0px 3px",
