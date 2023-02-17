@@ -6,28 +6,33 @@ import Typography from "@mui/material/Typography";
 import { CardActionArea } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
+import { categories } from "../../assets/styles/Data.js";
 
-const MosaicCategories = ({ categories }) => {
-  const image =
-    "https://images.samsung.com/is/image/samsung/assets/co/smartphones/galaxy-z-flip3-5g/buy/ZFlip3_Carousel_FoldUnfoldCombo_Lavender_MO.jpg";
-
+const MosaicCategories = () => {
   return (
-    <Grid sx={{ flexGrow: 1 }} container spacing={2}>
-      {categories.map((el) => {
+    <Grid
+      sx={{ flexGrow: 1 }}
+      container
+      direction="row"
+      justifyContent="center"
+      alignItems="center"
+      spacing={2}
+    >
+      {categories.map((categories, index) => {
         return (
-          <Grid item xs>
-            <Link to={`/categories/${el.title}`}>
-              <Card sx={{ maxWidth: 345 }}>
+          <Grid item xs={12} sm={4} key={index} >
+            <Link to={`/${categories.title}`}>
+              <Card sx={{ maxWidth: 920 }}>
                 <CardActionArea>
                   <CardMedia
                     component="img"
                     height="140"
-                    image={el.img}
-                    alt={el.title}
+                    image={categories.img}
+                    alt={categories.title}
                   />
                   <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
-                      {el.title}
+                      {categories.title}
                     </Typography>
                   </CardContent>
                 </CardActionArea>
