@@ -23,7 +23,8 @@ const Home = () => {
   const categoriesExample2 = [
     {
       title: "SmartPhones",
-      img: "https://images.samsung.com/is/image/samsung/assets/co/smartphones/galaxy-z-flip3-5g/buy/ZFlip3_Carousel_FoldUnfoldCombo_Lavender_MO.jpg",
+      img:
+        "https://images.samsung.com/is/image/samsung/assets/co/smartphones/galaxy-z-flip3-5g/buy/ZFlip3_Carousel_FoldUnfoldCombo_Lavender_MO.jpg",
     },
     {
       title: "televisions",
@@ -39,7 +40,8 @@ const Home = () => {
     },
     {
       title: "washing machines",
-      img: "https://exitocol.vtexassets.com/arquivos/ids/16359240/Lavadora-Secadora-LG-16-KG-35-Lbs-WD16EG256-1777261_c.jpg?v=638104331806530000",
+      img:
+        "https://exitocol.vtexassets.com/arquivos/ids/16359240/Lavadora-Secadora-LG-16-KG-35-Lbs-WD16EG256-1777261_c.jpg?v=638104331806530000",
     },
     {
       title: "refrigerators",
@@ -47,7 +49,8 @@ const Home = () => {
     },
     {
       title: "audio",
-      img: "https://assets.bose.com/content/dam/Bose_DAM/Web/consumer_electronics/global/products/speakers/soundlink_revolve_ii/product_silo_images/SoundLink_Revolve_II_Black_Ecom_1.png/_jcr_content/renditions/cq5dam.web.320.320.png",
+      img:
+        "https://assets.bose.com/content/dam/Bose_DAM/Web/consumer_electronics/global/products/speakers/soundlink_revolve_ii/product_silo_images/SoundLink_Revolve_II_Black_Ecom_1.png/_jcr_content/renditions/cq5dam.web.320.320.png",
     },
     {
       title: "air conditioners",
@@ -55,21 +58,17 @@ const Home = () => {
     },
     {
       title: "kitchen",
-      img: "https://images.samsung.com/is/image/samsung/co-microwave-oven-ms23j5133ag-ms23j5133ag-ap-frontblack-135501501?$650_519_PNG$",
+      img:
+        "https://images.samsung.com/is/image/samsung/co-microwave-oven-ms23j5133ag-ms23j5133ag-ap-frontblack-135501501?$650_519_PNG$",
     },
   ];
   return (
     <>
+      <Banner></Banner>
       <Container fixed>
         <Box sx={{ width: "100%" }}>
-          <Stack
-            direction="column"
-            justifyContent="center"
-            alignItems="center"
-            spacing={6}
-          >
+          <Stack direction="column" justifyContent="center" alignItems="center" spacing={6}>
             <div>---Home---</div>
-            <Banner></Banner>
             <Carousel></Carousel>
             <MosaicCategories categories={categoriesExample2} />
           </Stack>
