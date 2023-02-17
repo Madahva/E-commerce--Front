@@ -20,17 +20,14 @@ const Home = () => {
       img: "https://www.lg.com/co/images/neveras/md07538746/gallery/GB37WPT_1100-10.jpg",
     },
   ];*/
+
   return (
     <>
+      <Banner></Banner>
       <Container fixed>
         <Box sx={{ width: "100%" }}>
-          <Stack
-            direction="column"
-            justifyContent="center"
-            alignItems="center"
-            spacing={6}
-          >
-            <Banner></Banner>
+          <Stack direction="column" justifyContent="center" alignItems="center" spacing={6}>
+
             <Carousel></Carousel>
             <MosaicCategories />
           </Stack>
