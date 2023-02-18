@@ -84,7 +84,7 @@ const ProductCatalog = (props) => {
                   <h2>Show XX items of XX</h2>
                   {products[categorieSeccion].map((el, index) => {
                     return (
-                      <Link to={`/${categorieSeccion}/${index}`}>
+                      <Link to={`/${categorieSeccion}/${index}`} key={index}>
                         <Paper
                           className={classes.product}
                           sx={{
@@ -97,7 +97,6 @@ const ProductCatalog = (props) => {
                                 ? "#1A2027"
                                 : "#fff",
                           }}
-                          key={index}
                         >
                           <Grid container spacing={2}>
                             <Grid item>
