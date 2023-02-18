@@ -4,15 +4,18 @@ import Slider from "react-slick";
 const Banner = () => {
   const imagesBanner = [
     {
-      photo: "https://http2.mlstatic.com/D_NQ_756410-MLA53861274214_022023-OO.webp",
+      photo:
+        "https://http2.mlstatic.com/D_NQ_756410-MLA53861274214_022023-OO.webp",
       label: "image1",
     },
     {
-      photo: "https://http2.mlstatic.com/D_NQ_756410-MLA53861274214_022023-OO.webp",
+      photo:
+        "https://http2.mlstatic.com/D_NQ_756410-MLA53861274214_022023-OO.webp",
       label: "image2",
     },
     {
-      photo: "https://http2.mlstatic.com/D_NQ_756410-MLA53861274214_022023-OO.webp",
+      photo:
+        "https://http2.mlstatic.com/D_NQ_756410-MLA53861274214_022023-OO.webp",
       label: "image2",
     },
   ];
