@@ -11,8 +11,8 @@ const Home = () => {
       <Banner />
       <Container fixed>
         <Box sx={{ width: "100%" }}>
+          <Carousels />
           <Stack direction="column" justifyContent="center" alignItems="center" spacing={6}>
-            <Carousels />
             <MosaicCategories />
           </Stack>
         </Box>

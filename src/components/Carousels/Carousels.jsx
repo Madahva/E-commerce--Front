@@ -5,6 +5,49 @@ import { makeStyles } from "@mui/styles";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
+const items = [
+  { image: "https://via.placeholder.com/60x60" },
+  { image: "https://via.placeholder.com/60x60" },
+  { image: "https://via.placeholder.com/60x60" },
+  { image: "https://via.placeholder.com/60x60" },
+  { image: "https://via.placeholder.com/60x60" },
+  { image: "https://via.placeholder.com/60x60" },
+  { image: "https://via.placeholder.com/60x60" },
+  { image: "https://via.placeholder.com/60x60" },
+  { image: "https://via.placeholder.com/60x60" },
+];
+const useStyles = makeStyles({
+  circle: {
+    width: "80px",
+    height: "80px",
+    borderRadius: "40px",
+    backgroundColor: "#000",
+  },
+  items: {
+    display: "flex",
+    justifyContent: "center",
+    gap: "10px",
+  },
+  carouselButton: {
+    position: "absolute",
+    top: "calc(50% - 20px)",
+    width: "40px",
+    height: "40px",
+    borderRadius: "50%",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    color: "#fff",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    cursor: "pointer",
+    zIndex: 1,
+    transition: "opacity 0.2s",
+    "&:hover": {
+      opacity: 0.8,
+    },
+  },
+});
+
 const Carousels = () => {
   const classes = useStyles();
 
@@ -40,54 +83,5 @@ const Carousels = () => {
     </div>
   );
 };
-
-const items = [
-  { image: "https://via.placeholder.com/60x60" },
-  { image: "https://via.placeholder.com/60x60" },
-  { image: "https://via.placeholder.com/60x60" },
-  { image: "https://via.placeholder.com/60x60" },
-  { image: "https://via.placeholder.com/60x60" },
-  { image: "https://via.placeholder.com/60x60" },
-  { image: "https://via.placeholder.com/60x60" },
-  { image: "https://via.placeholder.com/60x60" },
-  { image: "https://via.placeholder.com/60x60" },
-];
-const useStyles = makeStyles({
-  circle: {
-    width: "80px",
-    height: "80px",
-    borderRadius: "40px",
-    backgroundColor: "#000",
-  },
-  items: {
-    display: "flex",
-    justifyContent: "center",
-    gap: "10px",
-  },
-  /*   carouselButton: {
-    position: "absolute",
-    top: "calc(50% - 20px)",
-    width: "40px",
-    height: "40px",
-    borderRadius: "50%",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    color: "#fff",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    cursor: "pointer",
-    zIndex: 1,
-    transition: "opacity 0.2s",
-    "&:hover": {
-      opacity: 0.8,
-    },
-  },
-  carouselButtonPrev: {
-    left: "20px",
-  },
-  carouselButtonNext: {
-    right: "20px",
-  }, */
-});
 
 export default Carousels;
