@@ -9,7 +9,7 @@ import { makeStyles } from "@mui/styles";
 import { styled } from "@mui/material/styles";
 
 type Props = {
-  categorieSeccion: any;
+  categorieSeccion: string;
 };
 
 const Products = ({ categorieSeccion }: Props) => {
@@ -38,9 +38,9 @@ const Products = ({ categorieSeccion }: Props) => {
   });
   return (
     <>
-      {products[categorieSeccion.categorieSeccion].map((el, index) => {
+      {products[categorieSeccion]?.map((el, index) => {
         return (
-          <Link to={`/${categorieSeccion.categorieSeccion}/${index}`}>
+          <Link to={`/${categorieSeccion}/${index}`} key={el.name}>
             <Paper
               className={classes.product}
               sx={{
