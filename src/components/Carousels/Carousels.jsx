@@ -7,19 +7,6 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 import { brands } from "../../assets/styles/Data.js";
 
-/* console.log(brands);
-
-const items = [
-  { image: "https://via.placeholder.com/60x60" },
-  { image: "https://via.placeholder.com/60x60" },
-  { image: "https://via.placeholder.com/60x60" },
-  { image: "https://via.placeholder.com/60x60" },
-  { image: "https://via.placeholder.com/60x60" },
-  { image: "https://via.placeholder.com/60x60" },
-  { image: "https://via.placeholder.com/60x60" },
-  { image: "https://via.placeholder.com/60x60" },
-  { image: "https://via.placeholder.com/60x60" },
-]; */
 const useStyles = makeStyles({
   circle: {
     width: "80px",

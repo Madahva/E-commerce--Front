@@ -514,7 +514,7 @@ const products = {
   ],
 };
 
-const imagesContext = require.context("../Brands", false, /\.(png|jpe?g|svg)$/);
+const imagesContext = require.context("../images/Brands", false, /\.(png|jpe?g|svg)$/);
 
 const brands = imagesContext.keys().map((image) => {
   return {

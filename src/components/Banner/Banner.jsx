@@ -1,8 +1,8 @@
 import React from "react";
 import Slider from "react-slick";
-import banner1 from "../../assets/banners/banner1.jpg";
-import banner2 from "../../assets/banners/banner2.jpg";
-import banner3 from "../../assets/banners/banner3.jpg";
+import banner1 from "../../assets/images/banners/banner1.jpg";
+import banner2 from "../../assets/images/banners/banner2.jpg";
+import banner3 from "../../assets/images/banners/banner3.jpg";
 
 const Banner = () => {
   const imagesBanner = [
