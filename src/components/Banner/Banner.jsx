@@ -1,32 +1,35 @@
 import React from "react";
 import Slider from "react-slick";
+import banner1 from "../../assets/images/banners/banner1.jpg";
+import banner2 from "../../assets/images/banners/banner2.jpg";
+import banner3 from "../../assets/images/banners/banner3.jpg";
 
 const Banner = () => {
   const imagesBanner = [
     {
-      photo: "https://http2.mlstatic.com/D_NQ_756410-MLA53861274214_022023-OO.webp",
+      photo: banner1,
       label: "image1",
     },
     {
-      photo: "https://http2.mlstatic.com/D_NQ_756410-MLA53861274214_022023-OO.webp",
+      photo: banner2,
       label: "image2",
     },
     {
-      photo: "https://http2.mlstatic.com/D_NQ_756410-MLA53861274214_022023-OO.webp",
-      label: "image2",
+      photo: banner3,
+      label: "image3",
     },
   ];
 
   const settingsBanner = {
     dots: true,
     infinite: true,
-    speed: 750,
+    speed: 1000,
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 2000,
-    slickNext: true,
-    slickPrevious: true,
+    slickNext: false,
+    slickPrevious: false,
     swipe: true,
   };
   return (
