@@ -17,6 +17,9 @@ import MenuItem from "@mui/material/MenuItem";
 import { useState } from "react";
 import Chip from "@mui/material/Chip";
 import Products from "../Products/Products";
+
+import Carousels from "../Carousels/Carousels";
+
 const useStyles = makeStyles((theme) => ({
   link: {
     color: "inherit",
@@ -58,6 +61,7 @@ const ProductCatalog = (props) => {
 
   return (
     <>
+      <Carousels />
       <Container fixed>
         <Box sx={{ width: "100%" }}>
           <Stack direction="column" spacing={6}>
@@ -70,20 +74,9 @@ const ProductCatalog = (props) => {
               </Link>
               <Typography color="text.primary">{categorieSeccion}</Typography>
             </Breadcrumbs>
-            <Grid
-              container
-              direction="row"
-              spacing={2}
-              justifyContent="center"
-              alignItems="flex-start"
-            >
+            <Grid container direction="row" spacing={2} justifyContent="center" alignItems="flex-start">
               <Grid item xs={3}>
-                <Stack
-                  spacing={2}
-                  direction="column"
-                  justifyContent="center"
-                  alignItems="center"
-                >
+                <Stack spacing={2} direction="column" justifyContent="center" alignItems="center">
                   <h1>Filters: </h1>
                   <Box sx={{ margin: 1.4 }}></Box>
                   <h3>Prices</h3>
@@ -95,21 +88,9 @@ const ProductCatalog = (props) => {
               </Grid>
               <Divider orientation="vertical" flexItem />
               <Grid item xs={8}>
-                <Grid
-                  container
-                  rowSpacing={2}
-                  direction="column"
-                  justifyContent="space-between"
-                  alignItems="stretch"
-                >
+                <Grid container rowSpacing={2} direction="column" justifyContent="space-between" alignItems="stretch">
                   <Grid item xs>
-                    <Grid
-                      container
-                      direction="row"
-                      justifyContent="space-between"
-                      alignItems="center"
-                      spacing={2}
-                    >
+                    <Grid container direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
                       <Grid item xs={4}>
                         <h2>Show XX items of XX</h2>
                       </Grid>
@@ -138,15 +119,9 @@ const ProductCatalog = (props) => {
                                 "aria-labelledby": "basic-button",
                               }}
                             >
-                              <MenuItem onClick={(e) => handleClose(e)}>
-                                Most relevant
-                              </MenuItem>
-                              <MenuItem onClick={(e) => handleClose(e)}>
-                                Lower price
-                              </MenuItem>
-                              <MenuItem onClick={(e) => handleClose(e)}>
-                                Higher price
-                              </MenuItem>
+                              <MenuItem onClick={(e) => handleClose(e)}>Most relevant</MenuItem>
+                              <MenuItem onClick={(e) => handleClose(e)}>Lower price</MenuItem>
+                              <MenuItem onClick={(e) => handleClose(e)}>Higher price</MenuItem>
                             </Menu>
                           </Grid>
                         </Grid>
