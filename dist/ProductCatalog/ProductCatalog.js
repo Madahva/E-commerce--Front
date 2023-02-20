@@ -8,6 +8,7 @@ import Stack from "@mui/material/Stack";
 import Container from "@mui/material/Container";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Divider from "@mui/material/Divider";
+import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useState } from "react";
@@ -48,7 +49,7 @@ const ProductCatalog = () => {
         setAnchorEl(event.currentTarget);
     };
     const handleClose = (event) => {
-        setButtonText(event.target.textContent);
+        setButtonText(event.target.textContent || "Most relevant");
         setAnchorEl(null);
     };
     return (React.createElement(React.Fragment, null,
@@ -83,6 +84,13 @@ const ProductCatalog = () => {
                                                     React.createElement("h3", null, "Order by: ")),
                                                 React.createElement(Grid, { item: true, xs: 7 },
                                                     React.createElement(Box, { sx: { margin: 1.4 } }),
+                                                    React.createElement(Button
+                                                    /* id="basic-button"
+                                                    aria-controls={open ? "basic-menu" : ""}
+                                                    aria-haspopup="true"
+                                                    aria-expanded={open ? "true" : ""}
+                                                    onClick={handleClick} */
+                                                    , null, buttonText),
                                                     React.createElement(Menu, { id: "basic-menu", anchorEl: anchorEl, open: open, onClose: handleClose, MenuListProps: {
                                                             "aria-labelledby": "basic-button",
                                                         } },

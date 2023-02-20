@@ -31,8 +31,8 @@ const Products = ({ categorieSeccion }) => {
         maxWidth: "100%",
         maxHeight: "100%",
     });
-    return (React.createElement(React.Fragment, null, products[categorieSeccion.categorieSeccion].map((el, index) => {
-        return (React.createElement(Link, { to: `/${categorieSeccion.categorieSeccion}/${index}` },
+    return (React.createElement(React.Fragment, null, products[categorieSeccion]?.map((el, index) => {
+        return (React.createElement(Link, { to: `/${categorieSeccion}/${index}`, key: el.name },
             React.createElement(Paper, { className: classes.product, sx: {
                     p: 2,
                     margin: "10px",

@@ -3,7 +3,7 @@ import { makeStyles } from "@mui/styles";
 import { Grid, Link, Typography } from "@mui/material";
 const useStyles = makeStyles(() => ({
     root: {
-        backgroundColor: "#000",
+        backgroundColor: "#fff",
         color: "#999",
         fontFamily: "Proxima Nova,-apple-system,Roboto,Arial,sans-serif",
         padding: "2rem",
