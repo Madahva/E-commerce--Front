@@ -6,6 +6,8 @@ import ProductCatalog from "./components/ProductCatalog/ProductCatalog.jsx";
 import DetailsPage from "./components/DetailsPage/DetailsPage.jsx";
 import ShoppingCart from "./components/ShoppingCart/ShoppingCart.jsx";
 import Footer from "./components/Footer/Footer.jsx";
+import Login from "./components/Login/Login.jsx";
+import SignUp from "./components/SignUp/SignUp.jsx"
 
 const App = () => {
   return (
@@ -14,6 +16,8 @@ const App = () => {
       <Routes>
         <Route exact path="/" element={<Home />} />
         <Route exact path="/:category" element={<ProductCatalog />} />
+        <Route exact path="/log-in" element={<Login />} />
+        <Route exact path="/sign-up" element={<SignUp />} />
         <Route exact path="/:category/:id" element={<DetailsPage />} />
         <Route exact path="/shoppingCart" element={<ShoppingCart />} />
       </Routes>

@@ -16,7 +16,7 @@ const Banner = () => {
     },
     {
       photo: banner3,
-      label: "image2",
+      label: "image3",
     },
   ];
 
