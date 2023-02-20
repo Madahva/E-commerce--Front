@@ -5,6 +5,10 @@ import { makeStyles } from "@mui/styles";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
+import { brands } from "../../assets/styles/Data.js";
+
+/* console.log(brands);
+
 const items = [
   { image: "https://via.placeholder.com/60x60" },
   { image: "https://via.placeholder.com/60x60" },
@@ -15,7 +19,7 @@ const items = [
   { image: "https://via.placeholder.com/60x60" },
   { image: "https://via.placeholder.com/60x60" },
   { image: "https://via.placeholder.com/60x60" },
-];
+]; */
 const useStyles = makeStyles({
   circle: {
     width: "80px",
@@ -51,7 +55,7 @@ const useStyles = makeStyles({
 const Carousels = () => {
   const classes = useStyles();
 
-  const itemsByGroup = items.reduce((result, item, index) => {
+  const itemsByGroup = brands.reduce((result, item, index) => {
     const groupIndex = Math.floor(index / 6);
     result[groupIndex] ??= [];
     result[groupIndex].push(item);
@@ -64,7 +68,7 @@ const Carousels = () => {
         indicators={false}
         autoPlay={false}
         cycleNavigation={true}
-        animation="slide"
+        animation="fade"
         navButtonsAlwaysVisible={true}
         slidesPerPage={1}
         NextIcon={<ChevronRightIcon />}
@@ -74,7 +78,7 @@ const Carousels = () => {
           <Paper className={classes.paper} key={index}>
             <div className={classes.items}>
               {group.map((item, i) => (
-                <img key={i} src={item.image} alt="" className={classes.circle} />
+                <img key={i} src={item.src} alt={item.alt} className={classes.circle} />
               ))}
             </div>
           </Paper>
