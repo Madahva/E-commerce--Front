@@ -1,10 +1,11 @@
+import React from "react";
 import { products } from "../../assets/styles/Data";
 import { useParams } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles((theme) => ({
   detailsPage: {
-    backgroundColor:"#ededed",
+    backgroundColor: "#ededed",
   },
   detail: {
     alignItems: "center",
@@ -13,8 +14,8 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     backgroundColor: "#fff",
     padding: "1rem",
-    width:"50vw",
-    margin:"0 auto"
+    width: "50vw",
+    margin: "0 auto",
   },
   productImage: {
     maxWidth: "350px",
@@ -22,19 +23,17 @@ const useStyles = makeStyles((theme) => ({
     height: "auto",
   },
 }));
-const DetailsPage = () => {
+
+const DetailsPage: React.FC = () => {
   const classes = useStyles();
-  const { category, id } = useParams();
-  const product = products[category][id];
+  const { category = "", id } = useParams();
+  const product = products[category][parseInt(id)];
+
   return (
     <div className={classes.detailsPage}>
       <div className={classes.detail}>
         <h1>{product.name}</h1>
-        <img
-          src={product.image}
-          alt={product.name}
-          className={classes.productImage}
-        />
+        <img src={product.image} alt={product.name} className={classes.productImage} />
         <div>
           <p>{product.description}</p>
           <p>{product.brand}</p>

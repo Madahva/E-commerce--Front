@@ -1,5 +1,4 @@
 const Details = () => {
-  return null;
+    return null;
 };
-
 export default Details;

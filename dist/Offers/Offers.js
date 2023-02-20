@@ -1,5 +1,4 @@
 const Offers = () => {
-  return null;
+    return null;
 };
-
 export default Offers;

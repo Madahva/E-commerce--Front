@@ -1,3 +1,4 @@
+import React from "react";
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
@@ -8,7 +9,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   navBarContainer: {
     display: "flex",
     flexDirection: "column",
@@ -19,9 +20,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     gap: "1rem",
     padding: ".5rem",
-    [theme.breakpoints.up("md")]: {
-      padding: "1rem 10rem",
-    },
   },
   form: {
     display: "flex",
@@ -43,10 +41,6 @@ const useStyles = makeStyles((theme) => ({
     gap: "2rem",
     padding: ".5rem",
     borderBottom: "1px solid #ccc",
-    [theme.breakpoints.up("md")]: {
-      padding: "1rem 10rem",
-      justifyContent: "flex-start",
-    },
   },
   menu_text: {
     color: "#1976d2",
@@ -56,15 +50,8 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     gap: ".5rem",
     justifyContent: "flex-start",
-    [theme.breakpoints.up("md")]: {
-      gap: "2rem",
-    },
   },
-  button: {
-    [theme.breakpoints.up("md")]: {
-      width: "15rem",
-    },
-  },
+  button: {},
 }));
 
 const NavBar = () => {
@@ -94,19 +81,10 @@ const NavBar = () => {
           <Button>
             <SearchIcon />
           </Button>
-          <Input
-            className={classes.input}
-            autoFocus
-            type="text"
-            placeholder="Search..."
-          />
+          <Input className={classes.input} autoFocus type="text" placeholder="Search..." />
         </form>
         <div className={classes.icons}>
-          {showMenu ? (
-            <Button onClick={toggleMenu}>
-              {showBtn ? <CloseIcon /> : <MenuIcon />}
-            </Button>
-          ) : null}
+          {showMenu ? <Button onClick={toggleMenu}>{showBtn ? <CloseIcon /> : <MenuIcon />}</Button> : null}
           <Link to="/shoppingCart">
             <Button>
               <ShoppingCartOutlinedIcon />{" "}
@@ -120,25 +98,18 @@ const NavBar = () => {
             <AccountCircleIcon sx={{ color: "#1976d2" }} fontSize="large" />
           </div>
           <div className={classes.menu_text}>
-            <h3 style={{margin:"0"}}>Welcome!</h3>
+            <h3 style={{ margin: "0" }}>Welcome!</h3>
             <p style={{ color: "rgba(0,0,0,.45)" }}>
-              Sign in to your account to check out your purchase history, saved
-              items, and more.
+              Sign in to your account to check out your purchase history, saved items, and more.
             </p>
             <div className={classes.menu_btn}>
               <Link to="/log-in">
-                <Button
-                  sx={{ backgroundColor: "#DFE8EF" }}
-                  className={classes.button}
-                >
+                <Button sx={{ backgroundColor: "#DFE8EF" }} className={classes.button}>
                   Login
                 </Button>
               </Link>
               <Link to="/sign-up">
-                <Button
-                  sx={{ backgroundColor: "#DFE8EF" }}
-                  className={classes.button}
-                >
+                <Button sx={{ backgroundColor: "#DFE8EF" }} className={classes.button}>
                   Register
                 </Button>
               </Link>

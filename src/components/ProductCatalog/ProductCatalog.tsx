@@ -20,7 +20,7 @@ import Products from "../Products/Products";
 
 import Carousels from "../Carousels/Carousels";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   link: {
     color: "inherit",
     textDecoration: "none",
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ProductCatalog = (props) => {
+const ProductCatalog = () => {
   const classes = useStyles();
   const location = useLocation();
   const segments = location.pathname.split("/");
@@ -51,11 +51,11 @@ const ProductCatalog = (props) => {
   //en typescript se cambia
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event) => {
+  const handleClick = (event: React.MouseEvent<HTMLLIElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = (event) => {
-    setButtonText(event.target.textContent);
+  const handleClose = (event: React.MouseEvent<HTMLLIElement>) => {
+    setButtonText((event.target as HTMLInputElement).textContent);
     setAnchorEl(null);
   };
 
@@ -101,15 +101,15 @@ const ProductCatalog = (props) => {
                           </Grid>
                           <Grid item xs={7}>
                             <Box sx={{ margin: 1.4 }}></Box>
-                            <Button
+                            {/* <Button
                               id="basic-button"
-                              aria-controls={open ? "basic-menu" : undefined}
+                              aria-controls={open ? "basic-menu" : ''}
                               aria-haspopup="true"
-                              aria-expanded={open ? "true" : undefined}
+                              aria-expanded={open ? "true" : ''}
                               onClick={handleClick}
                             >
                               {buttonText}
-                            </Button>
+                            </Button> */}
                             <Menu
                               id="basic-menu"
                               anchorEl={anchorEl}
