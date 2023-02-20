@@ -68,7 +68,7 @@ const Carousels = () => {
         indicators={false}
         autoPlay={false}
         cycleNavigation={true}
-        animation="slide"
+        animation="fade"
         navButtonsAlwaysVisible={true}
         slidesPerPage={1}
         NextIcon={<ChevronRightIcon />}
