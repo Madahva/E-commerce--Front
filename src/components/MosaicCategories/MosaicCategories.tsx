@@ -20,7 +20,7 @@ const MosaicCategories = () => {
     >
       {categories.map((categories, index) => {
         return (
-          <Grid item xs={12} sm={4} key={index} >
+          <Grid item xs={6} sm={4} key={index} >
             <Link to={`/${categories.title}`}>
               <Card sx={{ maxWidth: 920 }}>
                 <CardActionArea>

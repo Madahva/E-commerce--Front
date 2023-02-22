@@ -1,4 +1,5 @@
 interface Product {
+  rating: number;
   name: string;
   description: string;
   category: string;
