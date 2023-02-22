@@ -1,13 +1,13 @@
 import "./assets/styles/App.css";
 import { Routes, Route } from "react-router-dom";
-import NavBar from "./components/NavBar/NavBar.jsx";
-import Home from "./components/Home/Home.jsx";
-import ProductCatalog from "./components/ProductCatalog/ProductCatalog.jsx";
-import DetailsPage from "./components/DetailsPage/DetailsPage.jsx";
-import ShoppingCart from "./components/ShoppingCart/ShoppingCart.jsx";
-import Footer from "./components/Footer/Footer.jsx";
-import Login from "./components/Login/Login.jsx";
-import SignUp from "./components/SignUp/SignUp.jsx"
+import NavBar from "./components/NavBar/NavBar";
+import Home from "./components/Home/Home";
+import ProductCatalog from "./components/ProductCatalog/ProductCatalog";
+import DetailsPage from "./components/DetailsPage/DetailsPage";
+import ShoppingCart from "./components/ShoppingCart/ShoppingCart";
+import Footer from "./components/Footer/Footer";
+import Login from "./components/Login/Login";
+import SignUp from "./components/SignUp/SignUp";
 
 const App = () => {
   return (

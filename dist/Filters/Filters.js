@@ -1,5 +1,4 @@
 const Filters = () => {
-  return null;
+    return null;
 };
-
 export default Filters;

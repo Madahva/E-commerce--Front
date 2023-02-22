@@ -2,31 +2,25 @@ import React from "react";
 import { makeStyles } from "@mui/styles";
 import { Grid, Link, Typography } from "@mui/material";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
-    backgroundColor: theme.palette.grey[0],
+    backgroundColor: "#fff",
     color: "#999",
     fontFamily: "Proxima Nova,-apple-system,Roboto,Arial,sans-serif",
-    padding:"2rem",
+    padding: "2rem",
   },
   container: {
     margin: "0 auto",
     width: "100%",
-    [theme.breakpoints.up("md")]: {
-      maxWidth: theme.breakpoints.values.md,
-    },
-    [theme.breakpoints.up("lg")]: {
-      maxWidth: theme.breakpoints.values.lg,
-    },
   },
   nav: {
     display: "flex",
     listStyle: "none",
     margin: 0,
     justifyContent: "space-between",
-    gap:"1rem",
-    padding:"2rem 0",
-    flexWrap:"wrap",
+    gap: "1rem",
+    padding: "2rem 0",
+    flexWrap: "wrap",
   },
   navItem: {
     padding: "0px 3px",

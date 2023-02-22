@@ -1,11 +1,17 @@
 import React from "react";
-import Carousel from "react-material-ui-carousel";
-import Paper from "@mui/material/Paper";
+import Carousel  from "react-material-ui-carousel";
+import { Paper} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 import { brands } from "../../assets/styles/Data.js";
+
+interface Brand {
+  src: string;
+  alt: string;
+}
+
 
 const useStyles = makeStyles({
   circle: {
@@ -39,10 +45,10 @@ const useStyles = makeStyles({
   },
 });
 
-const Carousels = () => {
+const Carousels: React.FC = () => {
   const classes = useStyles();
 
-  const itemsByGroup = brands.reduce((result, item, index) => {
+  const itemsByGroup: Brand[][] = brands.reduce((result: Brand[][], item: Brand, index: number) => {
     const groupIndex = Math.floor(index / 6);
     result[groupIndex] ??= [];
     result[groupIndex].push(item);
@@ -57,14 +63,13 @@ const Carousels = () => {
         cycleNavigation={true}
         animation="fade"
         navButtonsAlwaysVisible={true}
-        slidesPerPage={1}
         NextIcon={<ChevronRightIcon />}
         PrevIcon={<ChevronLeftIcon />}
       >
-        {itemsByGroup.map((group, index) => (
-          <Paper className={classes.paper} key={index}>
+        {itemsByGroup.map((group: Brand[], index: number) => (
+          <Paper key={index}>
             <div className={classes.items}>
-              {group.map((item, i) => (
+              {group.map((item: Brand, i: number) => (
                 <img key={i} src={item.src} alt={item.alt} className={classes.circle} />
               ))}
             </div>

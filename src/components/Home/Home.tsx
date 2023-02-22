@@ -1,3 +1,4 @@
+import React from "react";
 import Banner from "../Banner/Banner";
 import MosaicCategories from "../MosaicCategories/MosaicCategories";
 import Container from "@mui/material/Container";

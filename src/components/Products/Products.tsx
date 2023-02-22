@@ -8,7 +8,11 @@ import ButtonBase from "@mui/material/ButtonBase";
 import { makeStyles } from "@mui/styles";
 import { styled } from "@mui/material/styles";
 
-const Products = (categorieSeccion) => {
+type Props = {
+  categorieSeccion: string;
+};
+
+const Products = ({ categorieSeccion }: Props) => {
   const useStyles = makeStyles((theme) => ({
     link: {
       color: "inherit",
@@ -34,9 +38,9 @@ const Products = (categorieSeccion) => {
   });
   return (
     <>
-      {products[categorieSeccion.categorieSeccion].map((el, index) => {
+      {products[categorieSeccion]?.map((el, index) => {
         return (
-          <Link to={`/${categorieSeccion.categorieSeccion}/${index}`}>
+          <Link to={`/${categorieSeccion}/${index}`} key={el.name}>
             <Paper
               className={classes.product}
               sx={{
@@ -44,8 +48,7 @@ const Products = (categorieSeccion) => {
                 margin: "10px",
                 maxWidth: 1280,
                 flexGrow: 1,
-                backgroundColor: (theme) =>
-                  theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+                backgroundColor: (theme) => (theme.palette.mode === "dark" ? "#1A2027" : "#fff"),
               }}
               key={index}
             >
@@ -58,11 +61,7 @@ const Products = (categorieSeccion) => {
                 <Grid item xs={12} sm container>
                   <Grid item xs container direction="column" spacing={2}>
                     <Grid item xs>
-                      <Typography
-                        gutterBottom
-                        variant="subtitle1"
-                        component="div"
-                      >
+                      <Typography gutterBottom variant="subtitle1" component="div">
                         {el.name}
                       </Typography>
                       <Typography variant="body2" gutterBottom>

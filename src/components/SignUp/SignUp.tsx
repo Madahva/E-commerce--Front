@@ -1,4 +1,3 @@
-
 import * as React from "react";
 import { Link } from "react-router-dom";
 import { CssVarsProvider } from "@mui/joy/styles";
@@ -72,11 +71,7 @@ export default function SignUp() {
           </FormControl>
 
           <Button sx={{ mt: 1 /* margin top */ }}>Sign Up</Button>
-          <Typography
-            endDecorator={<Link to="/log-in">Log in</Link>}
-            fontSize="sm"
-            sx={{ alignSelf: "center" }}
-          >
+          <Typography endDecorator={<Link to="/log-in">Log in</Link>} fontSize="sm" sx={{ alignSelf: "center" }}>
             Already have an account?
           </Typography>
         </Sheet>

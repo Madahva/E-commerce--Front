@@ -2,25 +2,21 @@ import * as React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
 import Grid from "@mui/material/Grid";
-
 import Typography from "@mui/material/Typography";
-
 import { Box } from "@mui/system";
 import Stack from "@mui/material/Stack";
 import Container from "@mui/material/Container";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Divider from "@mui/material/Divider";
-
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useState } from "react";
 import Chip from "@mui/material/Chip";
 import Products from "../Products/Products";
-
 import Carousels from "../Carousels/Carousels";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   link: {
     color: "inherit",
     textDecoration: "none",
@@ -37,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ProductCatalog = (props) => {
+const ProductCatalog = () => {
   const classes = useStyles();
   const location = useLocation();
   const segments = location.pathname.split("/");
@@ -49,13 +45,13 @@ const ProductCatalog = (props) => {
   if (categorieSeccion === "Smart Watches") categorieSeccion = "SmartWatches";
 
   //en typescript se cambia
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event) => {
+  const handleClick = (event: React.MouseEvent<HTMLLIElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = (event) => {
-    setButtonText(event.target.textContent);
+  const handleClose = (event: React.MouseEvent<HTMLLIElement>) => {
+    setButtonText((event.target as HTMLInputElement).textContent || "Most relevant");
     setAnchorEl(null);
   };
 
@@ -102,11 +98,11 @@ const ProductCatalog = (props) => {
                           <Grid item xs={7}>
                             <Box sx={{ margin: 1.4 }}></Box>
                             <Button
-                              id="basic-button"
-                              aria-controls={open ? "basic-menu" : undefined}
+                              /* id="basic-button"
+                              aria-controls={open ? "basic-menu" : ""}
                               aria-haspopup="true"
-                              aria-expanded={open ? "true" : undefined}
-                              onClick={handleClick}
+                              aria-expanded={open ? "true" : ""}
+                              onClick={handleClick} */
                             >
                               {buttonText}
                             </Button>
@@ -119,9 +115,15 @@ const ProductCatalog = (props) => {
                                 "aria-labelledby": "basic-button",
                               }}
                             >
-                              <MenuItem onClick={(e) => handleClose(e)}>Most relevant</MenuItem>
-                              <MenuItem onClick={(e) => handleClose(e)}>Lower price</MenuItem>
-                              <MenuItem onClick={(e) => handleClose(e)}>Higher price</MenuItem>
+                              <MenuItem onClick={(e: React.MouseEvent<HTMLLIElement>) => handleClose(e)}>
+                                Most relevant
+                              </MenuItem>
+                              <MenuItem onClick={(e: React.MouseEvent<HTMLLIElement>) => handleClose(e)}>
+                                Lower price
+                              </MenuItem>
+                              <MenuItem onClick={(e: React.MouseEvent<HTMLLIElement>) => handleClose(e)}>
+                                Higher price
+                              </MenuItem>
                             </Menu>
                           </Grid>
                         </Grid>
