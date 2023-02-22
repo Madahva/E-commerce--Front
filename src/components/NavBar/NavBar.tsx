@@ -1,14 +1,13 @@
-import React from "react";
-import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useState } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
+import { useNavigate } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
-import { Button, Input } from "@mui/material";
+import { Button, Input, Link } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-
 const useStyles = makeStyles(() => ({
   navBarContainer: {
     display: "flex",
@@ -50,6 +49,7 @@ const useStyles = makeStyles(() => ({
     },
   },
   menu_text: {
+    margin: "1rem 0",
     color: "#1976d2",
   },
   menu_btn: {
@@ -69,11 +69,17 @@ const useStyles = makeStyles(() => ({
 }));
 
 const NavBar = () => {
-  const location = useLocation();
-  const segments = location.pathname.split("/");
-  const url = segments.pop();
+  const navigate = useNavigate();
+
+  const goToHome = () => {
+    navigate("/");
+  };
+
+  const goToCart = () => {
+    navigate("/shoppingCart");
+  };
+
   let showMenu = true;
-  if (url === "sign-up" || url === "log-in") showMenu = false;
   const classes = useStyles();
   const [showBtn, setShowBtn] = useState(false);
 
@@ -81,14 +87,12 @@ const NavBar = () => {
     setShowBtn(!showBtn);
   };
 
-  useEffect(() => {
-    setShowBtn(false);
-  }, [location.pathname]);
+  const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
 
   return (
     <div className={classes.navBarContainer}>
       <div className={classes.navBar}>
-        <Link to="/">
+        <Link onClick={goToHome}>
           <Button variant="contained">Home</Button>
         </Link>
         <form className={classes.form}>
@@ -108,10 +112,8 @@ const NavBar = () => {
               {showBtn ? <CloseIcon /> : <MenuIcon />}
             </Button>
           ) : null}
-          <Link to="/shoppingCart">
-            <Button>
-              <ShoppingCartOutlinedIcon />{" "}
-            </Button>
+          <Link onClick={goToCart}>
+            <ShoppingCartOutlinedIcon />{" "}
           </Link>
         </div>
       </div>
@@ -121,29 +123,56 @@ const NavBar = () => {
             <AccountCircleIcon sx={{ color: "#1976d2" }} fontSize="large" />
           </div>
           <div className={classes.menu_text}>
-            <h3 style={{ margin: "0" }}>Welcome!</h3>
-            <p style={{ color: "rgba(0,0,0,.45)" }}>
-              Sign in to your account to check out your purchase history, saved
-              items, and more.
-            </p>
-            <div className={classes.menu_btn}>
-              <Link to="/log-in">
-                <Button
-                  sx={{ backgroundColor: "#DFE8EF" }}
-                  className={classes.button}
-                >
-                  Login
-                </Button>
-              </Link>
-              <Link to="/sign-up">
-                <Button
-                  sx={{ backgroundColor: "#DFE8EF" }}
-                  className={classes.button}
-                >
-                  Register
-                </Button>
-              </Link>
-            </div>
+            <h3 style={{ margin: "1rem 0" }}>
+              Welcome! {isAuthenticated ? user.given_name : null}{" "}
+            </h3>
+            {!isAuthenticated ? (
+              <p style={{ color: "rgba(0,0,0,.45)" }}>
+                Sign in to your account to check out your purchase history,
+                saved items, and more.
+              </p>
+            ) : null}
+            {!isAuthenticated ? (
+              <div className={classes.menu_btn}>
+                <Link onClick={() => loginWithRedirect()}>
+                  <Button
+                    sx={{ backgroundColor: "#DFE8EF" }}
+                    className={classes.button}
+                  >
+                    Login
+                  </Button>
+                </Link>
+                <Link>
+                  <Button
+                    onClick={() => loginWithRedirect()}
+                    sx={{ backgroundColor: "#DFE8EF" }}
+                    className={classes.button}
+                  >
+                    Register
+                  </Button>
+                </Link>
+              </div>
+            ) : (
+              <div  className={classes.menu_btn}>
+                <Link>
+                  <Button
+                    sx={{ backgroundColor: "#DFE8EF" }}
+                    className={classes.button}
+                    onClick={() => logout()}
+                  >
+                    Logout
+                  </Button>
+                </Link>
+                <Link>
+                  <Button
+                    sx={{ backgroundColor: "#DFE8EF" }}
+                    className={classes.button}
+                  >
+                    History
+                  </Button>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       )}
