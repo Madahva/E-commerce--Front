@@ -20,6 +20,9 @@ const useStyles = makeStyles(() => ({
     justifyContent: "space-between",
     gap: "1rem",
     padding: ".5rem",
+    "@media (min-width: 960px)": {
+      padding: "1rem 10rem",
+    },
   },
   form: {
     display: "flex",
@@ -41,6 +44,10 @@ const useStyles = makeStyles(() => ({
     gap: "2rem",
     padding: ".5rem",
     borderBottom: "1px solid #ccc",
+    "@media (min-width: 960px)": {
+      padding: "1rem 10rem",
+      justifyContent: "flex-start",
+    },
   },
   menu_text: {
     color: "#1976d2",
@@ -50,8 +57,15 @@ const useStyles = makeStyles(() => ({
     display: "flex",
     gap: ".5rem",
     justifyContent: "flex-start",
+    "@media (min-width: 960px)": {
+      gap: "2rem",
+    },
   },
-  button: {},
+  button: {
+    "@media (min-width: 960px)": {
+      width: "15rem",
+    },
+  },
 }));
 
 const NavBar = () => {
@@ -81,10 +95,19 @@ const NavBar = () => {
           <Button>
             <SearchIcon />
           </Button>
-          <Input className={classes.input} autoFocus type="text" placeholder="Search..." />
+          <Input
+            className={classes.input}
+            autoFocus
+            type="text"
+            placeholder="Search..."
+          />
         </form>
         <div className={classes.icons}>
-          {showMenu ? <Button onClick={toggleMenu}>{showBtn ? <CloseIcon /> : <MenuIcon />}</Button> : null}
+          {showMenu ? (
+            <Button onClick={toggleMenu}>
+              {showBtn ? <CloseIcon /> : <MenuIcon />}
+            </Button>
+          ) : null}
           <Link to="/shoppingCart">
             <Button>
               <ShoppingCartOutlinedIcon />{" "}
@@ -100,16 +123,23 @@ const NavBar = () => {
           <div className={classes.menu_text}>
             <h3 style={{ margin: "0" }}>Welcome!</h3>
             <p style={{ color: "rgba(0,0,0,.45)" }}>
-              Sign in to your account to check out your purchase history, saved items, and more.
+              Sign in to your account to check out your purchase history, saved
+              items, and more.
             </p>
             <div className={classes.menu_btn}>
               <Link to="/log-in">
-                <Button sx={{ backgroundColor: "#DFE8EF" }} className={classes.button}>
+                <Button
+                  sx={{ backgroundColor: "#DFE8EF" }}
+                  className={classes.button}
+                >
                   Login
                 </Button>
               </Link>
               <Link to="/sign-up">
-                <Button sx={{ backgroundColor: "#DFE8EF" }} className={classes.button}>
+                <Button
+                  sx={{ backgroundColor: "#DFE8EF" }}
+                  className={classes.button}
+                >
                   Register
                 </Button>
               </Link>
