@@ -8,9 +8,12 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-const useStyles = makeStyles(() => ({
+import HomeIcon from "@mui/icons-material/Home";
+
+const useStyles = makeStyles((theme) => ({
   navBarContainer: {
     display: "flex",
+    justifyContent: "center",
     flexDirection: "column",
   },
   navBar: {
@@ -70,6 +73,9 @@ const useStyles = makeStyles(() => ({
 
 const NavBar = () => {
   const navigate = useNavigate();
+  const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
+  const isAdmind: boolean =
+    isAuthenticated && user.email === "galarzaguillermo.ggm@gmail.com";
 
   const goToHome = () => {
     navigate("/");
@@ -77,6 +83,10 @@ const NavBar = () => {
 
   const goToCart = () => {
     navigate("/shoppingCart");
+  };
+
+  const goToDashboard = () => {
+    navigate("/dashboard");
   };
 
   let showMenu = true;
@@ -87,13 +97,13 @@ const NavBar = () => {
     setShowBtn(!showBtn);
   };
 
-  const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
-
   return (
     <div className={classes.navBarContainer}>
       <div className={classes.navBar}>
         <Link onClick={goToHome}>
-          <Button variant="contained">Home</Button>
+          <Button>
+            <HomeIcon fontSize="large" />
+          </Button>
         </Link>
         <form className={classes.form}>
           <Button>
@@ -113,7 +123,9 @@ const NavBar = () => {
             </Button>
           ) : null}
           <Link onClick={goToCart}>
-            <ShoppingCartOutlinedIcon />{" "}
+            <Button>
+              <ShoppingCartOutlinedIcon />
+            </Button>
           </Link>
         </div>
       </div>
@@ -136,7 +148,7 @@ const NavBar = () => {
               <div className={classes.menu_btn}>
                 <Link onClick={() => loginWithRedirect()}>
                   <Button
-                    sx={{ backgroundColor: "#DFE8EF" }}
+                    sx={{ backgroundColor: "#DFE8EF", padding: ".5rem"  }}
                     className={classes.button}
                   >
                     Login
@@ -145,7 +157,7 @@ const NavBar = () => {
                 <Link>
                   <Button
                     onClick={() => loginWithRedirect()}
-                    sx={{ backgroundColor: "#DFE8EF" }}
+                    sx={{ backgroundColor: "#DFE8EF", padding: ".5rem"  }}
                     className={classes.button}
                   >
                     Register
@@ -153,24 +165,36 @@ const NavBar = () => {
                 </Link>
               </div>
             ) : (
-              <div  className={classes.menu_btn}>
+              <div className={classes.menu_btn}>
                 <Link>
                   <Button
-                    sx={{ backgroundColor: "#DFE8EF" }}
+                    sx={{ backgroundColor: "#DFE8EF", padding: ".5rem"  }}
                     className={classes.button}
                     onClick={() => logout()}
                   >
                     Logout
                   </Button>
                 </Link>
-                <Link>
-                  <Button
-                    sx={{ backgroundColor: "#DFE8EF" }}
-                    className={classes.button}
-                  >
-                    History
-                  </Button>
-                </Link>
+                {!isAdmind ? (
+                  <Link>
+                    <Button
+                      sx={{ backgroundColor: "#DFE8EF", padding: ".5rem"  }}
+                      className={classes.button}
+                    >
+                      History
+                    </Button>
+                  </Link>
+                ) : (
+                  <Link>
+                    <Button
+                      onClick={goToDashboard}
+                      sx={{ backgroundColor: "#DFE8EF", padding: ".5rem" }}
+                      className={classes.button}
+                    >
+                      Dashboard
+                    </Button>
+                  </Link>
+                )}
               </div>
             )}
           </div>
