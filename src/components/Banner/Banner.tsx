@@ -3,7 +3,8 @@ import Slider from "react-slick";
 import banner1 from "../../assets/images/banners/banner1.jpg";
 import banner2 from "../../assets/images/banners/banner2.jpg";
 import banner3 from "../../assets/images/banners/banner3.jpg";
-
+import banner4 from "../../assets/images/banners/banner4.jpg"
+import banner5 from "../../assets/images/banners/banner5.jpg"
 const Banner = () => {
   const imagesBanner = [
     {
@@ -18,16 +19,24 @@ const Banner = () => {
       photo: banner3,
       label: "image3",
     },
+  {
+      photo: banner4,
+      label: "image4",
+    },
+    {
+      photo: banner5,
+      label: "image5",
+    },
   ];
 
   const settingsBanner = {
-    dots: true,
+    dots: false,
     infinite: true,
-    speed: 1000,
+    speed: 3000,
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 2000,
+    autoplaySpeed: 3000,
     slickNext: false,
     slickPrevious: false,
     swipe: true,
@@ -41,7 +50,7 @@ const Banner = () => {
             alt={step.label}
             style={{
               borderRadius: "0px",
-              height: "300px",
+              height: "350px",
               display: "block",
               overflow: "hidden",
               width: "100%",

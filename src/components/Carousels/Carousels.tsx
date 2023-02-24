@@ -17,12 +17,13 @@ const useStyles = makeStyles({
   circle: {
     width: "80px",
     height: "80px",
-    borderRadius: "40px",
+    borderRadius: "30px",
     backgroundColor: "#000",
   },
   items: {
     display: "flex",
     justifyContent: "center",
+    backgroundColor: "#F5F5F5",
     gap: "10px",
   },
   carouselButton: {
@@ -56,7 +57,7 @@ const Carousels: React.FC = () => {
   }, []);
 
   return (
-    <div style={{ padding: "30px" }}>
+    <div style={{ padding: "6rem 0 0 0" }}>
       <Carousel
         indicators={false}
         autoPlay={false}
