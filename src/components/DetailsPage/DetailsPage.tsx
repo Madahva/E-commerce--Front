@@ -27,8 +27,9 @@ const useStyles = makeStyles((theme) => ({
     margin: "0 auto",
   },
   productImage: {
-    maxWidth: "350px",
-    width: "100%",
+    maxWidth: "100%",
+    maxHeight: "820px",
+    width: "auto",
     height: "auto",
   },
   link: {
@@ -72,6 +73,7 @@ const DetailsPage: React.FC = () => {
       justifyContent="center"
       alignItems="center" className={classes.detailsPage}>
       <Container fixed className={classes.detail}>
+        <Box sx={{ margin: "10px" }}></Box>
         <Breadcrumbs aria-label="breadcrumb">
           <Link className={classes.link} to="/">
             Home
@@ -84,15 +86,23 @@ const DetailsPage: React.FC = () => {
           </Link>
           <Typography color="text.primary">{product.name}</Typography>
         </Breadcrumbs>
+        <Box sx={{ margin: "20px" }}></Box>
         <Grid container
           direction="row"
-          justifyContent="center"
+          justifyContent="space-between"
           alignItems="flex-start">
 
           <Grid item sm={12} md={6}>
-            <img src={product.image} alt={product.name} className={classes.productImage} />
+            <Stack spacing={2} justifyContent="center"
+              alignItems="center" >
+              <img src={product.image} alt={product.name} className={classes.productImage} />
+              <Grid>
+                <img src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThHXM2GURRPNifTGEs7vq1EL_5KKO4rS_h-6f7ImXxMs1wB141nSRiYibpMKNaR5acpQg&usqp=CAU"} alt={product.name} id={"1"} />
+              </Grid>
+            </Stack>
           </Grid>
-          <Grid item sm={12} md={6}>
+          <Divider flexItem orientation="vertical" />
+          <Grid item sm={12} md={5}>
             <div >
               <h1>{product.name}</h1>
               <div>
@@ -119,11 +129,11 @@ const DetailsPage: React.FC = () => {
                     justifyContent="flex-start"
                     alignItems="center"
                   >
-                    <Grid item sm={3} md={5}>
-                      <Button onClick={handleDecrease} variant="contained" color="primary"><h3>-</h3></Button>
-                      <TextField label={value} type={"number"} sx={{ width: '75px', height: '100%', padding: '10px' }} />
-                      <Button onClick={handleIncrease} variant="contained" color="primary"><h3>+</h3></Button>
-                    </Grid>
+
+                    <Button onClick={handleDecrease} variant="contained" color="primary"><h3>-</h3></Button>
+                    <TextField label={value} type={"number"} sx={{ width: '75px', height: '100%', padding: '10px' }} />
+                    <Button onClick={handleIncrease} variant="contained" color="primary"><h3>+</h3></Button>
+
                   </Grid>
                   <Button variant="contained" color="primary">
                     <AddShoppingCart />

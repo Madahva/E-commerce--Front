@@ -57,7 +57,6 @@ const ProductCatalog = () => {
 
   return (
     <>
-      <Carousels />
       <Container fixed>
         <Box sx={{ width: "100%" }}>
           <Stack direction="column" spacing={6}>
@@ -70,6 +69,7 @@ const ProductCatalog = () => {
               </Link>
               <Typography color="text.primary">{categorieSeccion}</Typography>
             </Breadcrumbs>
+            <Carousels />
             <Grid container direction="row" spacing={2} justifyContent="center" alignItems="flex-start">
               <Grid item xs={3}>
                 <Stack spacing={2} direction="column" justifyContent="center" alignItems="center">
@@ -98,11 +98,11 @@ const ProductCatalog = () => {
                           <Grid item xs={7}>
                             <Box sx={{ margin: 1.4 }}></Box>
                             <Button
-                              /* id="basic-button"
-                              aria-controls={open ? "basic-menu" : ""}
-                              aria-haspopup="true"
-                              aria-expanded={open ? "true" : ""}
-                              onClick={handleClick} */
+                            /* id="basic-button"
+                            aria-controls={open ? "basic-menu" : ""}
+                            aria-haspopup="true"
+                            aria-expanded={open ? "true" : ""}
+                            onClick={handleClick} */
                             >
                               {buttonText}
                             </Button>
