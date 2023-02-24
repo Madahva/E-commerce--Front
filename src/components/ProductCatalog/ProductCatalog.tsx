@@ -41,8 +41,11 @@ const ProductCatalog = () => {
   let categorieSeccion = decodeURIComponent(lastSegment);
   const [buttonText, setButtonText] = useState("Most relevant");
 
-  if (categorieSeccion === "Game Consoles") categorieSeccion = "GameConsoles";
-  if (categorieSeccion === "Smart Watches") categorieSeccion = "SmartWatches";
+  console.log(categorieSeccion)
+  if (categorieSeccion === "gaming consoles") categorieSeccion = "GameConsoles";
+  if (categorieSeccion === "smart watches") categorieSeccion = "SmartWatches";
+
+  if (categorieSeccion === "smartphones") categorieSeccion = "Smartphones";
 
   //en typescript se cambia
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
