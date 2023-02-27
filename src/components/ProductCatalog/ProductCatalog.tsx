@@ -38,23 +38,17 @@ const ProductCatalog = () => {
   const location = useLocation();
   const segments = location.pathname.split("/");
   const lastSegment = segments.pop();
-  let categorieSeccion = decodeURIComponent(lastSegment);
+  let categorieSeccion: string = decodeURIComponent(lastSegment);
   const [buttonText, setButtonText] = useState("Most relevant");
-
-  console.log(categorieSeccion)
-  if (categorieSeccion === "gaming consoles") categorieSeccion = "GameConsoles";
-  if (categorieSeccion === "smart watches") categorieSeccion = "SmartWatches";
-
-  if (categorieSeccion === "smartphones") categorieSeccion = "Smartphones";
-
-  //en typescript se cambia
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLLIElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = (event: React.MouseEvent<HTMLLIElement>) => {
-    setButtonText((event.target as HTMLInputElement).textContent || "Most relevant");
+    setButtonText(
+      (event.target as HTMLInputElement).textContent || "Most relevant"
+    );
     setAnchorEl(null);
   };
 
@@ -73,9 +67,20 @@ const ProductCatalog = () => {
               </Link>
               <Typography color="text.primary">{categorieSeccion}</Typography>
             </Breadcrumbs>
-            <Grid container direction="row" spacing={2} justifyContent="center" alignItems="flex-start">
+            <Grid
+              container
+              direction="row"
+              spacing={2}
+              justifyContent="center"
+              alignItems="flex-start"
+            >
               <Grid item xs={3}>
-                <Stack spacing={2} direction="column" justifyContent="center" alignItems="center">
+                <Stack
+                  spacing={2}
+                  direction="column"
+                  justifyContent="center"
+                  alignItems="center"
+                >
                   <h1>Filters: </h1>
                   <Box sx={{ margin: 1.4 }}></Box>
                   <h3>Prices</h3>
@@ -87,9 +92,21 @@ const ProductCatalog = () => {
               </Grid>
               <Divider orientation="vertical" flexItem />
               <Grid item xs={8}>
-                <Grid container rowSpacing={2} direction="column" justifyContent="space-between" alignItems="stretch">
+                <Grid
+                  container
+                  rowSpacing={2}
+                  direction="column"
+                  justifyContent="space-between"
+                  alignItems="stretch"
+                >
                   <Grid item xs>
-                    <Grid container direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
+                    <Grid
+                      container
+                      direction="row"
+                      justifyContent="space-between"
+                      alignItems="center"
+                      spacing={2}
+                    >
                       <Grid item xs={4}>
                         <h2>Show XX items of XX</h2>
                       </Grid>
@@ -101,7 +118,7 @@ const ProductCatalog = () => {
                           <Grid item xs={7}>
                             <Box sx={{ margin: 1.4 }}></Box>
                             <Button
-                              /* id="basic-button"
+                            /* id="basic-button"
                               aria-controls={open ? "basic-menu" : ""}
                               aria-haspopup="true"
                               aria-expanded={open ? "true" : ""}
@@ -118,13 +135,25 @@ const ProductCatalog = () => {
                                 "aria-labelledby": "basic-button",
                               }}
                             >
-                              <MenuItem onClick={(e: React.MouseEvent<HTMLLIElement>) => handleClose(e)}>
+                              <MenuItem
+                                onClick={(e: React.MouseEvent<HTMLLIElement>) =>
+                                  handleClose(e)
+                                }
+                              >
                                 Most relevant
                               </MenuItem>
-                              <MenuItem onClick={(e: React.MouseEvent<HTMLLIElement>) => handleClose(e)}>
+                              <MenuItem
+                                onClick={(e: React.MouseEvent<HTMLLIElement>) =>
+                                  handleClose(e)
+                                }
+                              >
                                 Lower price
                               </MenuItem>
-                              <MenuItem onClick={(e: React.MouseEvent<HTMLLIElement>) => handleClose(e)}>
+                              <MenuItem
+                                onClick={(e: React.MouseEvent<HTMLLIElement>) =>
+                                  handleClose(e)
+                                }
+                              >
                                 Higher price
                               </MenuItem>
                             </Menu>
