@@ -1,4 +1,4 @@
-import { createSlice, AsyncThunk, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { Category } from "../../types";
 const serverURL: string =
@@ -16,15 +16,13 @@ const initialState: CategoryState = {
   error: null,
 };
 
-export const fetchCategories: AsyncThunk<
-  Category[],
-  void,
-  {}
-> = createAsyncThunk("category/fetchCategories", async () => {
-  const response = await fetch(serverURL);
-  const data = await response.json();
-  return data;
-});
+export const fetchCategories = createAsyncThunk(
+  "category/fetchCategories",
+  async () => {
+    const response = await fetch(serverURL);
+    return (await response.json()) as Category[]
+  }
+);
 
 const categorySlice = createSlice({
   name: "category",
