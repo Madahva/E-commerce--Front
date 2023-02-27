@@ -3,6 +3,8 @@ import { useAppSelector } from "../../redux/hooks";
 import { selectProductDetailds } from "../../redux/features/productSlice";
 import { Product } from "../../types";
 import { makeStyles } from "@mui/styles";
+import Button from "@mui/material/Button";
+import { AddShoppingCart } from "@mui/icons-material";
 
 const useStyles = makeStyles((theme) => ({
   detailsPage: {
@@ -35,24 +37,27 @@ const DetailsPage: React.FC = () => {
 
   return (
     <div>
-    { product ?
-
-    <div className={classes.detailsPage}>
-      <div className={classes.detail}>
-        <h1>{product.name}</h1>
-        <img
-          src={product.img}
-          alt={product.name}
-          className={classes.productImage}
-        />
-        <div>
-          <p>{product.description}</p>
-          <p>{product.Marca}</p>
-          <p>{product.price}</p>
+      {product ? (
+        <div className={classes.detailsPage}>
+          <div className={classes.detail}>
+            <h1>{product.name}</h1>
+            <img
+              src={product.img}
+              alt={product.name}
+              className={classes.productImage}
+            />
+            <div>
+              <p>{product.description}</p>
+              <p>{product.Marca}</p>
+              <p>{product.price}</p>
+            </div>
+            <Button variant="contained" color="primary">
+              <AddShoppingCart />
+              <h2> Add to cart</h2>
+            </Button>
+          </div>
         </div>
-      </div>
-    </div>
-      : null} 
+      ) : null}
     </div>
   );
 };
