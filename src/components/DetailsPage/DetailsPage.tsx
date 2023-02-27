@@ -33,7 +33,9 @@ const DetailsPage: React.FC = () => {
 
   if (productDetaild[0]) {
     var product = productDetaild[0];
+    console.log(product)
   }
+
 
   return (
     <div>

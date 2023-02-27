@@ -17,7 +17,7 @@ interface ProductsProps {
 
 const Products = ({ categorieSeccion }: ProductsProps) => {
   const products: Product[] = useAppSelector(selectProduct);
-
+console.log(products[0] && typeof products[0].price)
   const useStyles = makeStyles((theme) => ({
     link: {
       color: "inherit",

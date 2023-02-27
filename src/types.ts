@@ -9,7 +9,7 @@ export interface Product {
   quantity: number;
   description: string;
   img: string;
-  price: string;
+  price: number;
   deleted: boolean;
   rating: string;
   Marca: string;

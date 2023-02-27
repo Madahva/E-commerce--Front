@@ -1,4 +1,6 @@
 import * as React from "react";
+import { useAppDispatch } from "../../redux/hooks";
+import { sortProductsByPrice } from "../../redux/features/filterSlice";
 import { Link, useLocation } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
 import Grid from "@mui/material/Grid";
@@ -15,6 +17,7 @@ import { useState } from "react";
 import Chip from "@mui/material/Chip";
 import Products from "../Products/Products";
 import Carousels from "../Carousels/Carousels";
+import FilterSelect from "./FilterSelect/FilterSelect";
 
 const useStyles = makeStyles(() => ({
   link: {
@@ -34,22 +37,20 @@ const useStyles = makeStyles(() => ({
 }));
 
 const ProductCatalog = () => {
+  const dispatch = useAppDispatch()
   const classes = useStyles();
   const location = useLocation();
   const segments = location.pathname.split("/");
   const lastSegment = segments.pop();
   let categorieSeccion: string = decodeURIComponent(lastSegment);
-  const [buttonText, setButtonText] = useState("Most relevant");
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLLIElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = (event: React.MouseEvent<HTMLLIElement>) => {
-    setButtonText(
-      (event.target as HTMLInputElement).textContent || "Most relevant"
-    );
-    setAnchorEl(null);
+  const [filter, setFilter] = useState<string>("mostRelevant");
+
+  const handleFilterChange = (
+    newFilter: "mostRelevant" | "lowerPrice" | "higherPrice"
+  ) => {
+    setFilter(newFilter);
+    dispatch(sortProductsByPrice(filter))
+    console.log(newFilter)
   };
 
   return (
@@ -110,56 +111,10 @@ const ProductCatalog = () => {
                       <Grid item xs={4}>
                         <h2>Show XX items of XX</h2>
                       </Grid>
-                      <Grid item xs={4}>
-                        <Grid container spacing={2}>
-                          <Grid item xs={5}>
-                            <h3>Order by: </h3>
-                          </Grid>
-                          <Grid item xs={7}>
-                            <Box sx={{ margin: 1.4 }}></Box>
-                            <Button
-                            /* id="basic-button"
-                              aria-controls={open ? "basic-menu" : ""}
-                              aria-haspopup="true"
-                              aria-expanded={open ? "true" : ""}
-                              onClick={handleClick} */
-                            >
-                              {buttonText}
-                            </Button>
-                            <Menu
-                              id="basic-menu"
-                              anchorEl={anchorEl}
-                              open={open}
-                              onClose={handleClose}
-                              MenuListProps={{
-                                "aria-labelledby": "basic-button",
-                              }}
-                            >
-                              <MenuItem
-                                onClick={(e: React.MouseEvent<HTMLLIElement>) =>
-                                  handleClose(e)
-                                }
-                              >
-                                Most relevant
-                              </MenuItem>
-                              <MenuItem
-                                onClick={(e: React.MouseEvent<HTMLLIElement>) =>
-                                  handleClose(e)
-                                }
-                              >
-                                Lower price
-                              </MenuItem>
-                              <MenuItem
-                                onClick={(e: React.MouseEvent<HTMLLIElement>) =>
-                                  handleClose(e)
-                                }
-                              >
-                                Higher price
-                              </MenuItem>
-                            </Menu>
-                          </Grid>
-                        </Grid>
-                      </Grid>
+                      <FilterSelect
+                        value={filter}
+                        onChange={handleFilterChange}
+                      />
                     </Grid>
                   </Grid>
                   <Grid item xs>
