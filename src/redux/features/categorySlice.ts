@@ -1,10 +1,8 @@
 import { createSlice, AsyncThunk, createAsyncThunk } from "@reduxjs/toolkit";
-const serverURL: string = "https://e-commerce-back-production-848f.up.railway.app/category";
-
-interface Category {
-  name: string;
-  url: string;
-}
+import { RootState } from "../store";
+import { Category } from "../../types";
+const serverURL: string =
+  "https://e-commerce-back-production-848f.up.railway.app/category";
 
 interface CategoryState {
   categories: Category[];
@@ -18,14 +16,15 @@ const initialState: CategoryState = {
   error: null,
 };
 
-export const fetchCategories: AsyncThunk<Category[], void, {}> = createAsyncThunk(
-  "category/fetchCategories",
-  async () => {
-    const response = await fetch(serverURL);
-    const data = await response.json();
-    return data;
-  }
-);
+export const fetchCategories: AsyncThunk<
+  Category[],
+  void,
+  {}
+> = createAsyncThunk("category/fetchCategories", async () => {
+  const response = await fetch(serverURL);
+  const data = await response.json();
+  return data;
+});
 
 const categorySlice = createSlice({
   name: "category",
@@ -47,4 +46,6 @@ const categorySlice = createSlice({
   },
 });
 
+export const selectCategory = (state: RootState) =>
+  state.categoryReducer.categories;
 export default categorySlice.reducer;
