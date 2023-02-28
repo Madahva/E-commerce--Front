@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useAppDispatch } from "../../redux/hooks";
+import { fetchBySearch } from "../../redux/features/filterSlice"
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
@@ -72,7 +74,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const NavBar = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const [searchValue, setSearchValue] = useState<string>("");
   const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
   const isAdmind: boolean =
     isAuthenticated && user.email === "galarzaguillermo.ggm@gmail.com";
@@ -97,6 +102,19 @@ const NavBar = () => {
     setShowBtn(!showBtn);
   };
 
+  const handleFormSubmit = (event: any) => {
+    event.preventDefault();
+    if (searchValue !== "") {
+      dispatch(fetchBySearch(searchValue));
+      navigate("/products");
+      setSearchValue("");
+    }
+  };
+
+  const handleSearchInputChange = (event: any) => {
+    setSearchValue(event.target.value);
+  };
+
   return (
     <div className={classes.navBarContainer}>
       <div className={classes.navBar}>
@@ -105,8 +123,8 @@ const NavBar = () => {
             <HomeIcon fontSize="large" />
           </Button>
         </Link>
-        <form className={classes.form}>
-          <Button>
+        <form className={classes.form} onSubmit={handleFormSubmit}>
+          <Button onClick={handleFormSubmit}>
             <SearchIcon />
           </Button>
           <Input
@@ -114,6 +132,8 @@ const NavBar = () => {
             autoFocus
             type="text"
             placeholder="Search..."
+            value={searchValue}
+            onChange={handleSearchInputChange}
           />
         </form>
         <div className={classes.icons}>
@@ -148,7 +168,7 @@ const NavBar = () => {
               <div className={classes.menu_btn}>
                 <Link onClick={() => loginWithRedirect()}>
                   <Button
-                    sx={{ backgroundColor: "#DFE8EF", padding: ".5rem"  }}
+                    sx={{ backgroundColor: "#DFE8EF", padding: ".5rem" }}
                     className={classes.button}
                   >
                     Login
@@ -157,7 +177,7 @@ const NavBar = () => {
                 <Link>
                   <Button
                     onClick={() => loginWithRedirect()}
-                    sx={{ backgroundColor: "#DFE8EF", padding: ".5rem"  }}
+                    sx={{ backgroundColor: "#DFE8EF", padding: ".5rem" }}
                     className={classes.button}
                   >
                     Register
@@ -168,7 +188,7 @@ const NavBar = () => {
               <div className={classes.menu_btn}>
                 <Link>
                   <Button
-                    sx={{ backgroundColor: "#DFE8EF", padding: ".5rem"  }}
+                    sx={{ backgroundColor: "#DFE8EF", padding: ".5rem" }}
                     className={classes.button}
                     onClick={() => logout()}
                   >
@@ -178,7 +198,7 @@ const NavBar = () => {
                 {!isAdmind ? (
                   <Link>
                     <Button
-                      sx={{ backgroundColor: "#DFE8EF", padding: ".5rem"  }}
+                      sx={{ backgroundColor: "#DFE8EF", padding: ".5rem" }}
                       className={classes.button}
                     >
                       History

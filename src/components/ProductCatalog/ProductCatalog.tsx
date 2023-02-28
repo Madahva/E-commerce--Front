@@ -114,7 +114,7 @@ const ProductCatalog = () => {
                   <Chip
                     className={classes.priceFilter}
                     label="Clear 🧹"
-                    onClick={() => handleFilter("all")}
+                    onClick={() => handleFilter("🧹")}
                   />
                 </Stack>
               </Grid>

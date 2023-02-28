@@ -1,14 +1,12 @@
-import {
-  createSlice,
-  createAsyncThunk,
-  AsyncThunk,
-  PayloadAction,
-} from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { Product } from "../../types";
 
 const filterCategoryURL: string =
   "https://e-commerce-back-production-848f.up.railway.app/filters/category?category_id=";
+
+const searchURL: string =
+  "https://e-commerce-back-production-848f.up.railway.app/filters/name?name=";
 
 interface filterState {
   product: Product[];
@@ -38,6 +36,16 @@ export const fetchCategoryByID = createAsyncThunk(
     return parsedProducts;
   }
 );
+
+export const fetchBySearch = createAsyncThunk(
+  "search/fetchBySearch",
+  async (name: string) => {
+    const newURL: string = `${searchURL}${name}`;
+    const response = await fetch(newURL);
+    return (await response.json()) as Product[];
+  }
+);
+
 const filterSlice = createSlice({
   name: "filter",
   initialState,
@@ -73,6 +81,9 @@ const filterSlice = createSlice({
         state.filteredProducts = state.product;
       }
     },
+    updateProductsFromSearch: (state, action: PayloadAction<Product[]>) => {
+      state.filteredProducts = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -87,6 +98,18 @@ const filterSlice = createSlice({
       .addCase(fetchCategoryByID.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
+      })
+      .addCase(fetchBySearch.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchBySearch.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.product = action.payload;
+        state.filteredProducts = action.payload;
+      })
+      .addCase(fetchBySearch.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
       });
   },
 });
@@ -95,5 +118,6 @@ export const {
   sortProductsByPrice,
   filterProductsByPrice,
 } = filterSlice.actions;
-export const selectProduct = (state: RootState) => state.filterReducer.filteredProducts;
+export const selectProduct = (state: RootState) =>
+  state.filterReducer.filteredProducts;
 export default filterSlice.reducer;
