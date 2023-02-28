@@ -54,6 +54,7 @@ const Banner = () => {
               display: "block",
               overflow: "hidden",
               width: "100%",
+              marginBottom: "6rem",
             }}
           />
         </div>

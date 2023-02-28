@@ -9,9 +9,9 @@ export interface Product {
   quantity: number;
   description: string;
   img: string;
-  price: number;
+  price: any;
   deleted: boolean;
-  rating: string;
+  rating: any;
   Marca: string;
   category_id: number;
 }
