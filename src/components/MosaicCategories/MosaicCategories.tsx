@@ -5,15 +5,14 @@ import {
   fetchCategories,
   selectCategory,
 } from "../../redux/features/categorySlice";
-import {
-  fetchCategoryByID,
-} from "../../redux/features/filterSlice";
+import { fetchCategoryByID } from "../../redux/features/filterSlice";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { CardActionArea } from "@mui/material";
 import Grid from "@mui/material/Grid";
+import { makeStyles } from "@mui/styles";
 import { Link } from "react-router-dom";
 
 const image: string[] = [
@@ -28,13 +27,21 @@ const image: string[] = [
   "https://authogar.vtexassets.com/arquivos/ids/184569-800-auto?v=638048243255100000&width=800&height=auto&aspect=true",
 ];
 
+const useStyles = makeStyles({
+  category: {
+    "&:hover": {
+      transition: "all ease-in .3s",
+      transform: "scale(.98)",
+    },
+  },
+});
+
 const MosaicCategories = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
-
 
   interface Category {
     id: number;
@@ -47,6 +54,7 @@ const MosaicCategories = () => {
     dispatch(fetchCategoryByID(categoryId));
   };
 
+  const classes = useStyles();
   return (
     <Grid
       sx={{ flexGrow: 1, margin: "6rem 0" }}
@@ -66,7 +74,7 @@ const MosaicCategories = () => {
             onClick={() => handleClick(category.id)}
           >
             <Link to={`/${category.typecategory.toLowerCase()}`}>
-              <Card sx={{ maxWidth: 920 }}>
+              <Card sx={{ maxWidth: 920 }} className={classes.category}>
                 <CardActionArea>
                   <CardMedia
                     component="img"
@@ -75,16 +83,24 @@ const MosaicCategories = () => {
                       width: "100%",
                       objectFit: "scale-down",
                       borderRadius: "4px",
+                      padding: "2rem 0",
                     }}
                     image={image[index]}
                     alt={category.typecategory}
                   />
-                  <CardContent>
+                  <CardContent
+                    style={{
+                      backgroundColor: "#f5f5f5",
+                    }}
+                  >
                     <Typography
                       gutterBottom
                       variant="h5"
                       component="div"
-                      style={{ textTransform: "capitalize" }}
+                      style={{
+                        textTransform: "capitalize",
+                        marginLeft: "2rem",
+                      }}
                     >
                       {category.typecategory}
                     </Typography>

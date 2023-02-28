@@ -1,6 +1,6 @@
 import React from "react";
 import Carousel  from "react-material-ui-carousel";
-import { Paper} from "@mui/material";
+import { easing, Paper} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
@@ -15,16 +15,22 @@ interface Brand {
 
 const useStyles = makeStyles({
   circle: {
-    width: "80px",
-    height: "80px",
-    borderRadius: "30px",
+    width: "78px",
+    height: "78px",
+    borderRadius: "100%",
+    border: "1px solid grey",
     backgroundColor: "#000",
+    transition: "all ease-in .2s",
+    "&:hover": {
+      transform: "scale(0.9)"
+    },
   },
   items: {
     display: "flex",
     justifyContent: "center",
     backgroundColor: "#F5F5F5",
     gap: "10px",
+    cursor: "pointer",
   },
   carouselButton: {
     position: "absolute",
@@ -57,7 +63,7 @@ const Carousels: React.FC = () => {
   }, []);
 
   return (
-    <div style={{ padding: "6rem 0 0 0" }}>
+    <div style={{ padding: "0" }}>
       <Carousel
         indicators={false}
         autoPlay={false}

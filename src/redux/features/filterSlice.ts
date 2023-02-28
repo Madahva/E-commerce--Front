@@ -29,19 +29,30 @@ export const fetchCategoryByID = createAsyncThunk(
   async (category: number) => {
     const newURL: string = `${filterCategoryURL}${category}`;
     const response = await fetch(newURL);
-    return (await response.json()) as Product[];
+    const products = await response.json();
+    const parsedProducts = products.map((product: Product) => ({
+      ...product,
+      price: parseFloat(product.price),
+      rating: parseFloat(product.rating),
+    })) as Product[];
+    return parsedProducts;
   }
 );
-
 const filterSlice = createSlice({
   name: "filter",
   initialState,
   reducers: {
     sortProductsByPrice: (state, action: PayloadAction<string>) => {
-      const higherPrice = (a: Product, b: Product) => a.price - b.price;
-      const lowerPrice = (a: Product, b: Product) => b.price - a.price;
-      const orderPrice =
-        action.payload === "higherPrice" ? higherPrice: lowerPrice;
+      const mostRelevant = (a: Product, b: Product) => b.rating - a.rating;
+      const higherPrice = (a: Product, b: Product) => b.price - a.price;
+      const lowerPrice = (a: Product, b: Product) => a.price - b.price;
+      
+      let orderPrice
+
+      if (action.payload === "mostRelevant") orderPrice = mostRelevant;
+      if (action.payload === "higherPrice") orderPrice = higherPrice;
+      if (action.payload === "lowerPrice") orderPrice = lowerPrice;
+
       state.product.sort(orderPrice);
       state.filter = action.payload;
     },

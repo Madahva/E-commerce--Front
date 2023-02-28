@@ -8,8 +8,10 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import ButtonBase from "@mui/material/ButtonBase";
+import Button from "@mui/material/Button";
 import { makeStyles } from "@mui/styles";
 import { styled } from "@mui/material/styles";
+import { AddShoppingCart } from "@mui/icons-material";
 
 interface ProductsProps {
   categorieSeccion: string;
@@ -17,7 +19,7 @@ interface ProductsProps {
 
 const Products = ({ categorieSeccion }: ProductsProps) => {
   const products: Product[] = useAppSelector(selectProduct);
-console.log(products[0] && typeof products[0].price)
+  console.log(products[0] && typeof products[0].price);
   const useStyles = makeStyles((theme) => ({
     link: {
       color: "inherit",
@@ -29,7 +31,7 @@ console.log(products[0] && typeof products[0].price)
     product: {
       cursor: "pointer",
       "&:hover": {
-        backgroundColor: "#b0ecfd",
+        backgroundColor: "#d1fdff",
         transition: "all ease-in .2s",
       },
     },
@@ -41,7 +43,7 @@ console.log(products[0] && typeof products[0].price)
     maxWidth: "100%",
     maxHeight: "100%",
   });
-  
+
   const dispatch = useAppDispatch();
 
   const handleClick = (productID: string) => {
@@ -53,7 +55,11 @@ console.log(products[0] && typeof products[0].price)
       {products &&
         products.map((el: Product, index: number) => {
           return (
-            <Link to={`/${categorieSeccion}/${el.id}`} key={el.name} onClick={() => handleClick(el.id)} >
+            <Link
+              to={`/${categorieSeccion}/${el.id}`}
+              key={el.name}
+              onClick={() => handleClick(el.id)}
+            >
               <Paper
                 className={classes.product}
                 sx={{
@@ -90,9 +96,10 @@ console.log(products[0] && typeof products[0].price)
                         </Typography>
                       </Grid>
                       <Grid item>
-                        <Typography sx={{ cursor: "pointer" }} variant="body2">
-                          {"Favorites <3"}
-                        </Typography>
+
+                        <Button variant="contained" color="primary" sx={{ width: 128 }}>
+                          <AddShoppingCart />
+                        </Button>
                       </Grid>
                     </Grid>
                     <Grid item>
