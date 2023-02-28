@@ -12,14 +12,14 @@ const filterCategoryURL: string =
 
 interface filterState {
   product: Product[];
-  filter: string;
+  filteredProducts: Product[];
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
 
 const initialState: filterState = {
   product: [],
-  filter: "",
+  filteredProducts: [],
   status: "idle",
   error: null,
 };
@@ -46,15 +46,32 @@ const filterSlice = createSlice({
       const mostRelevant = (a: Product, b: Product) => b.rating - a.rating;
       const higherPrice = (a: Product, b: Product) => b.price - a.price;
       const lowerPrice = (a: Product, b: Product) => a.price - b.price;
-      
-      let orderPrice
+
+      let orderPrice;
 
       if (action.payload === "mostRelevant") orderPrice = mostRelevant;
       if (action.payload === "higherPrice") orderPrice = higherPrice;
       if (action.payload === "lowerPrice") orderPrice = lowerPrice;
 
-      state.product.sort(orderPrice);
-      state.filter = action.payload;
+      state.filteredProducts.sort(orderPrice);
+    },
+    filterProductsByPrice: (state, action: PayloadAction<string>) => {
+      const selectedPrice = action.payload;
+      if (selectedPrice === "Up to $500") {
+        state.filteredProducts = state.product.filter(
+          (product) => product.price <= 500
+        );
+      } else if (selectedPrice === "$500 to $1500") {
+        state.filteredProducts = state.product.filter(
+          (product) => product.price > 500 && product.price <= 1500
+        );
+      } else if (selectedPrice === "> $1500") {
+        state.filteredProducts = state.product.filter(
+          (product) => product.price > 1500
+        );
+      } else {
+        state.filteredProducts = state.product;
+      }
     },
   },
   extraReducers: (builder) => {
@@ -65,6 +82,7 @@ const filterSlice = createSlice({
       .addCase(fetchCategoryByID.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.product = action.payload;
+        state.filteredProducts = action.payload;
       })
       .addCase(fetchCategoryByID.rejected, (state, action) => {
         state.status = "failed";
@@ -73,6 +91,9 @@ const filterSlice = createSlice({
   },
 });
 
-export const { sortProductsByPrice } = filterSlice.actions;
-export const selectProduct = (state: RootState) => state.filterReducer.product;
+export const {
+  sortProductsByPrice,
+  filterProductsByPrice,
+} = filterSlice.actions;
+export const selectProduct = (state: RootState) => state.filterReducer.filteredProducts;
 export default filterSlice.reducer;

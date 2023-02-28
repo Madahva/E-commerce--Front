@@ -1,6 +1,9 @@
 import * as React from "react";
 import { useAppDispatch } from "../../redux/hooks";
-import { sortProductsByPrice } from "../../redux/features/filterSlice";
+import {
+  sortProductsByPrice,
+  filterProductsByPrice,
+} from "../../redux/features/filterSlice";
 import { Link, useLocation } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
 import Grid from "@mui/material/Grid";
@@ -37,9 +40,9 @@ const useStyles = makeStyles(() => ({
     pointer: "cursor",
     minWidth: "120px",
     "&:hover": {
-      transform: "scale(1.1)"
-    }
-  }
+      transform: "scale(1.1)",
+    },
+  },
 }));
 
 const ProductCatalog = () => {
@@ -51,9 +54,13 @@ const ProductCatalog = () => {
   let categorieSeccion: string = decodeURIComponent(lastSegment);
   const [filter, setFilter] = useState<string>("mostRelevant");
 
-  const handleFilterChange = (newFilter: string) => {
+  const handleSortChange = (newFilter: string) => {
     setFilter(newFilter);
     dispatch(sortProductsByPrice(newFilter));
+  };
+
+  const handleFilter = (price: string) => {
+    dispatch(filterProductsByPrice(price));
   };
 
   return (
@@ -68,7 +75,9 @@ const ProductCatalog = () => {
               <Link className={classes.link} to="/">
                 Categories
               </Link>
-              <Link className={classes.link} to="#"> {categorieSeccion}
+              <Link className={classes.link} to="#">
+                {" "}
+                {categorieSeccion}
               </Link>
             </Breadcrumbs>
             <Carousels />
@@ -87,9 +96,26 @@ const ProductCatalog = () => {
                   alignItems="center"
                 >
                   <Typography>Filters:</Typography>
-                  <Chip className={classes.priceFilter} label="Up to $500" />
-                  <Chip className={classes.priceFilter} label="$500 to $1500" />
-                  <Chip className={classes.priceFilter} label="> $1500" />
+                  <Chip
+                    className={classes.priceFilter}
+                    label="Up to $500"
+                    onClick={() => handleFilter("Up to $500")}
+                  />
+                  <Chip
+                    className={classes.priceFilter}
+                    label="$500 to $1500"
+                    onClick={() => handleFilter("$500 to $1500")}
+                  />
+                  <Chip
+                    className={classes.priceFilter}
+                    label="> $1500"
+                    onClick={() => handleFilter("> $1500")}
+                  />
+                  <Chip
+                    className={classes.priceFilter}
+                    label="Clear 🧹"
+                    onClick={() => handleFilter("all")}
+                  />
                 </Stack>
               </Grid>
               <Divider orientation="vertical" flexItem />
@@ -111,7 +137,7 @@ const ProductCatalog = () => {
                     >
                       <FilterSelect
                         value={filter}
-                        onChange={handleFilterChange}
+                        onChange={handleSortChange}
                       />
                     </Grid>
                   </Grid>

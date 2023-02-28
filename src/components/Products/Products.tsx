@@ -19,7 +19,6 @@ interface ProductsProps {
 
 const Products = ({ categorieSeccion }: ProductsProps) => {
   const products: Product[] = useAppSelector(selectProduct);
-  console.log(products[0] && typeof products[0].price);
   const useStyles = makeStyles((theme) => ({
     link: {
       color: "inherit",
@@ -52,6 +51,7 @@ const Products = ({ categorieSeccion }: ProductsProps) => {
 
   return (
     <>
+      {products.length === 0 && <Typography> Nothing to see here. 🤭</Typography> }
       {products &&
         products.map((el: Product, index: number) => {
           return (
@@ -96,8 +96,11 @@ const Products = ({ categorieSeccion }: ProductsProps) => {
                         </Typography>
                       </Grid>
                       <Grid item>
-
-                        <Button variant="contained" color="primary" sx={{ width: 128 }}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          sx={{ width: 128 }}
+                        >
                           <AddShoppingCart />
                         </Button>
                       </Grid>
