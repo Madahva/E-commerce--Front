@@ -1,4 +1,9 @@
 import * as React from "react";
+import { useAppDispatch } from "../../redux/hooks";
+import {
+  sortProductsByPrice,
+  filterProductsByPrice,
+} from "../../redux/features/filterSlice";
 import { Link, useLocation } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
 import Grid from "@mui/material/Grid";
@@ -8,18 +13,17 @@ import Stack from "@mui/material/Stack";
 import Container from "@mui/material/Container";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Divider from "@mui/material/Divider";
-import Button from "@mui/material/Button";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 import { useState } from "react";
 import Chip from "@mui/material/Chip";
 import Products from "../Products/Products";
 import Carousels from "../Carousels/Carousels";
+import FilterSelect from "./FilterSelect/FilterSelect";
 
 const useStyles = makeStyles(() => ({
   link: {
     color: "inherit",
     textDecoration: "none",
+    textTransform: "capitalize",
     "&:hover": {
       textDecoration: "underline",
     },
@@ -31,32 +35,38 @@ const useStyles = makeStyles(() => ({
       transition: "all ease-in .2s",
     },
   },
+  priceFilter: {
+    transition: "all ease-in .3s",
+    pointer: "cursor",
+    minWidth: "120px",
+    "&:hover": {
+      transform: "scale(1.1)",
+    },
+  },
 }));
 
 const ProductCatalog = () => {
+  const dispatch = useAppDispatch();
   const classes = useStyles();
   const location = useLocation();
   const segments = location.pathname.split("/");
   const lastSegment = segments.pop();
   let categorieSeccion: string = decodeURIComponent(lastSegment);
-  const [buttonText, setButtonText] = useState("Most relevant");
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLLIElement>) => {
-    setAnchorEl(event.currentTarget);
+  const [filter, setFilter] = useState<string>("mostRelevant");
+
+  const handleSortChange = (newFilter: string) => {
+    setFilter(newFilter);
+    dispatch(sortProductsByPrice(newFilter));
   };
-  const handleClose = (event: React.MouseEvent<HTMLLIElement>) => {
-    setButtonText(
-      (event.target as HTMLInputElement).textContent || "Most relevant"
-    );
-    setAnchorEl(null);
+
+  const handleFilter = (price: string) => {
+    dispatch(filterProductsByPrice(price));
   };
 
   return (
     <>
-      <Carousels />
       <Container fixed>
-        <Box sx={{ width: "100%" }}>
+        <Box sx={{ width: "100%", margin: "2rem 0 6rem 0" }}>
           <Stack direction="column" spacing={6}>
             <Breadcrumbs aria-label="breadcrumb">
               <Link className={classes.link} to="/">
@@ -65,14 +75,18 @@ const ProductCatalog = () => {
               <Link className={classes.link} to="/">
                 Categories
               </Link>
-              <Typography color="text.primary">{categorieSeccion}</Typography>
+              <Link className={classes.link} to="#">
+                {" "}
+                {categorieSeccion}
+              </Link>
             </Breadcrumbs>
+            <Carousels />
             <Grid
               container
               direction="row"
               spacing={2}
               justifyContent="center"
-              alignItems="flex-start"
+              alignItems="center"
             >
               <Grid item xs={3}>
                 <Stack
@@ -81,13 +95,27 @@ const ProductCatalog = () => {
                   justifyContent="center"
                   alignItems="center"
                 >
-                  <h1>Filters: </h1>
-                  <Box sx={{ margin: 1.4 }}></Box>
-                  <h3>Prices</h3>
-                  <Chip label="Up to $50" />
-                  <Chip label="$50 to $100" />
-                  <Chip label="$100 to $500" />
-                  <Chip label="$500 to $1000" />
+                  <Typography>Filters:</Typography>
+                  <Chip
+                    className={classes.priceFilter}
+                    label="Up to $500"
+                    onClick={() => handleFilter("Up to $500")}
+                  />
+                  <Chip
+                    className={classes.priceFilter}
+                    label="$500 to $1500"
+                    onClick={() => handleFilter("$500 to $1500")}
+                  />
+                  <Chip
+                    className={classes.priceFilter}
+                    label="> $1500"
+                    onClick={() => handleFilter("> $1500")}
+                  />
+                  <Chip
+                    className={classes.priceFilter}
+                    label="Clear 🧹"
+                    onClick={() => handleFilter("🧹")}
+                  />
                 </Stack>
               </Grid>
               <Divider orientation="vertical" flexItem />
@@ -107,59 +135,10 @@ const ProductCatalog = () => {
                       alignItems="center"
                       spacing={2}
                     >
-                      <Grid item xs={4}>
-                        <h2>Show XX items of XX</h2>
-                      </Grid>
-                      <Grid item xs={4}>
-                        <Grid container spacing={2}>
-                          <Grid item xs={5}>
-                            <h3>Order by: </h3>
-                          </Grid>
-                          <Grid item xs={7}>
-                            <Box sx={{ margin: 1.4 }}></Box>
-                            <Button
-                            /* id="basic-button"
-                              aria-controls={open ? "basic-menu" : ""}
-                              aria-haspopup="true"
-                              aria-expanded={open ? "true" : ""}
-                              onClick={handleClick} */
-                            >
-                              {buttonText}
-                            </Button>
-                            <Menu
-                              id="basic-menu"
-                              anchorEl={anchorEl}
-                              open={open}
-                              onClose={handleClose}
-                              MenuListProps={{
-                                "aria-labelledby": "basic-button",
-                              }}
-                            >
-                              <MenuItem
-                                onClick={(e: React.MouseEvent<HTMLLIElement>) =>
-                                  handleClose(e)
-                                }
-                              >
-                                Most relevant
-                              </MenuItem>
-                              <MenuItem
-                                onClick={(e: React.MouseEvent<HTMLLIElement>) =>
-                                  handleClose(e)
-                                }
-                              >
-                                Lower price
-                              </MenuItem>
-                              <MenuItem
-                                onClick={(e: React.MouseEvent<HTMLLIElement>) =>
-                                  handleClose(e)
-                                }
-                              >
-                                Higher price
-                              </MenuItem>
-                            </Menu>
-                          </Grid>
-                        </Grid>
-                      </Grid>
+                      <FilterSelect
+                        value={filter}
+                        onChange={handleSortChange}
+                      />
                     </Grid>
                   </Grid>
                   <Grid item xs>
