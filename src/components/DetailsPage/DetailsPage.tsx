@@ -23,6 +23,10 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Box, height, Stack } from "@mui/system";
 import { useState } from "react";
 
+
+import { products } from "../../assets/styles/Data";
+
+
 const useStyles = makeStyles((theme) => ({
   detailsPage: {
     backgroundColor: "#ededed",
@@ -45,8 +49,6 @@ const useStyles = makeStyles((theme) => ({
   },
   link: {
     color: "inherit",
-    cursor: "pointer",
-    textTransform: "capitalize",
     textDecoration: "none",
     "&:hover": {
       textDecoration: "underline",
@@ -55,11 +57,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const StyledRating = styled(Rating)({
-  "& .MuiRating-iconFilled": {
-    color: "#ff6d75",
+  '& .MuiRating-iconFilled': {
+    color: '#ff6d75',
   },
-  "& .MuiRating-iconHover": {
-    color: "#ff3d47",
+  '& .MuiRating-iconHover': {
+    color: '#ff3d47',
   },
 });
 
@@ -68,7 +70,7 @@ const DetailsPage: React.FC = () => {
 
   const url = window.location.href;
   const splitUrl = url.split("/");
-  const productCategory = splitUrl[3]; 
+  const productCategory = splitUrl[3];
 
   const productDetaild: Product[] = useAppSelector(selectProductDetailds);
   if (productDetaild[0]) {
@@ -84,44 +86,88 @@ const DetailsPage: React.FC = () => {
   const handleDecrease = () => {
     setValue(value - 1);
   };
-  const { category = "", id } = useParams();
+  //const { category = "", id } = useParams();
   return (
-    <div>
-      {product ? (
-        <div className={classes.detailsPage}>
-          <Breadcrumbs aria-label="breadcrumb">
-            <Link className={classes.link} to="/">
-              Categories
-            </Link>
-            <p className={classes.link} onClick={() => window.history.back()}>
-              {productCategory}
-            </p>
+    <Grid
+      container
+      direction="column"
+      justifyContent="center"
+      alignItems="center" className={classes.detailsPage}>
+      <Container fixed className={classes.detail}>
+        <Box sx={{ margin: "10px" }}></Box>
+        <Breadcrumbs aria-label="breadcrumb">
+          <Link className={classes.link} to="/">
+            Home
+          </Link>
+          <Link className={classes.link} to="/">
+            Categories
+          </Link>
+          <Link className={classes.link} to={`/${productCategory}`}>
+            {productCategory}
+          </Link>
+          <Typography color="text.primary">{product.name}</Typography>
+        </Breadcrumbs>
+        <Box sx={{ margin: "20px" }}></Box>
+        <Grid container
+          direction="row"
+          justifyContent="space-between"
+          alignItems="flex-start">
 
-            <Typography color="text.primary">{product.name}</Typography>
-          </Breadcrumbs>
-          <Box sx={{ margin: "20px" }}></Box>
+          <Grid item sm={12} md={6}>
+            <Stack spacing={2} justifyContent="center"
+              alignItems="center" >
+              <img src={product.img} alt={product.name} className={classes.productImage} />
+              <Grid>
+                <img src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThHXM2GURRPNifTGEs7vq1EL_5KKO4rS_h-6f7ImXxMs1wB141nSRiYibpMKNaR5acpQg&usqp=CAU"} alt={product.name} id={"1"} />
+              </Grid>
+            </Stack>
+          </Grid>
+          <Divider flexItem orientation="vertical" />
+          <Grid item sm={12} md={5}>
+            <div >
+              <h1>{product.name}</h1>
+              <div>
+                <h2>{product.brand}</h2>
+                <h1><AttachMoneySharpIcon />{product.price}</h1>
+                <Divider flexItem />
+                <Stack spacing={6} sx={{ width: '100%' }} >
 
-          <div className={classes.detail}>
-            <h1>{product.name}</h1>
-            <img
-              src={product.img}
-              alt={product.name}
-              className={classes.productImage}
-            />
-            <div>
-              <p>{product.description}</p>
-              <p>{product.Marca}</p>
-              <p>{product.price}</p>
+                  <h3>{product.description}</h3>
+                  {product.romMemory ? <h4>{product.romMemory}</h4> : null}
+                  {product.ramMemory ? <h4>{product.ramMemory}</h4> : null}
+                  {product.processor ? <h4>{product.processor}</h4> : null}
+                  {product.graphicsCard ? <h4>{product.graphicsCard}</h4> : null}
+                  {product.display ? <h4>{product.display}</h4> : null}
+                  {product.size ? <h4>{product.size}</h4> : null}
+                  <StyledRating
+                    name="ratingProduct"
+                    defaultValue={product.rating}
+                    precision={0.5}
+                    icon={<FavoriteIcon fontSize="inherit" />}
+                    emptyIcon={<FavoriteBorderIcon fontSize="inherit" />}
+                  />
+                  <Grid container direction="row"
+                    justifyContent="flex-start"
+                    alignItems="center"
+                  >
+
+                    <Button onClick={handleDecrease} variant="contained" color="primary"><h3>-</h3></Button>
+                    <TextField label={value} type={"number"} sx={{ width: '75px', height: '100%', padding: '10px' }} />
+                    <Button onClick={handleIncrease} variant="contained" color="primary"><h3>+</h3></Button>
+
+                  </Grid>
+                  <Button variant="contained" color="primary">
+                    <AddShoppingCart />
+                    <h2> Add to cart</h2>
+                  </Button>
+                </Stack>
+              </div>
             </div>
-            <Button variant="contained" color="primary">
-              <AddShoppingCart />
-              <h2> Add to cart</h2>
-            </Button>
-          </div>
-        </div>
-      ) : null}
-    </div>
+          </Grid>
+
+        </Grid>
+      </Container>
+    </Grid>
   );
 };
-
 export default DetailsPage;

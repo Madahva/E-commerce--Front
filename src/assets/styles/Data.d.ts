@@ -11,6 +11,7 @@ interface Product {
   processor?: string;
   graphicsCard?: string;
   display?: string;
+  rating?: any;
 }
 
 interface Brand {

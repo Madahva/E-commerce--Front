@@ -51,8 +51,8 @@ const Products = ({ categorieSeccion }: ProductsProps) => {
 
   return (
     <>
-      { products.length === 0 && <Typography> Nothing to see here. 🤭</Typography> }
-      { products &&
+      {products.length === 0 && <Typography> Nothing to see here. 🤭</Typography>}
+      {products &&
         products.map((el: Product, index: number) => {
           return (
             <Link
@@ -92,7 +92,7 @@ const Products = ({ categorieSeccion }: ProductsProps) => {
                           {el.description}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                          {el.Marca}
+                          {el.brand}
                         </Typography>
                       </Grid>
                       <Grid item>

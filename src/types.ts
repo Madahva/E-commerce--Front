@@ -4,6 +4,12 @@ export interface Category {
 }
 
 export interface Product {
+  size: any;
+  display: any;
+  graphicsCard: any;
+  processor: any;
+  ramMemory: any;
+  romMemory: any;
   id: string;
   name: string;
   quantity: number;
@@ -12,7 +18,7 @@ export interface Product {
   price: any;
   deleted: boolean;
   rating: any;
-  Marca: string;
+  brand: string;
   category_id: number;
 }
 
