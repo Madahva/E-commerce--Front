@@ -34,7 +34,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export function Dashboard(): ReactElement {
+export function DashBoardProducts(): ReactElement {
   const classes = useStyles();
   const { user, isAuthenticated, isLoading } = useAuth0();
   const navigate = useNavigate();
@@ -89,7 +89,7 @@ export function Dashboard(): ReactElement {
               noWrap
               sx={{ color: "white" }}
             >
-              Dashboard
+              Products Dashboard
             </Typography>
 
             <Typography
@@ -102,62 +102,6 @@ export function Dashboard(): ReactElement {
               Admin: {user.given_name}
             </Typography>
           </div>
-          <Box className={classes.Box}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={4} md={3}>
-              <Link to="/dashboard-products">
-                <Typography
-                  variant="h6"
-                  style={squareStyles}
-                  color="#1976d2"
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  Products
-                </Typography>
-              </Link>
-              </Grid>
-              <Grid item xs={12} sm={4} md={3}>
-              <Link to="/dashboard-categories">
-                <Typography
-                  variant="h6"
-                  style={squareStyles}
-                  color="#1976d2"
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  Categories
-                </Typography>
-                </Link>
-              </Grid>
-              <Grid item xs={12} sm={4} md={3}>
-              <Link to="/">
-                <Typography
-                  variant="h6"
-                  color="#1976d2"
-                  style={squareStyles}
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  History
-                </Typography>
-              </Link>
-              </Grid>
-              <Grid item xs={12} sm={4} md={3}>
-              <Link to="/">
-                <Typography
-                  variant="h6"
-                  style={squareStyles}
-                  color="#1976d2"
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  Offers
-                </Typography>
-                </Link>
-              </Grid>
-            </Grid>
-          </Box>
         </div>
       )}
     </div>

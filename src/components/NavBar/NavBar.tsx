@@ -75,7 +75,7 @@ const NavBar = () => {
   const navigate = useNavigate();
   const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
   const isAdmind: boolean =
-    isAuthenticated && user.email === "galarzaguillermo.ggm@gmail.com";
+    isAuthenticated && user.email === "stiwarsg11@gmail.com";
 
   const goToHome = () => {
     navigate("/");

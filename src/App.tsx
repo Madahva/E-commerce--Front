@@ -10,6 +10,8 @@ import Footer from "./components/Footer/Footer";
 import Login from "./components/Login/Login";
 import SignUp from "./components/SignUp/SignUp";
 import { Dashboard } from "./components/Dashboard/Dashboard";
+import { DashBoardProducts } from "./components/DashBoardProducts/DashBoardProducts";
+import { DashBoardCategories } from "./components/DashBoardCategories/DashBoardCategories";
 const App = () => {
   const location = useLocation();
 
@@ -24,6 +26,8 @@ const App = () => {
         <Route path="/:category/:id" element={<DetailsPage />} />
         <Route path="/shoppingCart" element={<ShoppingCart />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard-products" element={<DashBoardProducts />} />
+        <Route path="/dashboard-categories" element={<DashBoardCategories />} />
       </Routes>
       {location.pathname !== "/dashboard" && <Footer />}
     </div>
