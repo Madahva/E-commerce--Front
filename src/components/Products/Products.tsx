@@ -10,8 +10,11 @@ import Paper from "@mui/material/Paper";
 import ButtonBase from "@mui/material/ButtonBase";
 import Button from "@mui/material/Button";
 import { makeStyles } from "@mui/styles";
-import { styled } from "@mui/material/styles";
 import { AddShoppingCart } from "@mui/icons-material";
+
+import { fill } from "@cloudinary/url-gen/actions/resize";
+import { CloudinaryImage } from '@cloudinary/url-gen';
+import { AdvancedImage } from "@cloudinary/react";
 
 interface ProductsProps {
   categorieSeccion: string;
@@ -36,12 +39,6 @@ const Products = ({ categorieSeccion }: ProductsProps) => {
     },
   }));
   const classes = useStyles();
-  const Img = styled("img")({
-    margin: "auto",
-    display: "block",
-    maxWidth: "100%",
-    maxHeight: "100%",
-  });
 
   const dispatch = useAppDispatch();
 
@@ -75,7 +72,7 @@ const Products = ({ categorieSeccion }: ProductsProps) => {
                 <Grid container spacing={2}>
                   <Grid item>
                     <ButtonBase sx={{ width: 128, height: 128 }}>
-                      <Img alt={el.name} src={el.img} />
+                      <img src={`https://res.cloudinary.com/dpnnlqglr/image/upload/c_fill,h_128,w_128/${el.id}`} />
                     </ButtonBase>
                   </Grid>
                   <Grid item xs={12} sm container>
