@@ -18,6 +18,9 @@ import makeStyles from '@mui/styles/makeStyles';
 import editIcon from "../../assets/Icons/edit.jpg";
 import addIcon from "../../assets/Icons/add.jpg";
 import deleteIcon from "../../assets/Icons/delete.jpg";
+import { Category } from "../../types";
+import { useAppSelector } from "../../redux/hooks";
+import { selectCategory  } from "../../redux/features/categorySlice";
 
 const useStyles = makeStyles(() => ({
   navBar: {
@@ -65,24 +68,6 @@ const StyledTableRow = withStyles(() =>
   }),
 )(TableRow);
 
-function createData(id: number, name: string, edit: string, add: string, delet: string) {
-  return { id, name, edit, add, delet};
-}
-
-const rows = [
-  createData(1,'Smarphones', "", "", ""),
-  createData(2,'Televisions', "", "", ""),
-  createData(3,'Computers', "", "", ""),
-  createData(4,'Game Consoles', "", "", ""),
-  createData(5,'Camaras', "", "", ""),
-  createData(6,'Smart Watches', "", "", ""),
-  createData(7,'Speakers', "", "", ""),
-  createData(8,'Drones', "", "", ""),
-  createData(9,'Headphones', "", "", ""),
-];
-
-
-
 export function DashBoardCategories(): ReactElement {
   const classes = useStyles();
   const { user, isAuthenticated, isLoading } = useAuth0();
@@ -91,6 +76,18 @@ export function DashBoardCategories(): ReactElement {
     isAuthenticated && user.email === "stiwarsg11@gmail.com";
   if (!isAdmind) navigate("/");
 
+  const categoryDetaild: Category[] = useAppSelector(selectCategory);
+  console.log(categoryDetaild)
+
+
+  function createData(id: number, name: string, edit: string, add: string, delet: string) {
+    return { id, name, edit, add, delet};
+  }
+  
+  const rows = categoryDetaild.map((category) =>
+  createData(category.id, category.typecategory, "", "", "")
+  );
+  
   return (
     <div>
       {isLoading ? (

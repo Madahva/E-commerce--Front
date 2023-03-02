@@ -1,14 +1,30 @@
 import React from "react";
 import Typography from "@mui/material/Typography";
 import type { ReactElement } from "react"
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
-import { makeStyles } from "@mui/styles";
 import HomeIcon from "@mui/icons-material/Home";
+import { withStyles,createStyles} from '@mui/styles';
+import Table from '@mui/material//Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import makeStyles from '@mui/styles/makeStyles';
+import editIcon from "../../assets/Icons/edit.jpg";
+import deleteIcon from "../../assets/Icons/delete.jpg";
+import { useAppSelector } from "../../redux/hooks";
+import { useEffect } from "react";
+import { useDispatch} from "react-redux";
+import { fetchProducts} from "../../redux/features/productSlice";
+import { RootState } from "../../redux/store";
+import { ThunkDispatch } from 'redux-thunk';
+import { AnyAction } from 'redux';
+
 
 const useStyles = makeStyles(() => ({
   navBar: {
@@ -33,6 +49,29 @@ const useStyles = makeStyles(() => ({
     padding: "0 5rem",
   },
 }));
+const StyledTableCell = withStyles(() =>
+  createStyles({
+    head: {
+      backgroundColor: "#1976d2",
+      color: "#fff",
+    },
+    body: {
+      fontSize: 14,
+    },
+  }),
+)(TableCell);
+
+const StyledTableRow = withStyles(() =>
+  createStyles({
+    root: {
+      '&:nth-of-type(odd)': {
+        backgroundColor: "#f5f5f5",
+      },
+    },
+  }),
+)(TableRow);
+
+type AppDispatch = ThunkDispatch<RootState, void, AnyAction>;
 
 export function DashBoardProducts(): ReactElement {
   const classes = useStyles();
@@ -42,33 +81,27 @@ export function DashBoardProducts(): ReactElement {
     isAuthenticated && user.email === "stiwarsg11@gmail.com";
   if (!isAdmind) navigate("/");
 
-  const squareStyles = {
-    height: "150px",
-    width: "100%",
-    borderRadius: "5px",
-    backgroundColor: "rgba(250,250,250,1)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    transition: "box-shadow 0.1s ease-in-out",
-    boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.3)",
-    cursor: "pointer",
-    margin: "10px",
-  };
+  const dispatch: AppDispatch = useDispatch();
+  
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, [dispatch]);
+  
+  const productDetaild = useAppSelector((state: RootState) => state.productReducer.productDetaild);
+  
 
-  const squareHoverStyles = {
-    boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.5)",
-  };
-
-  const handleMouseEnter = (event: any) => {
-    event.currentTarget.style.boxShadow = squareHoverStyles.boxShadow;
-  };
-
-  const handleMouseLeave = (event: any) => {
-    event.currentTarget.style.backgroundColor = squareStyles.backgroundColor;
-    event.currentTarget.style.boxShadow = squareStyles.boxShadow;
-  };
-
+  function createData(id: string, name: string, quantity: number, description: string, 
+                     price: any, rating: any, Marca: string, category_id: number,
+                     edit: string, delet: string) {
+    return { id, name, quantity, description, price, rating, Marca, category_id, edit, delet};
+  }
+  
+  const rows = productDetaild.map((product) =>
+  createData(product.id, product.name, product.quantity, product.description, product.price,
+             product.rating, product.Marca, product.category_id, "", "")
+  );
+  
+  
   return (
     <div>
       {isLoading ? (
@@ -102,6 +135,42 @@ export function DashBoardProducts(): ReactElement {
               Admin: {user.given_name}
             </Typography>
           </div>
+          <TableContainer component={Paper} style={{ width: '95%', margin: '3%', maxHeight: '180vh' }}>
+            <Table aria-label="customized table">
+                <TableHead>
+                <TableRow>
+                  <StyledTableCell>ID</StyledTableCell>
+                  <StyledTableCell align="right">Name</StyledTableCell>
+                  <StyledTableCell align="right">Quantity</StyledTableCell>
+                  <StyledTableCell align="right">Description</StyledTableCell>
+                  <StyledTableCell align="right">Price</StyledTableCell>
+                  <StyledTableCell align="right">Rating</StyledTableCell>
+                  <StyledTableCell align="right">Brand</StyledTableCell>
+                  <StyledTableCell align="right">Category_id</StyledTableCell>
+                  <StyledTableCell align="right">Edit</StyledTableCell>
+                  <StyledTableCell align="right">Delete</StyledTableCell>
+                </TableRow>
+                </TableHead>
+              <TableBody>
+                {rows.map((row) => (
+                  <StyledTableRow key={row.id}>
+                    <StyledTableCell component="th" scope="row">
+                    {row.id}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">{row.name}</StyledTableCell>
+                    <StyledTableCell align="right">{row.quantity}</StyledTableCell>
+                    <StyledTableCell align="right">{row.description}</StyledTableCell>
+                    <StyledTableCell align="right">{row.price}</StyledTableCell>
+                    <StyledTableCell align="right">{row.rating}</StyledTableCell>
+                    <StyledTableCell align="right">{row.Marca}</StyledTableCell>
+                    <StyledTableCell align="right">{row.category_id}</StyledTableCell>
+                    <StyledTableCell align="right"><Button><img src={editIcon} width="35" height="35"/></Button></StyledTableCell>
+                    <StyledTableCell align="right"><Button><img src={deleteIcon} width="35" height="35"/></Button></StyledTableCell>
+                  </StyledTableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </div>
       )}
     </div>
