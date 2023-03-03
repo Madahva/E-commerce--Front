@@ -1,0 +1,64 @@
+Este error ocurre porque el método dispatch espera que el argumento sea una acción de tipo AnyAction, 
+pero en tu código estás pasando una acción de tipo AsyncThunkAction<Product[], void, {}>.
+
+La solución es asegurarte de que el tipo de acción que estás pasando sea el correcto. En este caso,
+estás utilizando fetchProducts, que es un thunk asincrónico. Por lo tanto, debes importar el tipo de 
+acción ThunkDispatch en lugar de AsyncThunkAction desde la biblioteca @reduxjs/toolkit.
+
+Además, como ThunkDispatch es un tipo genérico, necesitarás pasar los tipos de la acción y el estado
+a la hora de declarar el tipo de tu dispatch y utilizar RootState en lugar de {} como tipo para el 
+estado en ThunkDispatch.
+
+type AppDispatch = ThunkDispatch<RootState, void, AnyAction>;
+
+export function DashBoardProducts(): ReactElement {
+  const classes = useStyles();
+  const { user, isAuthenticated, isLoading } = useAuth0();
+  const navigate = useNavigate();
+  const isAdmind: boolean =
+    isAuthenticated && user.email === "stiwarsg11@gmail.com";
+  if (!isAdmind) navigate("/");
+
+  const dispatch: AppDispatch = useDispatch();
+  
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, [dispatch]);
+  
+  const productDetaild = useAppSelector((state: RootState) => state.productReducer.productDetaild);
+
+
+Module '"react-redux"' has no exported member 'ThunkDispatch'.ts(2305)
+
+This error occurs because the ThunkDispatch type is not exported by the react-redux module. 
+Instead, it is exported by the redux-thunk package.
+
+To fix this error, you can install the redux-thunk package by running the following command:
+
+npm install redux-thunk
+
+
+
+Then, you can import the ThunkDispatch type from the redux-thunk package as follows:
+
+
+import { ThunkDispatch } from 'redux-thunk';
+import { AnyAction } from 'redux';
+import { fetchProducts } from '../../redux/features/productSlice';
+import { RootState } from '../../redux/store';
+
+type AppDispatch = ThunkDispatch<RootState, void, AnyAction>;
+
+interface Props {}
+
+export const DashboardProducts: React.FC<Props> = () => {
+  const dispatch: AppDispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, [dispatch]);
+
+
+By defining a AppDispatch type as a ThunkDispatch with the RootState and 
+AnyAction types, we can ensure that the dispatch function returned by 
+useDispatch can handle thunk actions that have a payload of RootState.

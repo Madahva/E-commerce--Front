@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Typography from "@mui/material/Typography";
 import type { ReactElement } from "react"
 import { Link } from "react-router-dom";
@@ -24,6 +24,9 @@ import { fetchProducts} from "../../redux/features/productSlice";
 import { RootState } from "../../redux/store";
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
+import { editProduct } from "../../redux/features/productSlice";
+import {DashEditProduct} from "../DashEditProduct/DashEditProduct"
+import Pagination from "../PaginationTable/PaginationTable"
 
 
 const useStyles = makeStyles(() => ({
@@ -100,7 +103,41 @@ export function DashBoardProducts(): ReactElement {
   createData(product.id, product.name, product.quantity, product.description, product.price,
              product.rating, product.Marca, product.category_id, "", "")
   );
-  
+  console.log(rows)
+  const [showTable, setShowTable] = useState(true);
+  const [name, setName] = useState("");
+  const [quantity, setQuantity] = useState(0);
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState(0);
+  const [brand, setBrand] = useState("");
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const indexOfLastProduct = (page + 1) * rowsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - rowsPerPage;
+  const currentProducts = rows.slice(indexOfFirstProduct, indexOfLastProduct);
+
+
+
+  const handleEditClick = (name: string, quantity: number, description: string, 
+    price: any,  brand: string) => {
+    setShowTable(false);
+    setName(name);
+    setQuantity(quantity);
+    setDescription(description);
+    setPrice(price);
+    setBrand(brand);
+  }
   
   return (
     <div>
@@ -135,6 +172,7 @@ export function DashBoardProducts(): ReactElement {
               Admin: {user.given_name}
             </Typography>
           </div>
+          {showTable ? (
           <TableContainer component={Paper} style={{ width: '95%', margin: '3%', maxHeight: '180vh' }}>
             <Table aria-label="customized table">
                 <TableHead>
@@ -152,7 +190,7 @@ export function DashBoardProducts(): ReactElement {
                 </TableRow>
                 </TableHead>
               <TableBody>
-                {rows.map((row) => (
+                {currentProducts.map((row) => (
                   <StyledTableRow key={row.id}>
                     <StyledTableCell component="th" scope="row">
                     {row.id}
@@ -164,15 +202,34 @@ export function DashBoardProducts(): ReactElement {
                     <StyledTableCell align="right">{row.rating}</StyledTableCell>
                     <StyledTableCell align="right">{row.Marca}</StyledTableCell>
                     <StyledTableCell align="right">{row.category_id}</StyledTableCell>
-                    <StyledTableCell align="right"><Button><img src={editIcon} width="35" height="35"/></Button></StyledTableCell>
+                    <StyledTableCell align="right"><Button onClick={() => handleEditClick(row.name, row.quantity,
+                       row.description,row.price,row.Marca)}>
+                      <img src={editIcon} width="35" height="35"/></Button></StyledTableCell>
                     <StyledTableCell align="right"><Button><img src={deleteIcon} width="35" height="35"/></Button></StyledTableCell>
                   </StyledTableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
+          ) : (
+            <div>
+              <DashEditProduct name={name} quantity={quantity} description={description} 
+              price={price} Marca={brand}/>
+            </div> 
+          )}
+          
+          <Pagination
+            rowsPerPage={rowsPerPage}
+            page={page}
+            count={rows.length}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+          />
+
         </div>
       )}
     </div>
   );
 }
+
+

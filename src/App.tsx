@@ -14,10 +14,11 @@ import { DashBoardProducts } from "./components/DashBoardProducts/DashBoardProdu
 import { DashBoardCategories } from "./components/DashBoardCategories/DashBoardCategories";
 const App = () => {
   const location = useLocation();
-
+  // &&  location.pathname !== "/dashboard-products" 
   return (
     <div>
-      {location.pathname !== "/dashboard" && <NavBar />}
+      {location.pathname !== "/dashboard" &&  location.pathname !== "/dashboard-products"
+      &&  location.pathname !== "/dashboard-categories" && <NavBar/>}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/:category" element={<ProductCatalog />} />

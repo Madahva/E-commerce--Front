@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, AsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, AsyncThunk, PayloadAction, } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { Product } from "../../types";
 
@@ -43,7 +43,17 @@ export const fetchProducts = createAsyncThunk<Product[], void>(
 const productSlice = createSlice({
   name: "product",
   initialState,
-  reducers: {},
+  reducers: {
+    editProduct: (state, action: PayloadAction<Product>) => {
+      const { id } = action.payload;
+      const productIndex = state.productDetaild.findIndex(
+        (product) => product.id === id
+      );
+      if (productIndex !== -1) {
+        state.productDetaild[productIndex] = action.payload;
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchProductByID.pending, (state) => {
@@ -51,13 +61,12 @@ const productSlice = createSlice({
       })
       .addCase(fetchProductByID.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.productDetaild =   action.payload;
+        state.productDetaild = action.payload;
       })
       .addCase(fetchProductByID.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })
-      //All products
       .addCase(fetchProducts.pending, (state) => {
         state.status = "loading";
       })
@@ -69,8 +78,10 @@ const productSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       });
+      ;
   },
 });
 
 export const selectProductDetailds = (state: RootState) => state.productReducer.productDetaild;
+export const { editProduct } = productSlice.actions;
 export default productSlice.reducer;

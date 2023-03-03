@@ -87,6 +87,7 @@ export function DashBoardCategories(): ReactElement {
   const rows = categoryDetaild.map((category) =>
   createData(category.id, category.typecategory, "", "", "")
   );
+  console.log(rows);
   
   return (
     <div>
