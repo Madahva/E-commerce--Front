@@ -1,6 +1,7 @@
 import { Button, Grid, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { Product } from "../../types";
+import { DashBoardProducts } from '../DashBoardProducts/DashBoardProducts';
 
 interface FormEditProps {
   name: string;
@@ -8,6 +9,9 @@ interface FormEditProps {
   description: string;
   price: any; 
   Marca: string; 
+  setIsCancel: (isTable: boolean) => void;
+  setIsCancel2: (isPaginated: boolean) => void;
+  
   // setName: (name: string) => void;
   // setIsEditing: (isEditing: boolean) => void;
 }
@@ -38,10 +42,17 @@ export function DashEditProduct(props: FormEditProps) {
     // props.setName(newNombre);
     // props.setIsEditing(false);
   }
+  // const [showTable, setShowTable] = useState(true);
+  // const [showPaginated, setshowPaginated] = useState(true);
+
+  const handleCancelClick = () => {
+    props.setIsCancel(true);
+    props.setIsCancel2(true);
+  };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Grid container spacing={2}>
+    <form onSubmit={handleSubmit} style={{ width: '95%', margin: '3%', maxHeight: '180vh' }}>
+      <Grid container spacing={2} >
         <Grid item xs={12}>
           <TextField
             id="name"
@@ -98,7 +109,7 @@ export function DashEditProduct(props: FormEditProps) {
       <Button variant="contained" color="primary" type="submit">
         Guardar
       </Button>
-      <Button variant="contained" color="secondary">
+      <Button variant="contained" color="secondary" onClick={handleCancelClick}>
         Cancelar
       </Button>
     </form>

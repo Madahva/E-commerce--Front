@@ -105,6 +105,7 @@ export function DashBoardProducts(): ReactElement {
   );
   console.log(rows)
   const [showTable, setShowTable] = useState(true);
+  const [showPaginated, setshowPaginated] = useState(true);
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState(0);
   const [description, setDescription] = useState("");
@@ -132,6 +133,7 @@ export function DashBoardProducts(): ReactElement {
   const handleEditClick = (name: string, quantity: number, description: string, 
     price: any,  brand: string) => {
     setShowTable(false);
+    setshowPaginated(false)
     setName(name);
     setQuantity(quantity);
     setDescription(description);
@@ -214,10 +216,10 @@ export function DashBoardProducts(): ReactElement {
           ) : (
             <div>
               <DashEditProduct name={name} quantity={quantity} description={description} 
-              price={price} Marca={brand}/>
+              price={price} Marca={brand} setIsCancel={setShowTable} setIsCancel2={setshowPaginated} />
             </div> 
           )}
-          
+           {showPaginated? (
           <Pagination
             rowsPerPage={rowsPerPage}
             page={page}
@@ -225,7 +227,9 @@ export function DashBoardProducts(): ReactElement {
             onChangePage={handleChangePage}
             onChangeRowsPerPage={handleChangeRowsPerPage}
           />
-
+           ):(
+            <div></div>
+           )}
         </div>
       )}
     </div>
