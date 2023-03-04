@@ -39,7 +39,7 @@ export function Dashboard(): ReactElement {
   const { user, isAuthenticated, isLoading } = useAuth0();
   const navigate = useNavigate();
   const isAdmind: boolean =
-    isAuthenticated && user.email === "galarzaguillermo.ggm@gmail.com";
+    isAuthenticated && user.email === "stiwarsg11@gmail.com";
   if (!isAdmind) navigate("/");
 
   const squareStyles = {
@@ -99,12 +99,13 @@ export function Dashboard(): ReactElement {
               noWrap
               sx={{ color: "white" }}
             >
-              Admind: {user.given_name}
+              Admin: {user.given_name}
             </Typography>
           </div>
           <Box className={classes.Box}>
             <Grid container spacing={3}>
               <Grid item xs={12} sm={4} md={3}>
+              <Link to="/dashboard-products">
                 <Typography
                   variant="h6"
                   style={squareStyles}
@@ -114,8 +115,10 @@ export function Dashboard(): ReactElement {
                 >
                   Products
                 </Typography>
+              </Link>
               </Grid>
               <Grid item xs={12} sm={4} md={3}>
+              <Link to="/dashboard-categories">
                 <Typography
                   variant="h6"
                   style={squareStyles}
@@ -125,8 +128,10 @@ export function Dashboard(): ReactElement {
                 >
                   Categories
                 </Typography>
+                </Link>
               </Grid>
               <Grid item xs={12} sm={4} md={3}>
+              <Link to="/">
                 <Typography
                   variant="h6"
                   color="#1976d2"
@@ -136,8 +141,10 @@ export function Dashboard(): ReactElement {
                 >
                   History
                 </Typography>
+              </Link>
               </Grid>
               <Grid item xs={12} sm={4} md={3}>
+              <Link to="/">
                 <Typography
                   variant="h6"
                   style={squareStyles}
@@ -147,6 +154,7 @@ export function Dashboard(): ReactElement {
                 >
                   Offers
                 </Typography>
+                </Link>
               </Grid>
             </Grid>
           </Box>
