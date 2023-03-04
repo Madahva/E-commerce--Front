@@ -40,6 +40,37 @@ export const fetchProducts = createAsyncThunk<Product[], void>(
   }
 );
 
+export const createNewProduct = createAsyncThunk<Product, Product>(
+  "product/createNewProduct",
+  async (newProduct) => {
+    const response = await fetch(productsURL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newProduct),
+    });
+    const data = await response.json();
+    return data;
+  }
+);
+// export const createNewProduct = createAsyncThunk<Product, Product>(
+//   "product/createNewProduct",
+//   async (updatedProduct) => {
+//     const { id } = updatedProduct;
+//     const response = await fetch(`${productsURL}${id}`, {
+//       method: "PATCH",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify(updatedProduct),
+//     });
+//     const data = await response.json();
+//     return data;
+//   }
+// );
+
+
 const productSlice = createSlice({
   name: "product",
   initialState,
@@ -77,8 +108,18 @@ const productSlice = createSlice({
       .addCase(fetchProducts.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
-      });
-      ;
+      })
+      .addCase(createNewProduct.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(createNewProduct.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.productDetaild.push(action.payload);
+      })
+      .addCase(createNewProduct.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
   },
 });
 

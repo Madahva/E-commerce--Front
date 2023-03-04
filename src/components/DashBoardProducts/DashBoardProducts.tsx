@@ -16,7 +16,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import makeStyles from '@mui/styles/makeStyles';
 import editIcon from "../../assets/Icons/edit.jpg";
-import deleteIcon from "../../assets/Icons/delete.jpg";
+import onIcon from "../../assets/Icons/on.jpg";
+import offIcon from "../../assets/Icons/off.jpg";
 import { useAppSelector } from "../../redux/hooks";
 import { useEffect } from "react";
 import { useDispatch} from "react-redux";
@@ -24,7 +25,7 @@ import { fetchProducts} from "../../redux/features/productSlice";
 import { RootState } from "../../redux/store";
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
-import { editProduct } from "../../redux/features/productSlice";
+// import { editProduct } from "../../redux/features/productSlice";
 import {DashEditProduct} from "../DashEditProduct/DashEditProduct"
 import Pagination from "../PaginationTable/PaginationTable"
 
@@ -89,23 +90,10 @@ export function DashBoardProducts(): ReactElement {
   useEffect(() => {
     dispatch(fetchProducts());
   }, [dispatch]);
-  
-  const productDetaild = useAppSelector((state: RootState) => state.productReducer.productDetaild);
-  
 
-  function createData(id: string, name: string, quantity: number, description: string, 
-                     price: any, rating: any, Marca: string, category_id: number,
-                     edit: string, delet: string) {
-    return { id, name, quantity, description, price, rating, Marca, category_id, edit, delet};
-  }
-  
-  const rows = productDetaild.map((product) =>
-  createData(product.id, product.name, product.quantity, product.description, product.price,
-             product.rating, product.Marca, product.category_id, "", "")
-  );
-  console.log(rows)
   const [showTable, setShowTable] = useState(true);
   const [showPaginated, setshowPaginated] = useState(true);
+  const [status, setStatus] = useState(onIcon);
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState(0);
   const [description, setDescription] = useState("");
@@ -114,6 +102,22 @@ export function DashBoardProducts(): ReactElement {
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  
+  const productDetaild = useAppSelector((state: RootState) => state.productReducer.productDetaild);
+  
+
+  function createData(id: string, name: string, quantity: number, description: string, 
+                     price: any, rating: any, Marca: string, category_id: number,
+                     edit: string, delet: string) {
+    return { id, name, quantity, description, price, rating, Marca, category_id, edit, delet:status};
+  }
+  
+  const rows = productDetaild.map((product) =>
+  createData(product.id, product.name, product.quantity, product.description, product.price,
+             product.rating, product.Marca, product.category_id, "", "")
+  );
+  console.log(rows)
+  
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -140,6 +144,26 @@ export function DashBoardProducts(): ReactElement {
     setPrice(price);
     setBrand(brand);
   }
+  
+  const handleCreateClick = () => {
+    navigate("/dashboard-create-products")
+  }
+
+  const handleDeletedLogicClick = (id: string, delet: string) => {
+    // const newStatus = status === onIcon ? offIcon : onIcon;
+    // setStatus(newStatus);
+    
+    const newStatus = delet === onIcon ? offIcon : onIcon;
+    const updatedRows = rows.map(r => {
+      if (r.id === id) {
+        return { ...r, delet: newStatus };
+      }
+      return r;
+    });
+    setStatus(updatedRows[0].delet);
+    
+  }
+
   
   return (
     <div>
@@ -207,7 +231,7 @@ export function DashBoardProducts(): ReactElement {
                     <StyledTableCell align="right"><Button onClick={() => handleEditClick(row.name, row.quantity,
                        row.description,row.price,row.Marca)}>
                       <img src={editIcon} width="35" height="35"/></Button></StyledTableCell>
-                    <StyledTableCell align="right"><Button><img src={deleteIcon} width="35" height="35"/></Button></StyledTableCell>
+                    <StyledTableCell align="right"><Button onClick={()=>handleDeletedLogicClick(row.id,row.delet)}><img src={row.delet} width="35" height="35"/></Button></StyledTableCell>
                   </StyledTableRow>
                 ))}
               </TableBody>
@@ -219,14 +243,17 @@ export function DashBoardProducts(): ReactElement {
               price={price} Marca={brand} setIsCancel={setShowTable} setIsCancel2={setshowPaginated} />
             </div> 
           )}
-           {showPaginated? (
-          <Pagination
+          {showPaginated? (
+          <div>
+            <Button onClick={() => handleCreateClick()}>Create</Button>
+            <Pagination
             rowsPerPage={rowsPerPage}
             page={page}
             count={rows.length}
             onChangePage={handleChangePage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
-          />
+            onChangeRowsPerPage={handleChangeRowsPerPage}  
+            />
+          </div>
            ):(
             <div></div>
            )}

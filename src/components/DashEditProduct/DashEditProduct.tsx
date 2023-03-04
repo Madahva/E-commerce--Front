@@ -2,6 +2,11 @@ import { Button, Grid, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { Product } from "../../types";
 import { DashBoardProducts } from '../DashBoardProducts/DashBoardProducts';
+// import  editProduct  from "../../redux/features/productActions";
+import { useDispatch} from "react-redux";
+import { AnyAction } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
+
 
 interface FormEditProps {
   name: string;
@@ -45,9 +50,18 @@ export function DashEditProduct(props: FormEditProps) {
   // const [showTable, setShowTable] = useState(true);
   // const [showPaginated, setshowPaginated] = useState(true);
 
+  // type AppDispatch = ThunkDispatch<RootState, void, AnyAction>;
+  // const dispatch: AppDispatch = useDispatch();
   const handleCancelClick = () => {
     props.setIsCancel(true);
     props.setIsCancel2(true);
+    // const editedProduct = {
+    //   name,
+    //   description,
+    //   price,
+    //   brand,
+    // };
+    // dispatch(editProduct(editedProduct));
   };
 
   return (
