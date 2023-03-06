@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { selectProductDetailds } from "../../redux/features/productSlice";
 import { fetchPayment, selectPayment } from "../../redux/features/paymentSlice";
@@ -13,6 +14,8 @@ import Button from "@mui/material/Button";
 import { Breadcrumbs, Typography } from "@mui/material";
 import { AddShoppingCart } from "@mui/icons-material";
 import { Box } from "@mui/system";
+import { Snackbar } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 
 const useStyles = makeStyles((theme) => ({
   detailsPage: {
@@ -65,6 +68,10 @@ const DetailsPage: React.FC = () => {
     var product = productDetaild[0];
   }
 
+  const [showSnackbar, setShowSnackbar] = useState(false);
+
+  const { isAuthenticated } = useAuth0();
+
   const dispatch = useAppDispatch();
   const response = useAppSelector(selectPayment);
   console.log(response);
@@ -86,21 +93,35 @@ const DetailsPage: React.FC = () => {
   };
 
   const handleBuy = (name: string, price: string) => {
-    dispatch(
-      fetchPayment([
-        {
-          title: name,
-          quantity: 1,
-          unit_price: parseInt(price),
-        },
-      ])
-    );
+    if (isAuthenticated) {
+      dispatch(
+        fetchPayment([
+          {
+            title: name,
+            quantity: 1,
+            unit_price: parseInt(price),
+          },
+        ])
+      );
+    } else {
+      setShowSnackbar(true);
+    }
   };
 
   return (
     <div>
       {product ? (
         <div className={classes.detailsPage}>
+          <Snackbar
+            open={showSnackbar}
+            autoHideDuration={5000}
+            onClose={() => setShowSnackbar(false)}
+          >
+            <Alert severity="warning" onClose={() => setShowSnackbar(false)}>
+              You must be logged in to make a purchase.
+            </Alert>
+          </Snackbar>
+
           <Breadcrumbs aria-label="breadcrumb">
             <Link className={classes.link} to="/">
               Categories

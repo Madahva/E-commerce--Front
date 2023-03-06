@@ -16,6 +16,9 @@ import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import HomeIcon from "@mui/icons-material/Home";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { Snackbar } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 
 const useStyles = makeStyles((theme) => ({
   navBarContainer: {
@@ -115,6 +118,7 @@ const NavBar = () => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchValue, setSearchValue] = useState<string>("");
+  const [showSnackbar, setShowSnackbar] = useState(false);
   const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
   const isAdmind: boolean =
     isAuthenticated && user.email === "stiwarsg11@gmail.com";
@@ -152,8 +156,16 @@ const NavBar = () => {
     setSearchValue(event.target.value);
   };
 
+  const handleBuyButton = () => {
+    if (isAuthenticated) {
+      dispatch(fetchPayment(shoppingCart));
+    } else {
+      setShowSnackbar(true);
+    }
+  };
+
   const shoppingCart = useAppSelector(selectShoppingCartItems);
-  console.log(shoppingCart)
+  console.log(shoppingCart);
   return (
     <div className={classes.navBarContainer}>
       <div className={classes.navBar}>
@@ -194,6 +206,18 @@ const NavBar = () => {
                 shoppingCart.map((item: any, index: number) => {
                   return (
                     <div className={classes.item_container} key={index}>
+                      <Snackbar
+                        open={showSnackbar}
+                        autoHideDuration={5000}
+                        onClose={() => setShowSnackbar(false)}
+                      >
+                        <Alert
+                          severity="warning"
+                          onClose={() => setShowSnackbar(false)}
+                        >
+                          You must be logged in to make a purchase.
+                        </Alert>
+                      </Snackbar>
                       <Typography>{item.title}</Typography>
                       <Typography>${item.unit_price}</Typography>
                       <Button
@@ -201,7 +225,7 @@ const NavBar = () => {
                         style={{ backgroundColor: "red" }}
                         onClick={() => dispatch(removeItem(item.id))}
                       >
-                        Delete
+                        <DeleteOutlineIcon />
                       </Button>
                     </div>
                   );
@@ -219,7 +243,7 @@ const NavBar = () => {
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={() => dispatch(fetchPayment(shoppingCart))}
+                  onClick={handleBuyButton}
                 >
                   Buy all
                 </Button>

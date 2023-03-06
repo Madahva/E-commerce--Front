@@ -8,6 +8,8 @@ const filterCategoryURL: string =
 const searchURL: string =
   "https://e-commerce-back-production-848f.up.railway.app/filters/name?name=";
 
+const storedFilteredProducts = localStorage.getItem("filteredProducts");
+
 interface filterState {
   product: Product[];
   filteredProducts: Product[];
@@ -17,7 +19,9 @@ interface filterState {
 
 const initialState: filterState = {
   product: [],
-  filteredProducts: [],
+  filteredProducts: storedFilteredProducts
+    ? JSON.parse(storedFilteredProducts)
+    : [],
   status: "idle",
   error: null,
 };
