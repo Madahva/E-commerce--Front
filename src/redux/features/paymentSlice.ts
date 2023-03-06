@@ -20,12 +20,13 @@ const initialState: paymentState = {
 export const fetchPayment = createAsyncThunk(
   "payment/fetchPayment",
   async (paymentData: any) => {
+    console.log(paymentData)
     const response = await fetch(paymentURL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify([paymentData]),
+      body: JSON.stringify(paymentData),
     });
     return (await response.json()) as any;
   }

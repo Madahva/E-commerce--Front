@@ -5,7 +5,6 @@ import NavBar from "./components/NavBar/NavBar";
 import Home from "./components/Home/Home";
 import ProductCatalog from "./components/ProductCatalog/ProductCatalog";
 import DetailsPage from "./components/DetailsPage/DetailsPage";
-import ShoppingCart from "./components/ShoppingCart/ShoppingCart";
 import Footer from "./components/Footer/Footer";
 import Login from "./components/Login/Login";
 import SignUp from "./components/SignUp/SignUp";
@@ -27,7 +26,6 @@ const App = () => {
         <Route path="/log-in" element={<Login />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/:category/:id" element={<DetailsPage />} />
-        <Route path="/shoppingCart" element={<ShoppingCart />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dashboard-products" element={<DashBoardProducts />} />
         <Route path="/dashboard-categories" element={<DashBoardCategories />} />

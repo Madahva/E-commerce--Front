@@ -2,6 +2,10 @@ import React, { useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { selectProductDetailds } from "../../redux/features/productSlice";
 import { fetchPayment, selectPayment } from "../../redux/features/paymentSlice";
+import {
+  addItem,
+  selectShoppingCartItems,
+} from "../../redux/features/shoppingCartSlice";
 import { Product } from "../../types";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
@@ -59,26 +63,37 @@ const DetailsPage: React.FC = () => {
   const productDetaild: Product[] = useAppSelector(selectProductDetailds);
   if (productDetaild[0]) {
     var product = productDetaild[0];
-    console.log(product);
   }
 
   const dispatch = useAppDispatch();
   const response = useAppSelector(selectPayment);
-  console.log(response?.init_point);
-
+  console.log(response);
   useEffect(() => {
     if (response?.init_point) {
       window.location.href = response.init_point;
     }
   }, [response]);
 
-  const handleBuy = (name: string, price: string) => {
+  const handleAddToShoppingCart = (name: any, id: any, price: any) => {
     dispatch(
-      fetchPayment({
+      addItem({
         title: name,
+        id,
         quantity: 1,
         unit_price: parseInt(price),
       })
+    );
+  };
+
+  const handleBuy = (name: string, price: string) => {
+    dispatch(
+      fetchPayment([
+        {
+          title: name,
+          quantity: 1,
+          unit_price: parseInt(price),
+        },
+      ])
     );
   };
 
@@ -112,7 +127,17 @@ const DetailsPage: React.FC = () => {
                   <p>{product.Marca}</p>
                   <p>{product.price}</p>
                 </div>
-                <Button variant="contained" color="primary">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    handleAddToShoppingCart(
+                      product.name,
+                      product.id,
+                      product.price
+                    );
+                  }}
+                >
                   <AddShoppingCart />
                   Add to cart
                 </Button>

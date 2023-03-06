@@ -1,10 +1,15 @@
 import React, { useState } from "react";
-import { useAppDispatch } from "../../redux/hooks";
-import { fetchBySearch } from "../../redux/features/filterSlice"
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { fetchBySearch } from "../../redux/features/filterSlice";
+import {
+  selectShoppingCartItems,
+  removeItem,
+} from "../../redux/features/shoppingCartSlice";
+import { fetchPayment } from "../../redux/features/paymentSlice";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
-import { Button, Input, Link } from "@mui/material";
+import { Button, Input, Link, Modal, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -71,12 +76,44 @@ const useStyles = makeStyles((theme) => ({
       width: "15rem",
     },
   },
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  paper: {
+    backgroundColor: "white",
+    border: "2px solid #000",
+    padding: "2rem",
+    width: 400,
+    height: 400,
+    overflow: "auto",
+    display: "flex",
+    flexDirection: "column",
+    gap: "2rem",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  closeButton: {
+    position: "absolute",
+    top: "2rem",
+  },
+  buyButton: {
+    position: "absolute",
+    bottom: "2rem",
+  },
+  item_container: {
+    alignItems: "center",
+    display: "flex",
+    justifyContent: "space-between",
+    width: "100%",
+  },
 }));
 
 const NavBar = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchValue, setSearchValue] = useState<string>("");
   const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
   const isAdmind: boolean =
@@ -86,8 +123,8 @@ const NavBar = () => {
     navigate("/");
   };
 
-  const goToCart = () => {
-    navigate("/shoppingCart");
+  const handleShoppingCart = () => {
+    setIsModalOpen(true);
   };
 
   const goToDashboard = () => {
@@ -115,6 +152,8 @@ const NavBar = () => {
     setSearchValue(event.target.value);
   };
 
+  const shoppingCart = useAppSelector(selectShoppingCartItems);
+  console.log(shoppingCart)
   return (
     <div className={classes.navBarContainer}>
       <div className={classes.navBar}>
@@ -142,11 +181,51 @@ const NavBar = () => {
               {showBtn ? <CloseIcon /> : <MenuIcon />}
             </Button>
           ) : null}
-          <Link onClick={goToCart}>
-            <Button>
-              <ShoppingCartOutlinedIcon />
-            </Button>
-          </Link>
+          <Button onClick={handleShoppingCart}>
+            <ShoppingCartOutlinedIcon />
+          </Button>
+          <Modal
+            open={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            className={classes.modal}
+          >
+            <div className={classes.paper}>
+              {shoppingCart &&
+                shoppingCart.map((item: any, index: number) => {
+                  return (
+                    <div className={classes.item_container} key={index}>
+                      <Typography>{item.title}</Typography>
+                      <Typography>${item.unit_price}</Typography>
+                      <Button
+                        variant="contained"
+                        style={{ backgroundColor: "red" }}
+                        onClick={() => dispatch(removeItem(item.id))}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  );
+                })}
+              <div className={classes.closeButton}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => setIsModalOpen(false)}
+                >
+                  Close
+                </Button>
+              </div>
+              <div className={classes.buyButton}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => dispatch(fetchPayment(shoppingCart))}
+                >
+                  Buy all
+                </Button>
+              </div>
+            </div>
+          </Modal>
         </div>
       </div>
       {showBtn && (
