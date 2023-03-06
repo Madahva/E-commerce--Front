@@ -38,6 +38,8 @@ const useStyles = makeStyles(() => ({
   priceFilter: {
     transition: "all ease-in .3s",
     pointer: "cursor",
+      color: "#555",
+    boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
     minWidth: "120px",
     "&:hover": {
       transform: "scale(1.1)",
