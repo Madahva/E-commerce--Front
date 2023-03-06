@@ -1,6 +1,7 @@
-import React from "react";
-import { useAppSelector } from "../../redux/hooks";
+import React, { useEffect } from "react";
+import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { selectProductDetailds } from "../../redux/features/productSlice";
+import { fetchPayment, selectPayment } from "../../redux/features/paymentSlice";
 import { Product } from "../../types";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
@@ -61,6 +62,26 @@ const DetailsPage: React.FC = () => {
     console.log(product);
   }
 
+  const dispatch = useAppDispatch();
+  const response = useAppSelector(selectPayment);
+  console.log(response?.init_point);
+
+  useEffect(() => {
+    if (response?.init_point) {
+      window.location.href = response.init_point;
+    }
+  }, [response]);
+
+  const handleBuy = (name: string, price: string) => {
+    dispatch(
+      fetchPayment({
+        title: name,
+        quantity: 1,
+        unit_price: parseInt(price),
+      })
+    );
+  };
+
   return (
     <div>
       {product ? (
@@ -98,6 +119,9 @@ const DetailsPage: React.FC = () => {
 
                 <Button
                   variant="contained"
+                  onClick={() => {
+                    handleBuy(product.name, product.price);
+                  }}
                   style={{ backgroundColor: "#4CAF50", marginLeft: "2rem" }}
                 >
                   Buy

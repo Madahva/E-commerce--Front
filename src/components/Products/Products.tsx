@@ -8,10 +8,8 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import ButtonBase from "@mui/material/ButtonBase";
-import Button from "@mui/material/Button";
 import { makeStyles } from "@mui/styles";
 import { styled } from "@mui/material/styles";
-import { AddShoppingCart } from "@mui/icons-material";
 
 interface ProductsProps {
   categorieSeccion: string;

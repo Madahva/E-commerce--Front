@@ -3,6 +3,7 @@ import categoryReducer from "./features/categorySlice";
 import productReducer from "./features/productSlice"
 import userReducer from "./features/userSlice"
 import filterReducer from "./features/filterSlice"
+import paymentReducer from "./features/paymentSlice"
 
 export const store = configureStore({
   reducer: { 
@@ -10,6 +11,7 @@ export const store = configureStore({
     productReducer,
     userReducer,
     filterReducer,
+    paymentReducer,
   }
 });
 
