@@ -1,4 +1,4 @@
-import { Button, FormControl, Grid, Input, InputLabel, OutlinedInput, TextField } from '@mui/material';
+import { Button, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
 import React, { useState } from 'react';
 import Typography from "@mui/material/Typography";
 import type { ReactElement } from "react"
@@ -7,7 +7,8 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
 import makeStyles from '@mui/styles/makeStyles';
-import { Product } from "../../types";
+import { ProductCreate } from "../../types";
+import { Category } from "../../types";
 import { DashBoardProducts } from '../DashBoardProducts/DashBoardProducts';
 // import  editProduct  from "../../redux/features/productActions";
 import { useDispatch} from "react-redux";
@@ -16,6 +17,9 @@ import { ThunkDispatch } from 'redux-thunk';
 import { createNewProduct } from '../../redux/features/productSlice';
 import { RootState } from '../../redux/store';
 import validations from './Validations';
+import { Container, FormGroup, Input } from "@mui/material";
+import { SelectChangeEvent } from '@mui/material/Select';
+import { useAppSelector } from "../../redux/hooks";
 
 interface ProductError {
   name: string;
@@ -25,6 +29,77 @@ interface ProductError {
   Marca: string;
 }
 
+interface Brand {
+  id: number;
+  name: string;
+}
+
+const brands: Brand[] = [
+  {
+    id: 1,
+    name: 'AMD',
+  },
+  {
+    id: 2,
+    name: 'BGH',
+  },
+  {
+    id: 3,
+    name: 'DELL',
+  },
+  {
+    id: 4,
+    name: 'Electrolux',
+  },
+  {
+    id: 5,
+    name: 'HP',
+  },
+  {
+    id: 6,
+    name: 'Huawei',
+  },
+  {
+    id: 7,
+    name: 'Lenovo',
+  },
+  {
+    id: 8,
+    name: 'LG',
+  },
+  {
+    id: 9,
+    name: 'Logitech',
+  },
+  {
+    id: 10,
+    name: 'Noblex',
+  },
+  {
+    id: 11,
+    name: 'Nokia',
+  },
+  {
+    id: 12,
+    name: 'Philco',
+  },
+  {
+    id: 13,
+    name: 'Philips',
+  },
+  {
+    id: 14,
+    name: 'Samsung',
+  },
+  {
+    id: 15,
+    name: 'Sony',
+  },
+  {
+    id: 16,
+    name: 'Xiaomi',
+  },
+];
 const useStyles = makeStyles(() => ({
   navBar: {
     alignItems: "center",
@@ -66,17 +141,20 @@ export function DashCreateProduct(): ReactElement {
     isAuthenticated && user.email === "stiwarsg11@gmail.com";
   if (!isAdmind) navigate("/");
 
-  const [id, ] = useState("ghfdgf112312");
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState(0);
   const [description, setDescription] = useState("");
-  const [img, ] = useState("");
   const [price, setPrice] = useState(0);
   const [deleted, ] = useState(false);
-  const [rating, ] = useState(0);
+  const [rating, ] = useState(4);
   const [Marca, setBrand] = useState("");
-  const [category_id, ] = useState(1);
+  const [category, setCategory] = useState("");
+  const [category_id, setCategoryID] = useState(0);
   const [errors, setErrors] = useState({});
+
+  const allCategories = useAppSelector((state: RootState) => state.categoryReducer.categories);
+
+  console.log(allCategories)
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
@@ -90,10 +168,40 @@ export function DashCreateProduct(): ReactElement {
   const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPrice(Number(event.target.value));
   }
-  const handleBrandChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBrandChange = (event: SelectChangeEvent<string>, child: React.ReactNode) => {
     setBrand(event.target.value);
   }
+  const handleCategoryChange = (event: SelectChangeEvent<string>, child: React.ReactNode) => {
+    const categoryType = event.target.value;
+    const selectedCategory = allCategories.find((c) => c.typecategory === categoryType);
   
+    if (selectedCategory) {
+      setCategoryID(selectedCategory.id);
+      setCategory(categoryType);
+      console.log(selectedCategory.id)
+    }
+  }
+
+  //Cloudinary
+  const [img, setImage] = useState("");
+  const [loading, setLoading] = useState(false);
+  
+  const upload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files[0];
+    const data = new FormData();
+    data.append("file",files)
+    data.append("upload_preset", "products");
+    setLoading(true)
+    const res = await fetch(`https://api.cloudinary.com/v1_1/dqkucfw4m/image/upload`, 
+        { method: "POST", body: data })
+      
+    const img_url = await res.json();
+    console.log(res)
+    setImage(img_url.secure_url)
+    console.log(img_url.secure_url)
+    setLoading(false)
+  };
+  //////////////////
   const dispatch: AppDispatch = useDispatch();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -105,15 +213,12 @@ export function DashCreateProduct(): ReactElement {
       price: price,
       Marca: Marca,
     }
-    
     setErrors(validations(product));
-      
-    const newProduct: Product = { id, name, quantity, description, img, price, deleted,rating, Marca, category_id};
+    const newProduct: ProductCreate = { name, quantity, description, img, price, deleted,rating, Marca, category_id};
     console.log(newProduct)
     dispatch(createNewProduct(newProduct));
     alert("Product has been created successfully!");
   };
-  
   
   return (
     <div>
@@ -147,6 +252,23 @@ export function DashCreateProduct(): ReactElement {
             >
               Admin: {user.given_name}
             </Typography>
+          </div>
+          <div>
+            <Container>
+                <h1 style = {{marginLeft: "-15px"}}>
+                    Upload Imagen
+                </h1>
+                {loading?(<h3>Loading Imagen...</h3>):(<img src = {img} style = {{width: "300px", marginLeft: "-15px"}}/>)}
+            </Container>
+             <FormGroup>
+              <Input
+                    type = "file"
+                    name = "file"
+                    placeholder = "Choose your product"
+                    onChange = {upload}
+                    style = {{width: "157px" , marginLeft: "40px"}}
+              />
+            </FormGroup>
           </div>
           <form onSubmit={handleSubmit} style={{ width: '95%', margin: '3%', maxHeight: '180vh' }}>
             
@@ -199,12 +321,45 @@ export function DashCreateProduct(): ReactElement {
                 <Grid item xs={12}>
                   <FormControl fullWidth variant="outlined">
                   <InputLabel htmlFor="brand">Brand</InputLabel>
-                  <OutlinedInput
+                  <Select
+                    value={Marca}
+                    onChange={handleBrandChange}
+                    displayEmpty
+                  >
+                  <MenuItem value='' disabled>
+                  Brand
+                  </MenuItem>
+                  {brands?.map((b) => (
+                    <MenuItem key={b.name} value={b.name}>
+                    {b.name.toUpperCase()}
+                    </MenuItem>
+                  ))}
+                  </Select>
+                  {/* <OutlinedInput
                     id="brand"
                     value={Marca}
                     onChange={handleBrandChange}
                     fullWidth
-                  />
+                  /> */}
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12}>
+                  <FormControl fullWidth variant="outlined">
+                  <InputLabel htmlFor="category">Category</InputLabel>
+                  <Select
+                    value={category}
+                    onChange={handleCategoryChange}
+                    displayEmpty
+                  >
+                  <MenuItem value='' disabled>
+                  Category
+                  </MenuItem>
+                  {allCategories?.map((c) => (
+                    <MenuItem key={c.id} value={c.typecategory}>
+                    {c.typecategory.toUpperCase()}
+                    </MenuItem>
+                  ))}
+                  </Select>
                   </FormControl>
                 </Grid>
               </Grid>

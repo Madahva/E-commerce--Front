@@ -244,8 +244,8 @@ export function DashBoardProducts(): ReactElement {
             </div> 
           )}
           {showPaginated? (
-          <div>
-            <Button onClick={() => handleCreateClick()}>Create</Button>
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Button variant="contained" color="primary" onClick={() => handleCreateClick()}>Create new product</Button>
             <Pagination
             rowsPerPage={rowsPerPage}
             page={page}

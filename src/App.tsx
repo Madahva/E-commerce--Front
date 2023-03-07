@@ -13,9 +13,9 @@ import { Dashboard } from "./components/Dashboard/Dashboard";
 import { DashBoardProducts } from "./components/DashBoardProducts/DashBoardProducts";
 import { DashBoardCategories } from "./components/DashBoardCategories/DashBoardCategories";
 import { DashCreateProduct } from "./components/DashCreateProduct/DashCreateProduct";
+// import { CloudinaryUpload} from "./components/Cloudinary/Cloudinary";
 const App = () => {
   const location = useLocation();
-  // &&  location.pathname !== "/dashboard-products" 
   return (
     <div>
       {location.pathname !== "/dashboard" &&  location.pathname !== "/dashboard-products"
@@ -31,6 +31,7 @@ const App = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dashboard-products" element={<DashBoardProducts />} />
         <Route path="/dashboard-categories" element={<DashBoardCategories />} />
+        {/* <Route path="/dashboard-create-products" element={<CloudinaryUpload />} /> */}
         <Route path="/dashboard-create-products" element={<DashCreateProduct />} />
 
       </Routes>
