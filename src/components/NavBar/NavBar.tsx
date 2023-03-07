@@ -109,6 +109,7 @@ const useStyles = makeStyles((theme) => ({
   item_container: {
     alignItems: "center",
     display: "flex",
+    borderBottom: "1px solid #ccc",
     justifyContent: "space-between",
     width: "100%",
   },
