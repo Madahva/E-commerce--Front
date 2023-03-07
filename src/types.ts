@@ -1,5 +1,5 @@
 export interface Category {
-  id: number,
+  id: any,
   typecategory: string
 }
 

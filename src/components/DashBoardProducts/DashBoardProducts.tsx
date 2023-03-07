@@ -164,7 +164,7 @@ export function DashBoardProducts(): ReactElement {
     
   }
 
-  
+  const allCategories = useAppSelector((state: RootState) => state.categoryReducer.categories);
   return (
     <div>
       {isLoading ? (
@@ -210,7 +210,7 @@ export function DashBoardProducts(): ReactElement {
                   <StyledTableCell align="right">Price</StyledTableCell>
                   <StyledTableCell align="right">Rating</StyledTableCell>
                   <StyledTableCell align="right">Brand</StyledTableCell>
-                  <StyledTableCell align="right">Category_id</StyledTableCell>
+                  <StyledTableCell align="right">Category</StyledTableCell>
                   <StyledTableCell align="right">Edit</StyledTableCell>
                   <StyledTableCell align="right">Delete</StyledTableCell>
                 </TableRow>
@@ -227,7 +227,11 @@ export function DashBoardProducts(): ReactElement {
                     <StyledTableCell align="right">{row.price}</StyledTableCell>
                     <StyledTableCell align="right">{row.rating}</StyledTableCell>
                     <StyledTableCell align="right">{row.Marca}</StyledTableCell>
-                    <StyledTableCell align="right">{row.category_id}</StyledTableCell>
+                    {allCategories.map((c) =>
+                        c.id === row.category_id ? (
+                        <StyledTableCell align="right">{c.typecategory}</StyledTableCell>
+                        ) : null
+                    )}
                     <StyledTableCell align="right"><Button onClick={() => handleEditClick(row.name, row.quantity,
                        row.description,row.price,row.Marca)}>
                       <img src={editIcon} width="35" height="35"/></Button></StyledTableCell>
