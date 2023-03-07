@@ -1,7 +1,7 @@
 import React from "react";
 import Typography from "@mui/material/Typography";
-import type { ReactElement } from "react"
 import Grid from "@mui/material/Grid";
+import type { ReactElement } from "react"
 import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -38,8 +38,11 @@ export function Dashboard(): ReactElement {
   const classes = useStyles();
   const { user, isAuthenticated, isLoading } = useAuth0();
   const navigate = useNavigate();
+
   const isAdmind: boolean =
-    isAuthenticated && user.email === "stiwarsg11@gmail.com";
+    isAuthenticated &&
+    (user.email === process.env.REACT_APP_EMAIL_ADMIN_1 ||
+      user.email === process.env.REACT_APP_EMAIL_ADMIN_2);
   if (!isAdmind) navigate("/");
 
   const squareStyles = {
@@ -105,55 +108,55 @@ export function Dashboard(): ReactElement {
           <Box className={classes.Box}>
             <Grid container spacing={3}>
               <Grid item xs={12} sm={4} md={3}>
-              <Link to="/dashboard-products">
-                <Typography
-                  variant="h6"
-                  style={squareStyles}
-                  color="#1976d2"
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  Products
-                </Typography>
-              </Link>
-              </Grid>
-              <Grid item xs={12} sm={4} md={3}>
-              <Link to="/dashboard-categories">
-                <Typography
-                  variant="h6"
-                  style={squareStyles}
-                  color="#1976d2"
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  Categories
-                </Typography>
+                <Link to="/dashboard-products">
+                  <Typography
+                    variant="h6"
+                    style={squareStyles}
+                    color="#1976d2"
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                  >
+                    Products
+                  </Typography>
                 </Link>
               </Grid>
               <Grid item xs={12} sm={4} md={3}>
-              <Link to="/">
-                <Typography
-                  variant="h6"
-                  color="#1976d2"
-                  style={squareStyles}
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  History
-                </Typography>
-              </Link>
+                <Link to="/dashboard-categories">
+                  <Typography
+                    variant="h6"
+                    style={squareStyles}
+                    color="#1976d2"
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                  >
+                    Categories
+                  </Typography>
+                </Link>
               </Grid>
               <Grid item xs={12} sm={4} md={3}>
-              <Link to="/">
-                <Typography
-                  variant="h6"
-                  style={squareStyles}
-                  color="#1976d2"
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  Offers
-                </Typography>
+                <Link to="/">
+                  <Typography
+                    variant="h6"
+                    color="#1976d2"
+                    style={squareStyles}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                  >
+                    History
+                  </Typography>
+                </Link>
+              </Grid>
+              <Grid item xs={12} sm={4} md={3}>
+                <Link to="/">
+                  <Typography
+                    variant="h6"
+                    style={squareStyles}
+                    color="#1976d2"
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                  >
+                    Offers
+                  </Typography>
                 </Link>
               </Grid>
             </Grid>

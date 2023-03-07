@@ -3,10 +3,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { selectProductDetailds } from "../../redux/features/productSlice";
 import { fetchPayment, selectPayment } from "../../redux/features/paymentSlice";
-import {
-  addItem,
-  selectShoppingCartItems,
-} from "../../redux/features/shoppingCartSlice";
+import { addItem } from "../../redux/features/shoppingCartSlice";
 import { Product } from "../../types";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
@@ -16,6 +13,7 @@ import { AddShoppingCart } from "@mui/icons-material";
 import { Box } from "@mui/system";
 import { Snackbar } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
   detailsPage: {
@@ -69,7 +67,8 @@ const DetailsPage: React.FC = () => {
   }
 
   const [showSnackbar, setShowSnackbar] = useState(false);
-
+  const [showSuccestMsg, setShowSuccestMsg] = useState(false);
+  const [showBuying, setShowBuying] = useState(false);
   const { isAuthenticated } = useAuth0();
 
   const dispatch = useAppDispatch();
@@ -90,6 +89,7 @@ const DetailsPage: React.FC = () => {
         unit_price: parseInt(price),
       })
     );
+    setShowSuccestMsg(true);
   };
 
   const handleBuy = (name: string, price: string) => {
@@ -103,6 +103,7 @@ const DetailsPage: React.FC = () => {
           },
         ])
       );
+      setShowBuying(true);
     } else {
       setShowSnackbar(true);
     }
@@ -119,6 +120,16 @@ const DetailsPage: React.FC = () => {
           >
             <Alert severity="warning" onClose={() => setShowSnackbar(false)}>
               You must be logged in to make a purchase.
+            </Alert>
+          </Snackbar>
+
+          <Snackbar
+            open={showSuccestMsg}
+            autoHideDuration={5000}
+            onClose={() => setShowSuccestMsg(false)}
+          >
+            <Alert severity="success" onClose={() => setShowSuccestMsg(false)}>
+              Product added to cart!
             </Alert>
           </Snackbar>
 
@@ -170,7 +181,7 @@ const DetailsPage: React.FC = () => {
                   }}
                   style={{ backgroundColor: "#4CAF50", marginLeft: "2rem" }}
                 >
-                  Buy
+                  {showBuying ? (<CircularProgress />):"Buy"}
                 </Button>
               </div>
             </div>

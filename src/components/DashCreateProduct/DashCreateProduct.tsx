@@ -63,7 +63,10 @@ export function DashCreateProduct(): ReactElement {
   const { user, isAuthenticated, isLoading } = useAuth0();
   const navigate = useNavigate();
   const isAdmind: boolean =
-    isAuthenticated && user.email === "stiwarsg11@gmail.com";
+    isAuthenticated &&
+    (user.email === process.env.REACT_APP_EMAIL_ADMIN_1 ||
+      user.email === process.env.REACT_APP_EMAIL_ADMIN_2);
+
   if (!isAdmind) navigate("/");
 
   const [id, ] = useState("ghfdgf112312");

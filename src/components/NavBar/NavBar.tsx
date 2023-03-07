@@ -19,6 +19,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { Snackbar } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles((theme) => ({
   navBarContainer: {
@@ -86,8 +87,8 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     backgroundColor: "white",
-    border: "2px solid #000",
     padding: "2rem",
+    boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
     width: 400,
     height: 400,
     overflow: "auto",
@@ -119,9 +120,12 @@ const NavBar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchValue, setSearchValue] = useState<string>("");
   const [showSnackbar, setShowSnackbar] = useState(false);
+  const [showBuying, setShowBuying] = useState(false);
   const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
   const isAdmind: boolean =
-    isAuthenticated && user.email === "stiwarsg11@gmail.com";
+    isAuthenticated &&
+    (user.email === process.env.REACT_APP_EMAIL_ADMIN_1 ||
+      user.email === process.env.REACT_APP_EMAIL_ADMIN_2);
 
   const goToHome = () => {
     navigate("/");
@@ -159,13 +163,13 @@ const NavBar = () => {
   const handleBuyButton = () => {
     if (isAuthenticated) {
       dispatch(fetchPayment(shoppingCart));
+      setShowBuying(true);
     } else {
       setShowSnackbar(true);
     }
   };
 
   const shoppingCart = useAppSelector(selectShoppingCartItems);
-  console.log(shoppingCart);
   return (
     <div className={classes.navBarContainer}>
       <div className={classes.navBar}>
@@ -196,61 +200,64 @@ const NavBar = () => {
           <Button onClick={handleShoppingCart}>
             <ShoppingCartOutlinedIcon />
           </Button>
-          <Modal
-            open={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-            className={classes.modal}
-          >
-            <div className={classes.paper}>
-              {shoppingCart &&
-                shoppingCart.map((item: any, index: number) => {
-                  return (
-                    <div className={classes.item_container} key={index}>
-                      <Snackbar
-                        open={showSnackbar}
-                        autoHideDuration={5000}
+        </div>
+        <Modal
+          open={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          className={classes.modal}
+        >
+          <div className={classes.paper}>
+            {shoppingCart.length === 0 ? (
+              <Typography>There are no items in the shopping cart.</Typography>
+            ) : (
+              shoppingCart.map((item: any, index: number) => {
+                return (
+                  <div className={classes.item_container} key={index}>
+                    <Snackbar
+                      open={showSnackbar}
+                      autoHideDuration={5000}
+                      onClose={() => setShowSnackbar(false)}
+                    >
+                      <Alert
+                        severity="warning"
                         onClose={() => setShowSnackbar(false)}
                       >
-                        <Alert
-                          severity="warning"
-                          onClose={() => setShowSnackbar(false)}
-                        >
-                          You must be logged in to make a purchase.
-                        </Alert>
-                      </Snackbar>
-                      <Typography>{item.title}</Typography>
-                      <Typography>${item.unit_price}</Typography>
-                      <Button
-                        variant="contained"
-                        style={{ backgroundColor: "red" }}
-                        onClick={() => dispatch(removeItem(item.id))}
-                      >
-                        <DeleteOutlineIcon />
-                      </Button>
-                    </div>
-                  );
-                })}
-              <div className={classes.closeButton}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => setIsModalOpen(false)}
-                >
-                  Close
-                </Button>
-              </div>
-              <div className={classes.buyButton}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleBuyButton}
-                >
-                  Buy all
-                </Button>
-              </div>
+                        Debe iniciar sesión para realizar una compra.
+                      </Alert>
+                    </Snackbar>
+                    <Typography>{item.title}</Typography>
+                    <Typography>${item.unit_price}</Typography>
+                    <Button
+                      variant="contained"
+                      style={{ backgroundColor: "red" }}
+                      onClick={() => dispatch(removeItem(item.id))}
+                    >
+                      <DeleteOutlineIcon />
+                    </Button>
+                  </div>
+                );
+              })
+            )}
+            <div className={classes.closeButton}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setIsModalOpen(false)}
+              >
+                <CloseIcon />
+              </Button>
             </div>
-          </Modal>
-        </div>
+            <div className={classes.buyButton}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleBuyButton}
+              >
+                {showBuying ? <CircularProgress /> : "Buy all"}
+              </Button>
+            </div>
+          </div>
+        </Modal>
       </div>
       {showBtn && (
         <div className={classes.menu}>

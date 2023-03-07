@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import {DefaultTooltipContent} from "recharts/types/component/DefaultTooltipContent";
 import { RootState } from "../store";
 
 const paymentURL: string =
@@ -20,7 +19,6 @@ const initialState: paymentState = {
 export const fetchPayment = createAsyncThunk(
   "payment/fetchPayment",
   async (paymentData: any) => {
-    console.log(paymentData)
     const response = await fetch(paymentURL, {
       method: "POST",
       headers: {
