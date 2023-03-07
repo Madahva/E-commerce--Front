@@ -8,10 +8,8 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import ButtonBase from "@mui/material/ButtonBase";
-import Button from "@mui/material/Button";
 import { makeStyles } from "@mui/styles";
 import { styled } from "@mui/material/styles";
-import { AddShoppingCart } from "@mui/icons-material";
 
 interface ProductsProps {
   categorieSeccion: string;
@@ -34,6 +32,13 @@ const Products = ({ categorieSeccion }: ProductsProps) => {
         transition: "all ease-in .2s",
       },
     },
+    notFoundMsg: {
+      color: "#555",
+      textAlign: "center",
+      boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
+      backgroundColor: "white",
+      padding: "2rem 4rem",
+    },
   }));
   const classes = useStyles();
   const Img = styled("img")({
@@ -51,8 +56,13 @@ const Products = ({ categorieSeccion }: ProductsProps) => {
 
   return (
     <>
-      { products.length === 0 && <Typography> Nothing to see here. 🤭</Typography> }
-      { products &&
+      {products.length === 0 && (
+        <Typography className={classes.notFoundMsg}>
+          {" "}
+          Nothing to see here. 🤭
+        </Typography>
+      )}
+      {products &&
         products.map((el: Product, index: number) => {
           return (
             <Link
@@ -94,15 +104,6 @@ const Products = ({ categorieSeccion }: ProductsProps) => {
                         <Typography variant="body2" color="text.secondary">
                           {el.Marca}
                         </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          sx={{ width: 128 }}
-                        >
-                          <AddShoppingCart />
-                        </Button>
                       </Grid>
                     </Grid>
                     <Grid item>

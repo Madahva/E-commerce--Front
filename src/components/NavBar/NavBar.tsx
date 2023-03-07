@@ -1,16 +1,25 @@
 import React, { useState } from "react";
-import { useAppDispatch } from "../../redux/hooks";
-import { fetchBySearch } from "../../redux/features/filterSlice"
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { fetchBySearch } from "../../redux/features/filterSlice";
+import {
+  selectShoppingCartItems,
+  removeItem,
+} from "../../redux/features/shoppingCartSlice";
+import { fetchPayment } from "../../redux/features/paymentSlice";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
-import { Button, Input, Link } from "@mui/material";
+import { Button, Input, Link, Modal, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import HomeIcon from "@mui/icons-material/Home";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { Snackbar } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles((theme) => ({
   navBarContainer: {
@@ -71,23 +80,60 @@ const useStyles = makeStyles((theme) => ({
       width: "15rem",
     },
   },
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  paper: {
+    backgroundColor: "white",
+    padding: "2rem",
+    boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
+    width: 400,
+    height: 400,
+    overflow: "auto",
+    display: "flex",
+    flexDirection: "column",
+    gap: "2rem",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  closeButton: {
+    position: "absolute",
+    top: "2rem",
+  },
+  buyButton: {
+    position: "absolute",
+    bottom: "2rem",
+  },
+  item_container: {
+    alignItems: "center",
+    display: "flex",
+    borderBottom: "1px solid #ccc",
+    justifyContent: "space-between",
+    width: "100%",
+  },
 }));
 
 const NavBar = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchValue, setSearchValue] = useState<string>("");
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [showBuying, setShowBuying] = useState(false);
   const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
   const isAdmind: boolean =
-    isAuthenticated && user.email === "stiwarsg11@gmail.com";
+    isAuthenticated &&
+    (user.email === process.env.REACT_APP_EMAIL_ADMIN_1 ||
+      user.email === process.env.REACT_APP_EMAIL_ADMIN_2);
 
   const goToHome = () => {
     navigate("/");
   };
 
-  const goToCart = () => {
-    navigate("/shoppingCart");
+  const handleShoppingCart = () => {
+    setIsModalOpen(true);
   };
 
   const goToDashboard = () => {
@@ -115,6 +161,16 @@ const NavBar = () => {
     setSearchValue(event.target.value);
   };
 
+  const handleBuyButton = () => {
+    if (isAuthenticated) {
+      dispatch(fetchPayment(shoppingCart));
+      setShowBuying(true);
+    } else {
+      setShowSnackbar(true);
+    }
+  };
+
+  const shoppingCart = useAppSelector(selectShoppingCartItems);
   return (
     <div className={classes.navBarContainer}>
       <div className={classes.navBar}>
@@ -142,12 +198,67 @@ const NavBar = () => {
               {showBtn ? <CloseIcon /> : <MenuIcon />}
             </Button>
           ) : null}
-          <Link onClick={goToCart}>
-            <Button>
-              <ShoppingCartOutlinedIcon />
-            </Button>
-          </Link>
+          <Button onClick={handleShoppingCart}>
+            <ShoppingCartOutlinedIcon />
+          </Button>
         </div>
+        <Modal
+          open={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          className={classes.modal}
+        >
+          <div className={classes.paper}>
+            {shoppingCart.length === 0 ? (
+              <Typography>There are no items in the shopping cart.</Typography>
+            ) : (
+              shoppingCart.map((item: any, index: number) => {
+                return (
+                  <div className={classes.item_container} key={index}>
+                    <Snackbar
+                      open={showSnackbar}
+                      autoHideDuration={5000}
+                      onClose={() => setShowSnackbar(false)}
+                    >
+                      <Alert
+                        severity="warning"
+                        onClose={() => setShowSnackbar(false)}
+                      >
+                        Debe iniciar sesión para realizar una compra.
+                      </Alert>
+                    </Snackbar>
+                    <Typography>{item.title}</Typography>
+                    <Typography>${item.unit_price}</Typography>
+                    <Button
+                      variant="contained"
+                      style={{ backgroundColor: "red" }}
+                      onClick={() => dispatch(removeItem(item.id))}
+                    >
+                      <DeleteOutlineIcon />
+                    </Button>
+                  </div>
+                );
+              })
+            )}
+            <div className={classes.closeButton}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setIsModalOpen(false)}
+              >
+                <CloseIcon />
+              </Button>
+            </div>
+            <div className={classes.buyButton}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleBuyButton}
+              >
+                {showBuying ? <CircularProgress /> : "Buy all"}
+              </Button>
+            </div>
+          </div>
+        </Modal>
       </div>
       {showBtn && (
         <div className={classes.menu}>
