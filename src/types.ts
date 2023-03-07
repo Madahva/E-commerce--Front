@@ -13,6 +13,17 @@ export interface Product {
   deleted: boolean;
   rating: any;
   Marca: string;
-  category_id: number;
+  category_id: any;
 }
 
+export interface ProductCreate {
+  name: string;
+  quantity: number;
+  description: string;
+  img: string;
+  price: any;
+  deleted: boolean;
+  rating: any;
+  Marca: string;
+  category_id: any;
+}

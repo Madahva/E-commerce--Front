@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, AsyncThunk, PayloadAction, } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { Product } from "../../types";
+import { ProductCreate } from "../../types";
 
 const productByIdURL: string =
   "https://e-commerce-back-production-848f.up.railway.app/products/";
@@ -10,12 +11,14 @@ const productsURL: string =
 
 interface filterState {
   productDetaild: Product[];
+  productCreate: ProductCreate[];
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
 
 const initialState: filterState = {
   productDetaild: [],
+  productCreate: [],
   status: "idle",
   error: null,
 };
@@ -40,7 +43,7 @@ export const fetchProducts = createAsyncThunk<Product[], void>(
   }
 );
 
-export const createNewProduct = createAsyncThunk<Product, Product>(
+export const createNewProduct = createAsyncThunk<ProductCreate, ProductCreate>(
   "product/createNewProduct",
   async (newProduct) => {
     const response = await fetch(productsURL, {
@@ -114,7 +117,7 @@ const productSlice = createSlice({
       })
       .addCase(createNewProduct.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.productDetaild.push(action.payload);
+        state.productCreate.push(action.payload);
       })
       .addCase(createNewProduct.rejected, (state, action) => {
         state.status = "failed";
