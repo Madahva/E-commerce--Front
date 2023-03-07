@@ -98,11 +98,13 @@ export function DashBoardProducts(): ReactElement {
   const [showTable, setShowTable] = useState(true);
   const [showPaginated, setshowPaginated] = useState(true);
   const [status, setStatus] = useState(onIcon);
+  const [id, setID] = useState("");
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState(0);
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
   const [brand, setBrand] = useState("");
+  const [img, setImg] = useState("");
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -111,14 +113,14 @@ export function DashBoardProducts(): ReactElement {
   
 
   function createData(id: string, name: string, quantity: number, description: string, 
-                     price: any, rating: any, Marca: string, category_id: number,
+                     price: any, rating: any, Marca: string, category_id: number, img: string,
                      edit: string, delet: string) {
-    return { id, name, quantity, description, price, rating, Marca, category_id, edit, delet:status};
+    return { id, name, quantity, description, price, rating, Marca, category_id,img, edit, delet:status};
   }
   
   const rows = productDetaild.map((product) =>
   createData(product.id, product.name, product.quantity, product.description, product.price,
-             product.rating, product.Marca, product.category_id, "", "")
+             product.rating, product.Marca, product.category_id,product.img, "", "")
   );
   console.log(rows)
   
@@ -138,10 +140,11 @@ export function DashBoardProducts(): ReactElement {
 
 
 
-  const handleEditClick = (name: string, quantity: number, description: string, 
-    price: any,  brand: string) => {
+  const handleEditClick = (id: any, name: string, quantity: number, description: string, 
+    price: any,  brand: string, img: string) => {
     setShowTable(false);
     setshowPaginated(false)
+    setID(id)
     setName(name);
     setQuantity(quantity);
     setDescription(description);
@@ -168,7 +171,7 @@ export function DashBoardProducts(): ReactElement {
     
   }
 
-  
+  const allCategories = useAppSelector((state: RootState) => state.categoryReducer.categories);
   return (
     <div>
       {isLoading ? (
@@ -214,7 +217,7 @@ export function DashBoardProducts(): ReactElement {
                   <StyledTableCell align="right">Price</StyledTableCell>
                   <StyledTableCell align="right">Rating</StyledTableCell>
                   <StyledTableCell align="right">Brand</StyledTableCell>
-                  <StyledTableCell align="right">Category_id</StyledTableCell>
+                  <StyledTableCell align="right">Category</StyledTableCell>
                   <StyledTableCell align="right">Edit</StyledTableCell>
                   <StyledTableCell align="right">Delete</StyledTableCell>
                 </TableRow>
@@ -231,9 +234,13 @@ export function DashBoardProducts(): ReactElement {
                     <StyledTableCell align="right">{row.price}</StyledTableCell>
                     <StyledTableCell align="right">{row.rating}</StyledTableCell>
                     <StyledTableCell align="right">{row.Marca}</StyledTableCell>
-                    <StyledTableCell align="right">{row.category_id}</StyledTableCell>
-                    <StyledTableCell align="right"><Button onClick={() => handleEditClick(row.name, row.quantity,
-                       row.description,row.price,row.Marca)}>
+                    {allCategories.map((c) =>
+                        c.id === row.category_id ? (
+                        <StyledTableCell align="right">{c.typecategory}</StyledTableCell>
+                        ) : null
+                    )}
+                    <StyledTableCell align="right"><Button onClick={() => handleEditClick(row.id,row.name, row.quantity,
+                       row.description,row.price,row.Marca,row.img)}>
                       <img src={editIcon} width="35" height="35"/></Button></StyledTableCell>
                     <StyledTableCell align="right"><Button onClick={()=>handleDeletedLogicClick(row.id,row.delet)}><img src={row.delet} width="35" height="35"/></Button></StyledTableCell>
                   </StyledTableRow>
@@ -243,8 +250,8 @@ export function DashBoardProducts(): ReactElement {
           </TableContainer>
           ) : (
             <div>
-              <DashEditProduct name={name} quantity={quantity} description={description} 
-              price={price} Marca={brand} setIsCancel={setShowTable} setIsCancel2={setshowPaginated} />
+              <DashEditProduct id={id} name={name} quantity={quantity} description={description} 
+              price={price} Marca={brand} img={img} setIsCancel={setShowTable} setIsCancel2={setshowPaginated} />
             </div> 
           )}
           {showPaginated? (

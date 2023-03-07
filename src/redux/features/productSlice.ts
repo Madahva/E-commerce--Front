@@ -9,6 +9,9 @@ const productByIdURL: string =
 const productsURL: string =
   "https://e-commerce-back-production-848f.up.railway.app/products/";  
 
+const editURL: string =
+  "https://e-commerce-back-production-848f.up.railway.app/products/edit/";  
+
 interface filterState {
   productDetaild: Product[];
   productCreate: ProductCreate[];
@@ -57,36 +60,30 @@ export const createNewProduct = createAsyncThunk<ProductCreate, ProductCreate>(
     return data;
   }
 );
-// export const createNewProduct = createAsyncThunk<Product, Product>(
-//   "product/createNewProduct",
-//   async (updatedProduct) => {
-//     const { id } = updatedProduct;
-//     const response = await fetch(`${productsURL}${id}`, {
-//       method: "PATCH",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify(updatedProduct),
-//     });
-//     const data = await response.json();
-//     return data;
-//   }
-// );
+
+export const updateProduct: AsyncThunk<
+Product,
+any,
+{}
+> = createAsyncThunk("product/updateProductProduct", async (updatedProduct) => {
+    const { id } = updatedProduct;
+    const response = await fetch(`${editURL}${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedProduct),
+    });
+    const data = await response.json();
+    return data;
+  }
+);
 
 
 const productSlice = createSlice({
   name: "product",
   initialState,
   reducers: {
-    editProduct: (state, action: PayloadAction<Product>) => {
-      const { id } = action.payload;
-      const productIndex = state.productDetaild.findIndex(
-        (product) => product.id === id
-      );
-      if (productIndex !== -1) {
-        state.productDetaild[productIndex] = action.payload;
-      }
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -123,9 +120,26 @@ const productSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       })
+      .addCase(updateProduct.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(updateProduct.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        // Find the index of the updated product in the array of productDetaild
+        const index = state.productDetaild.findIndex(
+          (product) => product.id === action.payload.id
+        );
+        // If the product exists in the array, update it
+        if (index !== -1) {
+          state.productDetaild[index] = action.payload;
+        }
+      })
+      .addCase(updateProduct.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
   },
 });
 
 export const selectProductDetailds = (state: RootState) => state.productReducer.productDetaild;
-export const { editProduct } = productSlice.actions;
 export default productSlice.reducer;
