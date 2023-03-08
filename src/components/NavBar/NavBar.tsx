@@ -5,7 +5,12 @@ import {
   selectShoppingCartItems,
   removeItem,
 } from "../../redux/features/shoppingCartSlice";
-import { fetchPayment } from "../../redux/features/paymentSlice";
+import {
+  fetchPayment,
+  createPaymentHistory,
+  fetchUserPaymentHistory,
+  selectUserPaymentHistory,
+} from "../../redux/features/paymentSlice";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
@@ -83,13 +88,14 @@ const useStyles = makeStyles((theme) => ({
   modal: {
     display: "flex",
     alignItems: "center",
+    position: "relative",
     justifyContent: "center",
   },
   paper: {
     backgroundColor: "white",
     padding: "2rem",
     boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
-    width: 400,
+    width: "fit-content",
     height: 400,
     overflow: "auto",
     display: "flex",
@@ -100,7 +106,7 @@ const useStyles = makeStyles((theme) => ({
   },
   closeButton: {
     position: "absolute",
-    top: "2rem",
+    top: "1rem",
   },
   buyButton: {
     position: "absolute",
@@ -108,10 +114,31 @@ const useStyles = makeStyles((theme) => ({
   },
   item_container: {
     alignItems: "center",
+    gap: "3rem",
     display: "flex",
     borderBottom: "1px solid #ccc",
     justifyContent: "space-between",
     width: "100%",
+  },
+  paperHistory: {
+    backgroundColor: "white",
+    padding: "6rem 2rem",
+    boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
+    width: "fit-content",
+    height: 400,
+    overflow: "auto",
+    display: "flex",
+    flexDirection: "column",
+    gap: "2rem",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  labelContainer: {
+    alignItems: "center",
+    display: "flex",
+    justifyContent: "space-between",
+    width: "100%",
+    color:"#1976d2",
   },
 }));
 
@@ -119,6 +146,7 @@ const NavBar = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
   const [searchValue, setSearchValue] = useState<string>("");
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [showBuying, setShowBuying] = useState(false);
@@ -134,6 +162,11 @@ const NavBar = () => {
 
   const handleShoppingCart = () => {
     setIsModalOpen(true);
+  };
+
+  const handleHistoryButton = () => {
+    setIsHistoryModalOpen(true);
+    dispatch(fetchUserPaymentHistory(user.email));
   };
 
   const goToDashboard = () => {
@@ -163,12 +196,15 @@ const NavBar = () => {
 
   const handleBuyButton = () => {
     if (isAuthenticated) {
+      dispatch(createPaymentHistory({ shoppingCart, userEmail: user.email }));
       dispatch(fetchPayment(shoppingCart));
       setShowBuying(true);
     } else {
       setShowSnackbar(true);
     }
   };
+
+  const userPaymentHistory = useAppSelector(selectUserPaymentHistory);
 
   const shoppingCart = useAppSelector(selectShoppingCartItems);
   return (
@@ -226,7 +262,9 @@ const NavBar = () => {
                         Debe iniciar sesión para realizar una compra.
                       </Alert>
                     </Snackbar>
-                    <Typography>{item.title}</Typography>
+                    <Typography sx={{ maxWidth: "150px" }}>
+                      {item.title}
+                    </Typography>
                     <Typography>${item.unit_price}</Typography>
                     <Button
                       variant="contained"
@@ -255,6 +293,52 @@ const NavBar = () => {
                 onClick={handleBuyButton}
               >
                 {showBuying ? <CircularProgress /> : "Buy all"}
+              </Button>
+            </div>
+          </div>
+        </Modal>
+
+        <Modal
+          open={isHistoryModalOpen}
+          onClose={() => setIsHistoryModalOpen(false)}
+          className={classes.modal}
+        >
+          <div className={classes.paperHistory}>
+            <div className={classes.labelContainer}>
+              <Typography>Quantity</Typography>
+              <Typography>Title</Typography>
+              <Typography>Price</Typography>
+              <Typography>Date</Typography>
+              <Typography>Amount</Typography>
+            </div>
+            {userPaymentHistory.length === 0 ? (
+              <Typography>There are no items to show.</Typography>
+            ) : (
+              userPaymentHistory.data.map((item: any, index: number) => {
+                const fechaCompleta = item.createdAt;
+                const fecha = new Date(fechaCompleta);
+                const date = fecha.toISOString().split("T")[0];
+                return (
+                  <div className={classes.item_container} key={index}>
+                    <Typography>{item.quantity}</Typography>
+                    <Typography sx={{ maxWidth: "150px" }}>
+                      {item.title}
+                    </Typography>
+                    <Typography>{item.price}</Typography>
+                    <Typography>{date}</Typography>
+                    <Typography>{item.amount}</Typography>
+                  </div>
+                );
+              })
+            )}
+
+            <div className={classes.closeButton}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setIsHistoryModalOpen(false)}
+              >
+                <CloseIcon />
               </Button>
             </div>
           </div>
@@ -311,6 +395,7 @@ const NavBar = () => {
                     <Button
                       sx={{ backgroundColor: "#DFE8EF", padding: ".5rem" }}
                       className={classes.button}
+                      onClick={handleHistoryButton}
                     >
                       History
                     </Button>
