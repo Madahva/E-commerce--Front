@@ -51,7 +51,7 @@ const brands: Brand[] = [
   },
   {
     id: 4,
-    name: 'Electrolux',
+    name: 'ElECTROLUX',
   },
   {
     id: 5,
@@ -71,7 +71,7 @@ const brands: Brand[] = [
   },
   {
     id: 9,
-    name: 'Logitech',
+    name: 'LOGITECH',
   },
   {
     id: 10,
