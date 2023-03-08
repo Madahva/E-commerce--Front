@@ -79,6 +79,29 @@ any,
   }
 );
 
+// export const deleteProduct: AsyncThunk<Product, string, {}> = 
+// createAsyncThunk("product/deleteProduct", async (ID) => {
+//   const newURL: string = `${productByIdURL}${ID}`;
+//   const response = await fetch(newURL, {
+//     method: "DELETE",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//   });
+//   const data = await response.json();
+//   return data;
+// });
+export const deleteProduct = createAsyncThunk(
+  "product/deleteProduct",
+  async (productId: string) => {
+    const response = await fetch(`${productByIdURL}${productId}`, {
+      method: "DELETE",
+    });
+    const data = await response.json();
+    return data;
+  }
+);
+
 
 const productSlice = createSlice({
   name: "product",
@@ -137,7 +160,18 @@ const productSlice = createSlice({
       .addCase(updateProduct.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
-      });
+      })
+      .addCase(deleteProduct.fulfilled, (state, action) => {
+        // Find the index of the deleted product in the array of productDetaild
+        const index = state.productDetaild.findIndex(
+          (product) => product.id === action.payload.id
+        );
+        // If the product exists in the array, mark it as deleted
+        if (index !== -1) {
+          state.productDetaild[index].deleted = true;
+        }
+      })
+
   },
 });
 

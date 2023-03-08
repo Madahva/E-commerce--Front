@@ -132,8 +132,7 @@ export function DashBoardCategories(): ReactElement {
                   <StyledTableCell>ID</StyledTableCell>
                   <StyledTableCell align="right">Name</StyledTableCell>
                   <StyledTableCell align="right">Edit</StyledTableCell>
-                  <StyledTableCell align="right">Add</StyledTableCell>
-                  <StyledTableCell align="right">Delete</StyledTableCell>
+                  <StyledTableCell align="right">Status</StyledTableCell>
                 </TableRow>
                 </TableHead>
               <TableBody>
@@ -144,7 +143,6 @@ export function DashBoardCategories(): ReactElement {
                     </StyledTableCell>
                     <StyledTableCell align="right">{row.name}</StyledTableCell>
                     <StyledTableCell align="right"><Button><img src={editIcon} width="35" height="35"/></Button></StyledTableCell>
-                    <StyledTableCell align="right"><Button><img src={addIcon} width="35" height="35"/></Button></StyledTableCell>
                     <StyledTableCell align="right"><Button><img src={deleteIcon} width="35" height="35"/></Button></StyledTableCell>
                   </StyledTableRow>
                 ))}
