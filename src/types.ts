@@ -1,6 +1,6 @@
 export interface Category {
-  id: any,
-  typecategory: string
+  id: any;
+  typecategory: string;
 }
 
 export interface Product {
@@ -26,4 +26,18 @@ export interface ProductCreate {
   rating: any;
   Marca: string;
   category_id: any;
+}
+
+export interface PaymentHistory {
+  data: {
+    id: number;
+    title: string;
+    price: number;
+    amount: number;
+    quantity: number;
+    user: string;
+    createdAt: string;
+  };
+  message: string;
+  success: boolean;
 }

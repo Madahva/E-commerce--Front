@@ -134,7 +134,7 @@ export function Dashboard(): ReactElement {
                 </Link>
               </Grid>
               <Grid item xs={12} sm={4} md={3}>
-                <Link to="/">
+                <Link to="/dashboard-history">
                   <Typography
                     variant="h6"
                     color="#1976d2"

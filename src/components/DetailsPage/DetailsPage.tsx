@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { selectProductDetailds } from "../../redux/features/productSlice";
-import { fetchPayment, selectPayment } from "../../redux/features/paymentSlice";
+import { fetchPayment, selectPayment, createPaymentHistory } from "../../redux/features/paymentSlice";
 import { addItem } from "../../redux/features/shoppingCartSlice";
 import { Product } from "../../types";
 import { Link } from "react-router-dom";
@@ -69,7 +69,7 @@ const DetailsPage: React.FC = () => {
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [showSuccestMsg, setShowSuccestMsg] = useState(false);
   const [showBuying, setShowBuying] = useState(false);
-  const { isAuthenticated } = useAuth0();
+  const { isAuthenticated, user } = useAuth0();
 
   const dispatch = useAppDispatch();
   const response = useAppSelector(selectPayment);
@@ -94,15 +94,14 @@ const DetailsPage: React.FC = () => {
 
   const handleBuy = (name: string, price: string) => {
     if (isAuthenticated) {
+      const shoppingCart = [{
+        title: name,
+        quantity: 1,
+        unit_price: parseInt(price),
+      }]
+      dispatch(createPaymentHistory({ shoppingCart, userEmail: user.email }));
       dispatch(
-        fetchPayment([
-          {
-            title: name,
-            quantity: 1,
-            unit_price: parseInt(price),
-          },
-        ])
-      );
+        fetchPayment(shoppingCart));
       setShowBuying(true);
     } else {
       setShowSnackbar(true);
