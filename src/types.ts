@@ -1,6 +1,6 @@
 export interface Category {
-  id: number,
-  typecategory: string
+  id: any;
+  typecategory: string;
 }
 
 export interface Product {
@@ -13,6 +13,31 @@ export interface Product {
   deleted: boolean;
   rating: any;
   Marca: string;
-  category_id: number;
+  category_id: any;
 }
 
+export interface ProductCreate {
+  name: string;
+  quantity: number;
+  description: string;
+  img: string;
+  price: any;
+  deleted: boolean;
+  rating: any;
+  Marca: string;
+  category_id: any;
+}
+
+export interface PaymentHistory {
+  data: {
+    id: number;
+    title: string;
+    price: number;
+    amount: number;
+    quantity: number;
+    user: string;
+    createdAt: string;
+  };
+  message: string;
+  success: boolean;
+}

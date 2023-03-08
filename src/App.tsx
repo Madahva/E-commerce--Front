@@ -12,14 +12,18 @@ import { Dashboard } from "./components/Dashboard/Dashboard";
 import { DashBoardProducts } from "./components/DashBoardProducts/DashBoardProducts";
 import { DashBoardCategories } from "./components/DashBoardCategories/DashBoardCategories";
 import { DashCreateProduct } from "./components/DashCreateProduct/DashCreateProduct";
+import { DashboardHistory } from "./components/Dashboard/DashboardHistory";
+// import { CloudinaryUpload} from "./components/Cloudinary/Cloudinary";
+
 const App = () => {
   const location = useLocation();
-  // &&  location.pathname !== "/dashboard-products" 
   return (
     <div>
-      {location.pathname !== "/dashboard" &&  location.pathname !== "/dashboard-products"
-      &&  location.pathname !== "/dashboard-categories" && location.pathname !== "/dashboard-create-products" 
-      && <NavBar/>}
+      {location.pathname !== "/dashboard" &&
+        location.pathname !== "/dashboard-products" &&
+        location.pathname !== "/dashboard-categories" &&
+        location.pathname !== "/dashboard-history" &&
+        location.pathname !== "/dashboard-create-products" && <NavBar />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/:category" element={<ProductCatalog />} />
@@ -29,8 +33,12 @@ const App = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dashboard-products" element={<DashBoardProducts />} />
         <Route path="/dashboard-categories" element={<DashBoardCategories />} />
-        <Route path="/dashboard-create-products" element={<DashCreateProduct />} />
-
+        {/* <Route path="/dashboard-create-products" element={<CloudinaryUpload />} /> */}
+        <Route
+          path="/dashboard-create-products"
+          element={<DashCreateProduct />}
+        />
+        <Route path="/dashboard-history" element={<DashboardHistory />} />
       </Routes>
       {location.pathname !== "/dashboard" && <Footer />}
     </div>

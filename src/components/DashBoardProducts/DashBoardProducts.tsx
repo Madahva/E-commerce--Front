@@ -18,6 +18,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import editIcon from "../../assets/Icons/edit.jpg";
 import onIcon from "../../assets/Icons/on.jpg";
 import offIcon from "../../assets/Icons/off.jpg";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
 import { useAppSelector } from "../../redux/hooks";
 import { useEffect } from "react";
 import { useDispatch} from "react-redux";
@@ -25,9 +26,12 @@ import { fetchProducts} from "../../redux/features/productSlice";
 import { RootState } from "../../redux/store";
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
+import { Product } from "../../types";
 // import { editProduct } from "../../redux/features/productSlice";
 import {DashEditProduct} from "../DashEditProduct/DashEditProduct"
 import Pagination from "../PaginationTable/PaginationTable"
+import { deleteProduct } from '../../redux/features/productSlice';
+import { updateProduct } from '../../redux/features/productSlice';
 
 
 const useStyles = makeStyles(() => ({
@@ -51,6 +55,14 @@ const useStyles = makeStyles(() => ({
   Box: {
     marginTop: "30vh",
     padding: "0 5rem",
+  },
+  link: {
+    color: "inherit",
+    textDecoration: "none",
+    textTransform: "capitalize",
+    "&:hover": {
+      textDecoration: "underline",
+    },
   },
 }));
 const StyledTableCell = withStyles(() =>
@@ -98,11 +110,14 @@ export function DashBoardProducts(): ReactElement {
   const [showTable, setShowTable] = useState(true);
   const [showPaginated, setshowPaginated] = useState(true);
   const [status, setStatus] = useState(onIcon);
+  const [id, setID] = useState("");
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState(0);
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
   const [brand, setBrand] = useState("");
+  const [img, setImg] = useState("");
+  const [deleted, setDeleted] = useState(false);
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -110,15 +125,15 @@ export function DashBoardProducts(): ReactElement {
   const productDetaild = useAppSelector((state: RootState) => state.productReducer.productDetaild);
   
 
-  function createData(id: string, name: string, quantity: number, description: string, 
-                     price: any, rating: any, Marca: string, category_id: number,
+  function createData(id: string, name: string, quantity: number, description: string, deleted: boolean,
+                     price: any, rating: any, Marca: string, category_id: number, img: string,
                      edit: string, delet: string) {
-    return { id, name, quantity, description, price, rating, Marca, category_id, edit, delet:status};
+    return { id, name, quantity, description, deleted, price, rating, Marca, category_id,img, edit, delet:status};
   }
   
   const rows = productDetaild.map((product) =>
-  createData(product.id, product.name, product.quantity, product.description, product.price,
-             product.rating, product.Marca, product.category_id, "", "")
+  createData(product.id, product.name, product.quantity, product.description, product.deleted, product.price,
+             product.rating, product.Marca, product.category_id,product.img, "", "")
   );
   console.log(rows)
   
@@ -138,10 +153,11 @@ export function DashBoardProducts(): ReactElement {
 
 
 
-  const handleEditClick = (name: string, quantity: number, description: string, 
-    price: any,  brand: string) => {
+  const handleEditClick = (id: any, name: string, quantity: number, description: string, 
+    price: any,  brand: string, img: string) => {
     setShowTable(false);
     setshowPaginated(false)
+    setID(id)
     setName(name);
     setQuantity(quantity);
     setDescription(description);
@@ -153,22 +169,46 @@ export function DashBoardProducts(): ReactElement {
     navigate("/dashboard-create-products")
   }
 
-  const handleDeletedLogicClick = (id: string, delet: string) => {
-    // const newStatus = status === onIcon ? offIcon : onIcon;
-    // setStatus(newStatus);
+  const handleDeletedLogicClick = (id: string, deleted: boolean, delet: string,
+    rating: any, Marca: string, category_id: any) => {
     
-    const newStatus = delet === onIcon ? offIcon : onIcon;
-    const updatedRows = rows.map(r => {
-      if (r.id === id) {
-        return { ...r, delet: newStatus };
-      }
-      return r;
-    });
-    setStatus(updatedRows[0].delet);
+    if(deleted===false){
+      // setDeleted(true)
+      dispatch(deleteProduct(id));
+    }else{
+      // setDeleted(false)
+      deleted = false;
+      const updataProduct: Product = { id, name, quantity, description, img, price, deleted,rating, Marca, category_id};
+      dispatch(updateProduct(updataProduct));
+    }
+    
+    
+    // // const newStatus = status === onIcon ? offIcon : onIcon;
+    // // setStatus(newStatus);
+    // const stateDeleted = delet
+    // const newStatus = delet === onIcon ? offIcon : onIcon;
+    // const updatedRows = rows.map(r => {
+    //   if (r.id === id) {
+    //     return { ...r, delet: newStatus };
+    //   }
+    //   return r;
+    // });
+    // setStatus(updatedRows[0].delet);
     
   }
 
+  // const handleCategoryChange = (event: SelectChangeEvent<string>, child: React.ReactNode) => {
+  //   const categoryType = event.target.value;
+  //   const selectedCategory = allCategories.find((c) => c.typecategory === categoryType);
   
+  //   if (selectedCategory) {
+  //     setCategoryID(selectedCategory.id);
+  //     setCategory(categoryType);
+  //     console.log(selectedCategory.id)
+  //   }
+  // }
+
+  const allCategories = useAppSelector((state: RootState) => state.categoryReducer.categories);
   return (
     <div>
       {isLoading ? (
@@ -202,6 +242,16 @@ export function DashBoardProducts(): ReactElement {
               Admin: {user.given_name}
             </Typography>
           </div>
+          <div style={{ marginLeft: "45px", marginTop: "10px", marginBottom: "-30px"}}>
+          <Breadcrumbs aria-label="breadcrumb">
+              <Link className={classes.link} to="/">
+                Home
+              </Link>
+              <Link className={classes.link} to="/dashboard">
+                Dashboard
+              </Link>
+          </Breadcrumbs>
+          </div>
           {showTable ? (
           <TableContainer component={Paper} style={{ width: '95%', margin: '3%', maxHeight: '180vh' }}>
             <Table aria-label="customized table">
@@ -214,9 +264,9 @@ export function DashBoardProducts(): ReactElement {
                   <StyledTableCell align="right">Price</StyledTableCell>
                   <StyledTableCell align="right">Rating</StyledTableCell>
                   <StyledTableCell align="right">Brand</StyledTableCell>
-                  <StyledTableCell align="right">Category_id</StyledTableCell>
+                  <StyledTableCell align="right">Category</StyledTableCell>
                   <StyledTableCell align="right">Edit</StyledTableCell>
-                  <StyledTableCell align="right">Delete</StyledTableCell>
+                  <StyledTableCell align="right">Status</StyledTableCell>
                 </TableRow>
                 </TableHead>
               <TableBody>
@@ -231,11 +281,16 @@ export function DashBoardProducts(): ReactElement {
                     <StyledTableCell align="right">{row.price}</StyledTableCell>
                     <StyledTableCell align="right">{row.rating}</StyledTableCell>
                     <StyledTableCell align="right">{row.Marca}</StyledTableCell>
-                    <StyledTableCell align="right">{row.category_id}</StyledTableCell>
-                    <StyledTableCell align="right"><Button onClick={() => handleEditClick(row.name, row.quantity,
-                       row.description,row.price,row.Marca)}>
+                    {allCategories.map((c) =>
+                        c.id === row.category_id ? (
+                        <StyledTableCell align="right">{c.typecategory}</StyledTableCell>
+                        ) : null
+                    )}
+                    <StyledTableCell align="right"><Button onClick={() => handleEditClick(row.id,row.name, row.quantity,
+                       row.description,row.price,row.Marca,row.img)}>
                       <img src={editIcon} width="35" height="35"/></Button></StyledTableCell>
-                    <StyledTableCell align="right"><Button onClick={()=>handleDeletedLogicClick(row.id,row.delet)}><img src={row.delet} width="35" height="35"/></Button></StyledTableCell>
+                    <StyledTableCell align="right"><Button onClick={()=>handleDeletedLogicClick(row.id,row.deleted,row.delet,
+                      row.rating, row.Marca, row.category_id)}><img src={row.delet} width="35" height="35"/></Button></StyledTableCell>
                   </StyledTableRow>
                 ))}
               </TableBody>
@@ -243,13 +298,13 @@ export function DashBoardProducts(): ReactElement {
           </TableContainer>
           ) : (
             <div>
-              <DashEditProduct name={name} quantity={quantity} description={description} 
-              price={price} Marca={brand} setIsCancel={setShowTable} setIsCancel2={setshowPaginated} />
+              <DashEditProduct id={id} name={name} quantity={quantity} description={description} 
+              price={price} Marca={brand} img={img} setIsCancel={setShowTable} setIsCancel2={setshowPaginated} />
             </div> 
           )}
           {showPaginated? (
-          <div>
-            <Button onClick={() => handleCreateClick()}>Create</Button>
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Button variant="contained" color="primary" onClick={() => handleCreateClick()}>Create new product</Button>
             <Pagination
             rowsPerPage={rowsPerPage}
             page={page}
