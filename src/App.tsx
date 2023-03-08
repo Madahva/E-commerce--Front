@@ -23,7 +23,8 @@ const App = () => {
         location.pathname !== "/dashboard-products" &&
         location.pathname !== "/dashboard-categories" &&
         location.pathname !== "/dashboard-history" &&
-        location.pathname !== "/dashboard-create-products" && <NavBar />}
+        location.pathname !== "/dashboard-create-products" &&
+        location.pathname !== "/dashboard-create-categories" && <NavBar />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/:category" element={<ProductCatalog />} />

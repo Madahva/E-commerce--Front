@@ -95,7 +95,11 @@ export const deleteProduct = createAsyncThunk(
   "product/deleteProduct",
   async (productId: string) => {
     const response = await fetch(`${productByIdURL}${productId}`, {
-      method: "DELETE",
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(productId),
     });
     const data = await response.json();
     return data;

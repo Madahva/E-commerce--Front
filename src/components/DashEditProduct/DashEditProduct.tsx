@@ -17,6 +17,7 @@ interface FormEditProps {
   price: any; 
   Marca: string;
   img: string;
+  category_id: any;
   setIsCancel: (isTable: boolean) => void;
   setIsCancel2: (isPaginated: boolean) => void;
 }
@@ -105,7 +106,7 @@ export function DashEditProduct(props: FormEditProps) {
   const [Marca, setUpDateBrand] = useState(props.Marca);
   const [id, setID] = useState(props.id);
   const [img, setImage] = useState(props.img);
-  const [category_id, setCategoryID] = useState(1);
+  const [category_id, setCategoryID] = useState(props.category_id);
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUpDateName(event.target.value);
