@@ -1,5 +1,5 @@
 import { Button, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Typography from "@mui/material/Typography";
 import type { ReactElement } from "react"
 import { Link } from "react-router-dom";
@@ -20,6 +20,8 @@ import validations from './Validations';
 import { Container, FormGroup, Input } from "@mui/material";
 import { SelectChangeEvent } from '@mui/material/Select';
 import { useAppSelector } from "../../redux/hooks";
+import { fetchCategories } from '../../redux/features/categorySlice';
+import Breadcrumbs from "@mui/material/Breadcrumbs";
 
 interface ProductError {
   name: string;
@@ -128,7 +130,15 @@ const useStyles = makeStyles(() => ({
     fontSize: '0.7rem',
     position: "absolute",
     backgroundColor: "transparent",
-  }
+  },
+  link: {
+    color: "inherit",
+    textDecoration: "none",
+    textTransform: "capitalize",
+    "&:hover": {
+      textDecoration: "underline",
+    },
+  },
 }));
 
 type AppDispatch = ThunkDispatch<RootState, void, AnyAction>;
@@ -143,7 +153,8 @@ export function DashCreateProduct(): ReactElement {
       user.email === process.env.REACT_APP_EMAIL_ADMIN_2);
 
   if (!isAdmind) navigate("/");
-
+  
+ 
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState(0);
   const [description, setDescription] = useState("");
@@ -156,8 +167,11 @@ export function DashCreateProduct(): ReactElement {
   const [errors, setErrors] = useState({});
 
   const allCategories = useAppSelector((state: RootState) => state.categoryReducer.categories);
-
-  console.log(allCategories)
+  
+  const dispatch: AppDispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
@@ -205,7 +219,6 @@ export function DashCreateProduct(): ReactElement {
     setLoading(false)
   };
   //////////////////
-  const dispatch: AppDispatch = useDispatch();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -255,6 +268,19 @@ export function DashCreateProduct(): ReactElement {
             >
               Admin: {user.given_name}
             </Typography>
+          </div>
+          <div style={{ marginLeft: "45px", marginTop: "10px", marginBottom: "-10px"}}>
+          <Breadcrumbs aria-label="breadcrumb">
+              <Link className={classes.link} to="/">
+                Home
+              </Link>
+              <Link className={classes.link} to="/dashboard">
+                Dashboard
+              </Link>
+              <Link className={classes.link} to="/dashboard-products">
+                Products Dashboard
+              </Link>
+          </Breadcrumbs>
           </div>
           <div>
             <Container>

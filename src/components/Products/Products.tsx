@@ -64,6 +64,7 @@ const Products = ({ categorieSeccion }: ProductsProps) => {
       )}
       {products &&
         products.map((el: Product, index: number) => {
+          if (el.deleted) return null;
           return (
             <Link
               to={`/${categorieSeccion}/${el.id}`}
