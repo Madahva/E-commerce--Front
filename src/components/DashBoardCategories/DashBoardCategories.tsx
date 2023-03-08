@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Typography from "@mui/material/Typography";
 import type { ReactElement } from "react"
 import { Link } from "react-router-dom";
@@ -21,6 +21,9 @@ import deleteIcon from "../../assets/Icons/delete.jpg";
 import { Category } from "../../types";
 import { useAppSelector } from "../../redux/hooks";
 import { selectCategory  } from "../../redux/features/categorySlice";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
+import { DashEditCategory } from "../DashEditCategory/DashEditCategory";
+import Pagination from "../PaginationTable/PaginationTable"
 
 const useStyles = makeStyles(() => ({
   navBar: {
@@ -43,6 +46,14 @@ const useStyles = makeStyles(() => ({
   Box: {
     marginTop: "30vh",
     padding: "0 5rem",
+  },
+  link: {
+    color: "inherit",
+    textDecoration: "none",
+    textTransform: "capitalize",
+    "&:hover": {
+      textDecoration: "underline",
+    },
   },
 }));
 
@@ -79,19 +90,50 @@ export function DashBoardCategories(): ReactElement {
 
   if (!isAdmind) navigate("/");
 
+  const [showTable, setShowTable] = useState(true);
+  const [showPaginated, setshowPaginated] = useState(true);
+  const [id, setID] = useState("");
+  const [typecategory, setTypeCategory] = useState("");
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
   const categoryDetaild: Category[] = useAppSelector(selectCategory);
   console.log(categoryDetaild)
 
 
-  function createData(id: number, name: string, edit: string, add: string, delet: string) {
-    return { id, name, edit, add, delet};
+  function createData(id: number, typecategory: string, edit: string, add: string, delet: string) {
+    return { id, typecategory, edit, add, delet};
   }
   
   const rows = categoryDetaild.map((category) =>
   createData(category.id, category.typecategory, "", "", "")
   );
   console.log(rows);
-  
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const indexOfLastCategory = (page + 1) * rowsPerPage;
+  const indexOfFirstCategory = indexOfLastCategory - rowsPerPage;
+  const currentCategory = rows.slice(indexOfFirstCategory, indexOfLastCategory);
+
+
+  const handleEditClick = (id: any, typecategory: string) => {
+    setShowTable(false);
+    setshowPaginated(false)
+    setID(id)
+    setTypeCategory(typecategory);
+  }
+  const handleCreateClick = () => {
+    navigate("/dashboard-create-category")
+  }
   return (
     <div>
       {isLoading ? (
@@ -125,6 +167,17 @@ export function DashBoardCategories(): ReactElement {
               Admin: {user.given_name}
             </Typography>
           </div>
+          <div style={{ marginLeft: "45px", marginTop: "10px", marginBottom: "-30px"}}>
+          <Breadcrumbs aria-label="breadcrumb">
+              <Link className={classes.link} to="/">
+                Home
+              </Link>
+              <Link className={classes.link} to="/dashboard">
+                Dashboard
+              </Link>
+          </Breadcrumbs>
+          </div>
+          {showTable ? (
           <TableContainer component={Paper} style={{ width: '90%', margin: '3%', maxHeight: '150vh' }}>
             <Table aria-label="customized table">
                 <TableHead>
@@ -136,19 +189,39 @@ export function DashBoardCategories(): ReactElement {
                 </TableRow>
                 </TableHead>
               <TableBody>
-                {rows.map((row) => (
+                {currentCategory.map((row) => (
                   <StyledTableRow key={row.id}>
                     <StyledTableCell component="th" scope="row">
                     {row.id}
                     </StyledTableCell>
-                    <StyledTableCell align="right">{row.name}</StyledTableCell>
-                    <StyledTableCell align="right"><Button><img src={editIcon} width="35" height="35"/></Button></StyledTableCell>
+                    <StyledTableCell align="right">{row.typecategory}</StyledTableCell>
+                    <StyledTableCell align="right"><Button onClick={() => handleEditClick(row.id,row.typecategory)}>
+                      <img src={editIcon} width="35" height="35"/></Button></StyledTableCell>
                     <StyledTableCell align="right"><Button><img src={deleteIcon} width="35" height="35"/></Button></StyledTableCell>
                   </StyledTableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
+          ) : (
+            <div>
+              <DashEditCategory id={id} typecategory={typecategory} setIsCancel={setShowTable} setIsCancel2={setshowPaginated} />
+            </div> 
+          )}
+          {showPaginated? (
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Button variant="contained" color="primary" onClick={() => handleCreateClick()}>Create new category</Button>
+            <Pagination
+            rowsPerPage={rowsPerPage}
+            page={page}
+            count={rows.length}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}  
+            />
+          </div>
+           ):(
+            <div></div>
+           )}
         </div>
       )}
 

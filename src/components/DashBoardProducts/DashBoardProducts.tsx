@@ -32,6 +32,7 @@ import {DashEditProduct} from "../DashEditProduct/DashEditProduct"
 import Pagination from "../PaginationTable/PaginationTable"
 import { deleteProduct } from '../../redux/features/productSlice';
 import { updateProduct } from '../../redux/features/productSlice';
+import { ClassSharp } from "@mui/icons-material";
 
 
 const useStyles = makeStyles(() => ({
@@ -106,11 +107,11 @@ export function DashBoardProducts(): ReactElement {
   useEffect(() => {
     dispatch(fetchProducts());
   }, [dispatch]);
-
+  const [id, setID] = useState("");
   const [showTable, setShowTable] = useState(true);
   const [showPaginated, setshowPaginated] = useState(true);
   const [status, setStatus] = useState(onIcon);
-  const [id, setID] = useState("");
+  
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState(0);
   const [description, setDescription] = useState("");
@@ -128,7 +129,7 @@ export function DashBoardProducts(): ReactElement {
   function createData(id: string, name: string, quantity: number, description: string, deleted: boolean,
                      price: any, rating: any, Marca: string, category_id: number, img: string,
                      edit: string, delet: string) {
-    return { id, name, quantity, description, deleted, price, rating, Marca, category_id,img, edit, delet:status};
+    return { id, name, quantity, description, deleted, price, rating, Marca, category_id,img, edit, delet};
   }
   
   const rows = productDetaild.map((product) =>
@@ -169,31 +170,33 @@ export function DashBoardProducts(): ReactElement {
     navigate("/dashboard-create-products")
   }
 
-  const handleDeletedLogicClick = (id: string, deleted: boolean, delet: string,
-    rating: any, Marca: string, category_id: any) => {
+  const handleDeletedLogicClick = (id: string, delet: string) => {
     
-    if(deleted===false){
-      // setDeleted(true)
-      dispatch(deleteProduct(id));
-    }else{
-      // setDeleted(false)
-      deleted = false;
-      const updataProduct: Product = { id, name, quantity, description, img, price, deleted,rating, Marca, category_id};
-      dispatch(updateProduct(updataProduct));
-    }
+    // if(deleted===false){
+    //   // setDeleted(true)
+    //   dispatch(deleteProduct(id));
+    //   // setStatus(offIcon)
+    // }else if(deleted===true){
+    //   // setDeleted(false)
+    //   const updataProduct: Product = { id, name, quantity, description, img, price, deleted:false,rating, Marca, category_id};
+    //   console.log(updataProduct)
+    //   dispatch(updateProduct(updataProduct));
+    //   // setStatus(onIcon)
+    //   // console.log(setStatus(onIcon))
+    // }
     
     
-    // // const newStatus = status === onIcon ? offIcon : onIcon;
-    // // setStatus(newStatus);
-    // const stateDeleted = delet
-    // const newStatus = delet === onIcon ? offIcon : onIcon;
-    // const updatedRows = rows.map(r => {
-    //   if (r.id === id) {
-    //     return { ...r, delet: newStatus };
-    //   }
-    //   return r;
-    // });
-    // setStatus(updatedRows[0].delet);
+    // const newStatus = status === onIcon ? offIcon : onIcon;
+    // setStatus(newStatus);
+    const stateDeleted = delet
+    const newStatus = delet === onIcon ? offIcon : onIcon;
+    const updatedRows = rows.map(r => {
+      if (r.id === id) {
+        return { ...r, delet: newStatus };
+      }
+      return r;
+    });
+    setStatus(updatedRows[0].delet);
     
   }
 
@@ -289,8 +292,7 @@ export function DashBoardProducts(): ReactElement {
                     <StyledTableCell align="right"><Button onClick={() => handleEditClick(row.id,row.name, row.quantity,
                        row.description,row.price,row.Marca,row.img)}>
                       <img src={editIcon} width="35" height="35"/></Button></StyledTableCell>
-                    <StyledTableCell align="right"><Button onClick={()=>handleDeletedLogicClick(row.id,row.deleted,row.delet,
-                      row.rating, row.Marca, row.category_id)}><img src={row.delet} width="35" height="35"/></Button></StyledTableCell>
+                    <StyledTableCell align="right"><Button onClick={()=>handleDeletedLogicClick(row.id,row.delet)}><img src={status} width="35" height="35"/></Button></StyledTableCell>
                   </StyledTableRow>
                 ))}
               </TableBody>
