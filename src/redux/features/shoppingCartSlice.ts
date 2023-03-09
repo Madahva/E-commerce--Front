@@ -24,10 +24,13 @@ const shoppingCartSlice = createSlice({
         (item: any) => item.id !== action.payload
       );
     },
+    updateCart: (state, action) => {
+      state.items = action.payload;
+    },
   },
 });
 
-export const { addItem, removeItem } = shoppingCartSlice.actions;
+export const { addItem, removeItem, updateCart } = shoppingCartSlice.actions;
 export const selectShoppingCartItems = (state: RootState) =>
   state.shoppingReducer.items;
 export default shoppingCartSlice.reducer;
