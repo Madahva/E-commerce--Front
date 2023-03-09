@@ -10,6 +10,7 @@ import userReducer from "./features/userSlice";
 import filterReducer from "./features/filterSlice";
 import paymentReducer from "./features/paymentSlice";
 import shoppingReducer from "./features/shoppingCartSlice";
+import brandReducer from "./features/brandSlice";
 
 const localStorageMiddleware: Middleware = ({ getState }) => {
   return (next) => (action) => {
@@ -43,6 +44,7 @@ export const store = configureStore({
     filterReducer,
     paymentReducer,
     shoppingReducer,
+    brandReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(

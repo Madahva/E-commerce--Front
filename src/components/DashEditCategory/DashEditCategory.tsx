@@ -66,7 +66,7 @@ export function DashEditCategory(props: FormEditProps) {
       <br />
       <br />
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-      <Button variant="contained" color="primary" type="submit">
+      <Button variant="contained" color="primary" type="submit" style={{ marginRight: "80px" }}>
         Guardar
       </Button>
       <Button variant="contained" color="secondary" onClick={handleCancelClick}>

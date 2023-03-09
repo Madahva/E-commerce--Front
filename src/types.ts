@@ -41,3 +41,9 @@ export interface PaymentHistory {
   message: string;
   success: boolean;
 }
+
+export interface Brand {
+  id: any;
+  Brand: string;
+}
+

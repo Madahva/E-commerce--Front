@@ -21,18 +21,18 @@ import offIcon from "../../assets/Icons/off.jpg";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import { useAppSelector, useAppDispatch} from "../../redux/hooks";
 import { useEffect } from "react";
-// import { useDispatch} from "react-redux";
 import { fetchProducts} from "../../redux/features/productSlice";
 import { RootState } from "../../redux/store";
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { Product } from "../../types";
-// import { editProduct } from "../../redux/features/productSlice";
 import {DashEditProduct} from "../DashEditProduct/DashEditProduct"
 import Pagination from "../PaginationTable/PaginationTable"
 import { deleteProduct } from '../../redux/features/productSlice';
 import { updateProduct } from '../../redux/features/productSlice';
 import { ClassSharp } from "@mui/icons-material";
+import { Snackbar } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 
 
 const useStyles = makeStyles(() => ({
@@ -110,7 +110,7 @@ export function DashBoardProducts(): ReactElement {
   const [id, setID] = useState("");
   const [showTable, setShowTable] = useState(true);
   const [showPaginated, setshowPaginated] = useState(true);
-  const [status, setStatus]  = useState<boolean>();
+  const [status, setStatus]  = useState(true);
   // const [rows, setRows] = useState([]);
 
   const [name, setName] = useState("");
@@ -121,15 +121,16 @@ export function DashBoardProducts(): ReactElement {
   const [img, setImg] = useState("");
   const [deleted, setDeleted] = useState(false);
   const [category_id, setCategoryID] = useState(0);
+  const [showSuccestMsg, setShowSuccestMsg] = useState(false);
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   
   const productDetaild = useAppSelector((state: RootState) => state.productReducer.productDetaild);
-  console.log(productDetaild)
+  // console.log(productDetaild)
 
   function createData(id: string, name: string, quantity: number, description: string, deleted: boolean,
-                     price: any, rating: any, Marca: string, category_id: number, img: string,
+                     price: any, rating: any, Marca: any, category_id: number, img: string,
                      edit: string, delet: boolean) {
     return { id, name, quantity, description, deleted, price, rating, Marca, category_id,img, edit, delet};
   }
@@ -187,6 +188,7 @@ export function DashBoardProducts(): ReactElement {
       const updataProduct: Product = { id, name, quantity, description, img, price, deleted,rating, Marca, category_id};
       dispatch(updateProduct(updataProduct));
       setDeleted(deleted)
+      setShowSuccestMsg(true);
       
     }
     else{
@@ -197,6 +199,7 @@ export function DashBoardProducts(): ReactElement {
       const updataProduct: Product = { id, name, quantity, description, img, price, deleted,rating, Marca, category_id};
       dispatch(updateProduct(updataProduct));
       setDeleted(deleted)
+      setShowSuccestMsg(true);
     }
     
   }
@@ -214,6 +217,10 @@ export function DashBoardProducts(): ReactElement {
   // }
 
   const allCategories = useAppSelector((state: RootState) => state.categoryReducer.categories);
+  console.log(allCategories)
+  const allBrands = useAppSelector((state: RootState) => state.brandReducer.brands);
+  console.log(allBrands)
+
   return (
     <div>
       {isLoading ? (
@@ -262,16 +269,16 @@ export function DashBoardProducts(): ReactElement {
             <Table aria-label="customized table">
                 <TableHead>
                 <TableRow>
-                  <StyledTableCell>ID</StyledTableCell>
-                  <StyledTableCell align="right">Name</StyledTableCell>
-                  <StyledTableCell align="right">Quantity</StyledTableCell>
-                  <StyledTableCell align="right">Description</StyledTableCell>
-                  <StyledTableCell align="right">Price</StyledTableCell>
-                  <StyledTableCell align="right">Rating</StyledTableCell>
-                  <StyledTableCell align="right">Brand</StyledTableCell>
-                  <StyledTableCell align="right">Category</StyledTableCell>
-                  <StyledTableCell align="right">Edit</StyledTableCell>
-                  <StyledTableCell align="right">Status</StyledTableCell>
+                  <StyledTableCell style={{color: 'white' , textAlign: 'center'}}>ID</StyledTableCell>
+                  <StyledTableCell style={{color: 'white' , textAlign: 'center'}} align="right">Name</StyledTableCell>
+                  <StyledTableCell style={{color: 'white' , textAlign: 'center'}} align="right">Quantity</StyledTableCell>
+                  <StyledTableCell style={{color: 'white' , textAlign: 'center'}} align="right">Description</StyledTableCell>
+                  <StyledTableCell style={{color: 'white' , textAlign: 'center'}} align="right">Price</StyledTableCell>
+                  <StyledTableCell style={{color: 'white' , textAlign: 'center'}} align="right">Rating</StyledTableCell>
+                  <StyledTableCell style={{color: 'white' , textAlign: 'center'}} align="right">Brand</StyledTableCell>
+                  <StyledTableCell style={{color: 'white' , textAlign: 'center'}} align="right">Category</StyledTableCell>
+                  <StyledTableCell style={{color: 'white' , textAlign: 'center'}} align="right">Edit</StyledTableCell>
+                  <StyledTableCell style={{color: 'white' , textAlign: 'center'}} align="right">Status</StyledTableCell>
                 </TableRow>
                 </TableHead>
               <TableBody>
@@ -286,6 +293,11 @@ export function DashBoardProducts(): ReactElement {
                     <StyledTableCell align="right">{row.price}</StyledTableCell>
                     <StyledTableCell align="right">{row.rating}</StyledTableCell>
                     <StyledTableCell align="right">{row.Marca}</StyledTableCell>
+                    {/* {allBrands.map((b) =>
+                        b.id === row.Marca ? (
+                        <StyledTableCell align="right">{b.Brand}</StyledTableCell>
+                        ) : null
+                    )} */}
                     {allCategories.map((c) =>
                         c.id === row.category_id ? (
                         <StyledTableCell align="right">{c.typecategory}</StyledTableCell>
@@ -308,6 +320,15 @@ export function DashBoardProducts(): ReactElement {
               price={price} Marca={brand} img={img} category_id ={category_id} setIsCancel={setShowTable} setIsCancel2={setshowPaginated} />
             </div> 
           )}
+          <Snackbar
+            open={showSuccestMsg}
+            autoHideDuration={5000}
+            onClose={() => setShowSuccestMsg(false)}
+            >
+            <Alert severity="success" onClose={() => setShowSuccestMsg(false)}>
+              Product change Status!
+            </Alert>
+          </Snackbar>
           {showPaginated? (
           <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
             <Button variant="contained" color="primary" onClick={() => handleCreateClick()}>Create new product</Button>

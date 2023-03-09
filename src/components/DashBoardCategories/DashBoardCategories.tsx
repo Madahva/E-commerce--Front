@@ -179,25 +179,25 @@ export function DashBoardCategories(): ReactElement {
           </div>
           {showTable ? (
           <TableContainer component={Paper} style={{ width: '90%', margin: '3%', maxHeight: '150vh' }}>
-            <Table aria-label="customized table">
-                <TableHead>
+            <Table aria-label="customized table" >
+                <TableHead >
                 <TableRow>
-                  <StyledTableCell>ID</StyledTableCell>
-                  <StyledTableCell align="right">Name</StyledTableCell>
-                  <StyledTableCell align="right">Edit</StyledTableCell>
-                  <StyledTableCell align="right">Status</StyledTableCell>
+                  <StyledTableCell style={{color: 'white' , width: '33%',textAlign: 'center'}}>ID</StyledTableCell>
+                  <StyledTableCell style={{color: 'white', width: '33%', textAlign: 'center'}} align="right">Name</StyledTableCell>
+                  <StyledTableCell style={{color: 'white', width: '33%', textAlign: 'center'}} align="right">Edit</StyledTableCell>
+                  {/* <StyledTableCell align="right">Status</StyledTableCell> */}
                 </TableRow>
                 </TableHead>
               <TableBody>
                 {currentCategory.map((row) => (
                   <StyledTableRow key={row.id}>
-                    <StyledTableCell component="th" scope="row">
+                    <StyledTableCell style={{textAlign: 'center'}} component="th" scope="row">
                     {row.id}
                     </StyledTableCell>
-                    <StyledTableCell align="right">{row.typecategory}</StyledTableCell>
-                    <StyledTableCell align="right"><Button onClick={() => handleEditClick(row.id,row.typecategory)}>
+                    <StyledTableCell style={{textAlign: 'center'}} align="right">{row.typecategory}</StyledTableCell>
+                    <StyledTableCell style={{textAlign: 'center'}} align="right"><Button onClick={() => handleEditClick(row.id,row.typecategory)}>
                       <img src={editIcon} width="35" height="35"/></Button></StyledTableCell>
-                    <StyledTableCell align="right"><Button><img src={deleteIcon} width="35" height="35"/></Button></StyledTableCell>
+                    {/* <StyledTableCell align="right"><Button><img src={deleteIcon} width="35" height="35"/></Button></StyledTableCell> */}
                   </StyledTableRow>
                 ))}
               </TableBody>
@@ -210,7 +210,7 @@ export function DashBoardCategories(): ReactElement {
           )}
           {showPaginated? (
           <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-            <Button variant="contained" color="primary" onClick={() => handleCreateClick()}>Create new category</Button>
+            {/* <Button variant="contained" color="primary" onClick={() => handleCreateClick()}>Create new category</Button> */}
             <Pagination
             rowsPerPage={rowsPerPage}
             page={page}
