@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { fetchBySearch } from "../../redux/features/filterSlice";
 import {
   selectShoppingCartItems,
   removeItem,
+  updateCart,
 } from "../../redux/features/shoppingCartSlice";
 import {
   fetchPayment,
@@ -14,7 +15,14 @@ import {
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
-import { Button, Input, Link, Modal, Typography } from "@mui/material";
+import {
+  Button,
+  Input,
+  Link,
+  Modal,
+  Typography,
+  TextField,
+} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -138,7 +146,13 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "space-between",
     width: "100%",
-    color:"#1976d2",
+    color: "#1976d2",
+  },
+  quantity: {
+    alignItems: "center",
+    display: "flex",
+    height: "40px",
+    margin: "2rem 0",
   },
 }));
 
@@ -205,8 +219,29 @@ const NavBar = () => {
   };
 
   const userPaymentHistory = useAppSelector(selectUserPaymentHistory);
-
   const shoppingCart = useAppSelector(selectShoppingCartItems);
+  const [quantity, setQuantity] = useState<number | null>(1);
+
+  const handleIncrease = (itemQuantity:number) => {
+    console.log(itemQuantity)
+    setQuantity(itemQuantity)
+    setQuantity(itemQuantity + 1);
+  };
+  const handleDecrease = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+    }
+  };
+
+  useEffect(() => {
+    const updatedCart = shoppingCart.map((item: any) => ({
+      ...item,
+      quantity,
+    }));
+    console.log(shoppingCart);
+    dispatch(updateCart(updatedCart));
+  }, [quantity]);
+
   return (
     <div className={classes.navBarContainer}>
       <div className={classes.navBar}>
@@ -244,6 +279,14 @@ const NavBar = () => {
           className={classes.modal}
         >
           <div className={classes.paper}>
+            <div className={classes.labelContainer}>
+              <Typography></Typography>
+              <Typography>Quantity</Typography>
+              <Typography>Price</Typography>
+              <Typography>Title</Typography>
+              <Typography>Amount</Typography>
+              <Typography>Delete</Typography>
+            </div>
             {shoppingCart.length === 0 ? (
               <Typography>There are no items in the shopping cart.</Typography>
             ) : (
@@ -259,16 +302,41 @@ const NavBar = () => {
                         severity="warning"
                         onClose={() => setShowSnackbar(false)}
                       >
-                        Debe iniciar sesión para realizar una compra.
+                        You must be logged in to make a purchase.
                       </Alert>
                     </Snackbar>
-                    <Typography sx={{ maxWidth: "150px" }}>
+                    <div className={classes.quantity}>
+                      <Button
+                        onClick={handleDecrease}
+                        variant="contained"
+                        sx={{ height: "55px", minWidth: "10px" }}
+                        color="primary"
+                      >
+                        <h3>-</h3>
+                      </Button>
+                      <TextField
+                        label={"quantity"}
+                        type={"number"}
+                        value={item.quantity}
+                        sx={{ width: "100px" }}
+                      />
+                      <Button
+                        onClick={ ()=> handleIncrease(item.quantity)}
+                        sx={{ height: "55px", minWidth: "10px" }}
+                        variant="contained"
+                        color="primary"
+                      >
+                        <h3>+</h3>
+                      </Button>
+                    </div>
+                    <Typography>${item.unit_price}</Typography>
+                    <Typography sx={{ minWidth: "150px" }}>
                       {item.title}
                     </Typography>
-                    <Typography>${item.unit_price}</Typography>
+                    <Typography>${item.unit_price * item.quantity}</Typography>
                     <Button
-                      variant="contained"
-                      style={{ backgroundColor: "red" }}
+                      variant="text"
+                      style={{ color: "red" }}
                       onClick={() => dispatch(removeItem(item.id))}
                     >
                       <DeleteOutlineIcon />

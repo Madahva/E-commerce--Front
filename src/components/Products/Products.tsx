@@ -8,6 +8,7 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import ButtonBase from "@mui/material/ButtonBase";
+import Rating from "@mui/material/Rating";
 import { makeStyles } from "@mui/styles";
 import { styled } from "@mui/material/styles";
 
@@ -17,6 +18,7 @@ interface ProductsProps {
 
 const Products = ({ categorieSeccion }: ProductsProps) => {
   const products: Product[] = useAppSelector(selectProduct);
+  console.log(products);
   const useStyles = makeStyles((theme) => ({
     link: {
       color: "inherit",
@@ -103,7 +105,7 @@ const Products = ({ categorieSeccion }: ProductsProps) => {
                           {el.description}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                          {el.Marca}
+                          <Rating value={el.rating} readOnly></Rating>
                         </Typography>
                       </Grid>
                     </Grid>
