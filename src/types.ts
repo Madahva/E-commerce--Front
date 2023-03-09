@@ -24,7 +24,7 @@ export interface ProductCreate {
   price: any;
   deleted: boolean;
   rating: any;
-  Marca: string;
+  Marca: any;
   category_id: any;
 }
 

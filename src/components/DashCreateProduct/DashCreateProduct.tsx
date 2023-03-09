@@ -30,7 +30,7 @@ interface ProductError {
   quantity: number;
   description: string;
   price: number;
-  Marca: string;
+  Marca: any;
 }
 
 interface Brand {
@@ -163,7 +163,8 @@ export function DashCreateProduct(): ReactElement {
   const [price, setPrice] = useState(0);
   const [deleted, ] = useState(false);
   const [rating, ] = useState(4);
-  const [Marca, setBrand] = useState("");
+  const [brand, setBrand] = useState("");
+  const [Marca, setBrandID] = useState(0);
   const [category, setCategory] = useState("");
   const [category_id, setCategoryID] = useState(0);
   const [errors, setErrors] = useState({});
@@ -189,8 +190,16 @@ export function DashCreateProduct(): ReactElement {
     setPrice(Number(event.target.value));
   }
   const handleBrandChange = (event: SelectChangeEvent<string>, child: React.ReactNode) => {
-    setBrand(event.target.value);
+    const brandType = event.target.value;
+    const selectedBrand = brands.find((b) => b.name=== brandType);
+  
+    if (selectedBrand) {
+      setBrandID(selectedBrand.id);
+      setBrand(brandType);
+      console.log(selectedBrand.id)
+    }
   }
+
   const handleCategoryChange = (event: SelectChangeEvent<string>, child: React.ReactNode) => {
     const categoryType = event.target.value;
     const selectedCategory = allCategories.find((c) => c.typecategory === categoryType);
@@ -354,7 +363,7 @@ export function DashCreateProduct(): ReactElement {
                   <FormControl fullWidth variant="outlined">
                   <InputLabel htmlFor="brand">Brand</InputLabel>
                   <Select
-                    value={Marca}
+                    value={brand}
                     onChange={handleBrandChange}
                     displayEmpty
                   >
@@ -362,7 +371,7 @@ export function DashCreateProduct(): ReactElement {
                   Brand
                   </MenuItem>
                   {brands?.map((b) => (
-                    <MenuItem key={b.name} value={b.name}>
+                    <MenuItem key={b.id} value={b.name}>
                     {b.name.toUpperCase()}
                     </MenuItem>
                   ))}
