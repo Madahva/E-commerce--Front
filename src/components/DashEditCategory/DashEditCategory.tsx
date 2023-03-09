@@ -12,7 +12,7 @@ import { updateProduct } from '../../redux/features/productSlice';
 
 interface FormEditProps {
   id: any,
-  name: string;
+  typecategory: string;
   setIsCancel: (isTable: boolean) => void;
   setIsCancel2: (isPaginated: boolean) => void;
   
@@ -25,7 +25,7 @@ interface FormEditProps {
 export function DashEditCategory(props: FormEditProps) {
 
 
-  const [typecategory, setUpDateName] = useState(props.name);
+  const [typecategory, setUpDateName] = useState(props.typecategory);
   const [id, setID] = useState(props.id);
 
 
@@ -47,6 +47,7 @@ export function DashEditCategory(props: FormEditProps) {
   };
 
   return (
+    
     <form onSubmit={handleSubmit} style={{ width: '95%', margin: '3%', maxHeight: '180vh' }}>
       <Grid container spacing={2} >
         <Grid item xs={12}>
@@ -65,7 +66,7 @@ export function DashEditCategory(props: FormEditProps) {
       <br />
       <br />
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-      <Button variant="contained" color="primary" type="submit">
+      <Button variant="contained" color="primary" type="submit" style={{ marginRight: "80px" }}>
         Guardar
       </Button>
       <Button variant="contained" color="secondary" onClick={handleCancelClick}>

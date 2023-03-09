@@ -7,7 +7,8 @@ import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { AppDispatch } from '../../redux/store';
 import { updateProduct } from '../../redux/features/productSlice';
-
+import { Snackbar } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 
 interface FormEditProps {
   id: any,
@@ -17,6 +18,7 @@ interface FormEditProps {
   price: any; 
   Marca: string;
   img: string;
+  category_id: any;
   setIsCancel: (isTable: boolean) => void;
   setIsCancel2: (isPaginated: boolean) => void;
 }
@@ -105,7 +107,8 @@ export function DashEditProduct(props: FormEditProps) {
   const [Marca, setUpDateBrand] = useState(props.Marca);
   const [id, setID] = useState(props.id);
   const [img, setImage] = useState(props.img);
-  const [category_id, setCategoryID] = useState(1);
+  const [category_id, setCategoryID] = useState(props.category_id);
+  const [showSuccestMsg, setShowSuccestMsg] = useState(false);
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUpDateName(event.target.value);
@@ -129,7 +132,7 @@ export function DashEditProduct(props: FormEditProps) {
     event.preventDefault();
     const updataProduct: Product = { id, name, quantity, description, img, price, deleted,rating, Marca, category_id};
     dispatch(updateProduct(updataProduct));
-    alert("Product has been created successfully!");
+    setShowSuccestMsg(true);
   };
 
   const handleCancelClick = () => {
@@ -211,13 +214,22 @@ export function DashEditProduct(props: FormEditProps) {
       <br />
       <br />
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-      <Button variant="contained" color="primary" type="submit">
+      <Button variant="contained" color="primary" type="submit" style={{ marginRight: "80px" }}>
         Guardar
       </Button>
       <Button variant="contained" color="secondary" onClick={handleCancelClick}>
         Cancelar
       </Button>
       </div>
+      <Snackbar
+            open={showSuccestMsg}
+            autoHideDuration={5000}
+            onClose={() => setShowSuccestMsg(false)}
+            >
+            <Alert severity="success" onClose={() => setShowSuccestMsg(false)}>
+              Product edited!
+            </Alert>
+      </Snackbar>
     </form>
 
   );

@@ -19,19 +19,20 @@ import editIcon from "../../assets/Icons/edit.jpg";
 import onIcon from "../../assets/Icons/on.jpg";
 import offIcon from "../../assets/Icons/off.jpg";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppSelector, useAppDispatch} from "../../redux/hooks";
 import { useEffect } from "react";
-import { useDispatch} from "react-redux";
 import { fetchProducts} from "../../redux/features/productSlice";
 import { RootState } from "../../redux/store";
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { Product } from "../../types";
-// import { editProduct } from "../../redux/features/productSlice";
 import {DashEditProduct} from "../DashEditProduct/DashEditProduct"
 import Pagination from "../PaginationTable/PaginationTable"
 import { deleteProduct } from '../../redux/features/productSlice';
 import { updateProduct } from '../../redux/features/productSlice';
+import { ClassSharp } from "@mui/icons-material";
+import { Snackbar } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 
 
 const useStyles = makeStyles(() => ({
@@ -87,7 +88,7 @@ const StyledTableRow = withStyles(() =>
   }),
 )(TableRow);
 
-type AppDispatch = ThunkDispatch<RootState, void, AnyAction>;
+// type AppDispatch = ThunkDispatch<RootState, void, AnyAction>;
 
 export function DashBoardProducts(): ReactElement {
   const classes = useStyles();
@@ -101,16 +102,17 @@ export function DashBoardProducts(): ReactElement {
       user.email === process.env.REACT_APP_EMAIL_ADMIN_2);
 
   if (!isAdmind) navigate("/");
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
   
   useEffect(() => {
     dispatch(fetchProducts());
   }, [dispatch]);
-
+  const [id, setID] = useState("");
   const [showTable, setShowTable] = useState(true);
   const [showPaginated, setshowPaginated] = useState(true);
-  const [status, setStatus] = useState(onIcon);
-  const [id, setID] = useState("");
+  const [status, setStatus]  = useState(true);
+  // const [rows, setRows] = useState([]);
+
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState(0);
   const [description, setDescription] = useState("");
@@ -118,26 +120,26 @@ export function DashBoardProducts(): ReactElement {
   const [brand, setBrand] = useState("");
   const [img, setImg] = useState("");
   const [deleted, setDeleted] = useState(false);
+  const [category_id, setCategoryID] = useState(0);
+  const [showSuccestMsg, setShowSuccestMsg] = useState(false);
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   
   const productDetaild = useAppSelector((state: RootState) => state.productReducer.productDetaild);
-  
+  // console.log(productDetaild)
 
   function createData(id: string, name: string, quantity: number, description: string, deleted: boolean,
-                     price: any, rating: any, Marca: string, category_id: number, img: string,
-                     edit: string, delet: string) {
-    return { id, name, quantity, description, deleted, price, rating, Marca, category_id,img, edit, delet:status};
+                     price: any, rating: any, Marca: any, category_id: number, img: string,
+                     edit: string, delet: boolean) {
+    return { id, name, quantity, description, deleted, price, rating, Marca, category_id,img, edit, delet};
   }
   
   const rows = productDetaild.map((product) =>
   createData(product.id, product.name, product.quantity, product.description, product.deleted, product.price,
-             product.rating, product.Marca, product.category_id,product.img, "", "")
+             product.rating, product.Marca, product.category_id,product.img, "", true)
   );
-  console.log(rows)
   
-
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -154,7 +156,7 @@ export function DashBoardProducts(): ReactElement {
 
 
   const handleEditClick = (id: any, name: string, quantity: number, description: string, 
-    price: any,  brand: string, img: string) => {
+    price: any,  brand: string, img: string, category_id: any) => {
     setShowTable(false);
     setshowPaginated(false)
     setID(id)
@@ -163,39 +165,46 @@ export function DashBoardProducts(): ReactElement {
     setDescription(description);
     setPrice(price);
     setBrand(brand);
+    setImg(img);
+    setCategoryID(category_id);
   }
   
   const handleCreateClick = () => {
     navigate("/dashboard-create-products")
   }
 
-  const handleDeletedLogicClick = (id: string, deleted: boolean, delet: string,
-    rating: any, Marca: string, category_id: any) => {
+  const handleDeletedLogicClick = (id: string,  name: string,
+    quantity: any, description: string, price: any, deleted: boolean, delet: boolean,
+    rating: any, Marca: string, img: string, category_id: any) => {
     
     if(deleted===false){
       // setDeleted(true)
-      dispatch(deleteProduct(id));
-    }else{
-      // setDeleted(false)
-      deleted = false;
+      // console.log(id)
+      // dispatch(deleteProduct(id));
+      setStatus(!delet)
+      deleted = true;
+      console.log(deleted)
+      console.log("paso")
       const updataProduct: Product = { id, name, quantity, description, img, price, deleted,rating, Marca, category_id};
       dispatch(updateProduct(updataProduct));
+      setDeleted(deleted)
+      setShowSuccestMsg(true);
+
+      
+    }
+    else{
+      // setDeleted(false)
+      deleted = false;
+      console.log(deleted)
+      console.log("paso2")
+      const updataProduct: Product = { id, name, quantity, description, img, price, deleted,rating, Marca, category_id};
+      dispatch(updateProduct(updataProduct));
+      setDeleted(deleted)
+      setShowSuccestMsg(true);
     }
     
-    
-    // // const newStatus = status === onIcon ? offIcon : onIcon;
-    // // setStatus(newStatus);
-    // const stateDeleted = delet
-    // const newStatus = delet === onIcon ? offIcon : onIcon;
-    // const updatedRows = rows.map(r => {
-    //   if (r.id === id) {
-    //     return { ...r, delet: newStatus };
-    //   }
-    //   return r;
-    // });
-    // setStatus(updatedRows[0].delet);
-    
   }
+
 
   // const handleCategoryChange = (event: SelectChangeEvent<string>, child: React.ReactNode) => {
   //   const categoryType = event.target.value;
@@ -209,6 +218,10 @@ export function DashBoardProducts(): ReactElement {
   // }
 
   const allCategories = useAppSelector((state: RootState) => state.categoryReducer.categories);
+  console.log(allCategories)
+  const allBrands = useAppSelector((state: RootState) => state.brandReducer.brands);
+  console.log(allBrands)
+
   return (
     <div>
       {isLoading ? (
@@ -257,16 +270,16 @@ export function DashBoardProducts(): ReactElement {
             <Table aria-label="customized table">
                 <TableHead>
                 <TableRow>
-                  <StyledTableCell>ID</StyledTableCell>
-                  <StyledTableCell align="right">Name</StyledTableCell>
-                  <StyledTableCell align="right">Quantity</StyledTableCell>
-                  <StyledTableCell align="right">Description</StyledTableCell>
-                  <StyledTableCell align="right">Price</StyledTableCell>
-                  <StyledTableCell align="right">Rating</StyledTableCell>
-                  <StyledTableCell align="right">Brand</StyledTableCell>
-                  <StyledTableCell align="right">Category</StyledTableCell>
-                  <StyledTableCell align="right">Edit</StyledTableCell>
-                  <StyledTableCell align="right">Status</StyledTableCell>
+                  <StyledTableCell style={{color: 'white' , textAlign: 'center'}}>ID</StyledTableCell>
+                  <StyledTableCell style={{color: 'white' , textAlign: 'center'}} align="right">Name</StyledTableCell>
+                  <StyledTableCell style={{color: 'white' , textAlign: 'center'}} align="right">Quantity</StyledTableCell>
+                  <StyledTableCell style={{color: 'white' , textAlign: 'center'}} align="right">Description</StyledTableCell>
+                  <StyledTableCell style={{color: 'white' , textAlign: 'center'}} align="right">Price</StyledTableCell>
+                  <StyledTableCell style={{color: 'white' , textAlign: 'center'}} align="right">Rating</StyledTableCell>
+                  <StyledTableCell style={{color: 'white' , textAlign: 'center'}} align="right">Brand</StyledTableCell>
+                  <StyledTableCell style={{color: 'white' , textAlign: 'center'}} align="right">Category</StyledTableCell>
+                  <StyledTableCell style={{color: 'white' , textAlign: 'center'}} align="right">Edit</StyledTableCell>
+                  <StyledTableCell style={{color: 'white' , textAlign: 'center'}} align="right">Status</StyledTableCell>
                 </TableRow>
                 </TableHead>
               <TableBody>
@@ -281,16 +294,22 @@ export function DashBoardProducts(): ReactElement {
                     <StyledTableCell align="right">{row.price}</StyledTableCell>
                     <StyledTableCell align="right">{row.rating}</StyledTableCell>
                     <StyledTableCell align="right">{row.Marca}</StyledTableCell>
+                    {/* {allBrands.map((b) =>
+                        b.id === row.Marca ? (
+                        <StyledTableCell align="right">{b.Brand}</StyledTableCell>
+                        ) : null
+                    )} */}
                     {allCategories.map((c) =>
                         c.id === row.category_id ? (
                         <StyledTableCell align="right">{c.typecategory}</StyledTableCell>
                         ) : null
                     )}
                     <StyledTableCell align="right"><Button onClick={() => handleEditClick(row.id,row.name, row.quantity,
-                       row.description,row.price,row.Marca,row.img)}>
+                       row.description,row.price,row.Marca,row.img, row.category_id)}>
                       <img src={editIcon} width="35" height="35"/></Button></StyledTableCell>
-                    <StyledTableCell align="right"><Button onClick={()=>handleDeletedLogicClick(row.id,row.deleted,row.delet,
-                      row.rating, row.Marca, row.category_id)}><img src={row.delet} width="35" height="35"/></Button></StyledTableCell>
+                    <StyledTableCell align="right"><Button onClick={()=>handleDeletedLogicClick(row.id,row.name,
+                      row.quantity, row.description, row.price,deleted,status,
+                      row.rating, row.Marca, row.img, row.category_id)}><img src={status ? onIcon : offIcon} width="35" height="35"/></Button></StyledTableCell>
                   </StyledTableRow>
                 ))}
               </TableBody>
@@ -299,9 +318,18 @@ export function DashBoardProducts(): ReactElement {
           ) : (
             <div>
               <DashEditProduct id={id} name={name} quantity={quantity} description={description} 
-              price={price} Marca={brand} img={img} setIsCancel={setShowTable} setIsCancel2={setshowPaginated} />
+              price={price} Marca={brand} img={img} category_id ={category_id} setIsCancel={setShowTable} setIsCancel2={setshowPaginated} />
             </div> 
           )}
+          <Snackbar
+            open={showSuccestMsg}
+            autoHideDuration={5000}
+            onClose={() => setShowSuccestMsg(false)}
+            >
+            <Alert severity="success" onClose={() => setShowSuccestMsg(false)}>
+              Product change Status!
+            </Alert>
+          </Snackbar>
           {showPaginated? (
           <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
             <Button variant="contained" color="primary" onClick={() => handleCreateClick()}>Create new product</Button>

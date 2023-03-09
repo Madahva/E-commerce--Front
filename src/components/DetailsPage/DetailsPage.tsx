@@ -2,18 +2,23 @@ import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { selectProductDetailds } from "../../redux/features/productSlice";
-import { fetchPayment, selectPayment, createPaymentHistory } from "../../redux/features/paymentSlice";
+import {
+  fetchPayment,
+  selectPayment,
+  createPaymentHistory,
+} from "../../redux/features/paymentSlice";
 import { addItem } from "../../redux/features/shoppingCartSlice";
 import { Product } from "../../types";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
 import Button from "@mui/material/Button";
-import { Breadcrumbs, Typography } from "@mui/material";
+import Rating from "@mui/material/Rating";
+import { Breadcrumbs, Typography, TextField } from "@mui/material";
 import { AddShoppingCart } from "@mui/icons-material";
 import { Box } from "@mui/system";
 import { Snackbar } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles((theme) => ({
   detailsPage: {
@@ -52,6 +57,12 @@ const useStyles = makeStyles((theme) => ({
     gap: "2rem",
     justifyContent: "space-between",
   },
+  quantity: {
+    alignItems: "center",
+    display: "flex",
+    height: "40px",
+    margin: "2rem 0",
+  },
 }));
 
 const DetailsPage: React.FC = () => {
@@ -73,7 +84,6 @@ const DetailsPage: React.FC = () => {
 
   const dispatch = useAppDispatch();
   const response = useAppSelector(selectPayment);
-  console.log(response);
   useEffect(() => {
     if (response?.init_point) {
       window.location.href = response.init_point;
@@ -85,28 +95,47 @@ const DetailsPage: React.FC = () => {
       addItem({
         title: name,
         id,
-        quantity: 1,
+        quantity: quantity,
         unit_price: parseInt(price),
       })
     );
     setShowSuccestMsg(true);
   };
+  const [quantity, setQuantity] = useState<number>(1);
 
-  const handleBuy = (name: string, price: string) => {
+  const handleIncrease = () => {
+    setQuantity(quantity + 1);
+  };
+  const handleDecrease = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+    }
+  };
+  const handleBuy = (name: string, price: string, quantity: number) => {
     if (isAuthenticated) {
-      const shoppingCart = [{
-        title: name,
-        quantity: 1,
-        unit_price: parseInt(price),
-      }]
+      const shoppingCart = [
+        {
+          title: name,
+          quantity: quantity,
+          unit_price: parseInt(price),
+        },
+      ];
+
       dispatch(createPaymentHistory({ shoppingCart, userEmail: user.email }));
-      dispatch(
-        fetchPayment(shoppingCart));
+      dispatch(fetchPayment(shoppingCart));
       setShowBuying(true);
     } else {
       setShowSnackbar(true);
     }
   };
+
+  const [rating, setRating] = React.useState<number | null>(null);
+
+  useEffect(() => {
+    if (product) {
+      setRating(product.rating);
+    }
+  }, [product]);
 
   return (
     <div>
@@ -156,11 +185,45 @@ const DetailsPage: React.FC = () => {
                 <div>
                   <p>{product.description}</p>
                   <p>{product.Marca}</p>
+                  <Rating
+                    name="simple-controlled"
+                    value={rating}
+                    onChange={(event, newValue) => {
+                      setRating(newValue);
+                    }}
+                  />
                   <p>{product.price}</p>
+
+                  <div className={classes.quantity}>
+                    <Button
+                      onClick={handleDecrease}
+                      variant="contained"
+                      sx={{ height: "100%" }}
+                      color="primary"
+                    >
+                      <h3>-</h3>
+                    </Button>
+                    <TextField
+                      label={"quantity"}
+                      type={"number"}
+                      value={quantity}
+                      sx={{ width: "100px", padding: "10px" }}
+                    />
+                    <Button
+                      onClick={handleIncrease}
+                      sx={{ height: "40px" }}
+                      variant="contained"
+                      color="primary"
+                    >
+                      <h3>+</h3>
+                    </Button>
+                  </div>
                 </div>
+
                 <Button
                   variant="contained"
                   color="primary"
+                  sx={{ padding: ".5rem 1rem" }}
                   onClick={() => {
                     handleAddToShoppingCart(
                       product.name,
@@ -176,11 +239,15 @@ const DetailsPage: React.FC = () => {
                 <Button
                   variant="contained"
                   onClick={() => {
-                    handleBuy(product.name, product.price);
+                    handleBuy(product.name, product.price, quantity);
                   }}
-                  style={{ backgroundColor: "#4CAF50", marginLeft: "2rem" }}
+                  style={{
+                    backgroundColor: "#4CAF50",
+                    marginLeft: "2rem",
+                    padding: ".5rem 1rem",
+                  }}
                 >
-                  {showBuying ? (<CircularProgress />):"Buy"}
+                  {showBuying ? <CircularProgress /> : "Buy"}
                 </Button>
               </div>
             </div>
