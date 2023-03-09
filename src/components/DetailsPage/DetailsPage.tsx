@@ -2,18 +2,23 @@ import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { selectProductDetailds } from "../../redux/features/productSlice";
-import { fetchPayment, selectPayment, createPaymentHistory } from "../../redux/features/paymentSlice";
+import {
+  fetchPayment,
+  selectPayment,
+  createPaymentHistory,
+} from "../../redux/features/paymentSlice";
 import { addItem } from "../../redux/features/shoppingCartSlice";
 import { Product } from "../../types";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
 import Button from "@mui/material/Button";
+import Rating from "@mui/material/Rating";
 import { Breadcrumbs, Typography } from "@mui/material";
 import { AddShoppingCart } from "@mui/icons-material";
 import { Box } from "@mui/system";
 import { Snackbar } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles((theme) => ({
   detailsPage: {
@@ -94,19 +99,22 @@ const DetailsPage: React.FC = () => {
 
   const handleBuy = (name: string, price: string) => {
     if (isAuthenticated) {
-      const shoppingCart = [{
-        title: name,
-        quantity: 1,
-        unit_price: parseInt(price),
-      }]
+      const shoppingCart = [
+        {
+          title: name,
+          quantity: 1,
+          unit_price: parseInt(price),
+        },
+      ];
       dispatch(createPaymentHistory({ shoppingCart, userEmail: user.email }));
-      dispatch(
-        fetchPayment(shoppingCart));
+      dispatch(fetchPayment(shoppingCart));
       setShowBuying(true);
     } else {
       setShowSnackbar(true);
     }
   };
+
+  const [rating, setRating] = React.useState<number | null>(product.rating);
 
   return (
     <div>
@@ -156,6 +164,13 @@ const DetailsPage: React.FC = () => {
                 <div>
                   <p>{product.description}</p>
                   <p>{product.Marca}</p>
+                  <Rating
+                    name="simple-controlled"
+                    value={rating}
+                    onChange={(event, newValue) => {
+                      setRating(newValue);
+                    }}
+                  />
                   <p>{product.price}</p>
                 </div>
                 <Button
@@ -180,7 +195,7 @@ const DetailsPage: React.FC = () => {
                   }}
                   style={{ backgroundColor: "#4CAF50", marginLeft: "2rem" }}
                 >
-                  {showBuying ? (<CircularProgress />):"Buy"}
+                  {showBuying ? <CircularProgress /> : "Buy"}
                 </Button>
               </div>
             </div>
