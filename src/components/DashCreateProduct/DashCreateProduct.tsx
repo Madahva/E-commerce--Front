@@ -22,6 +22,8 @@ import { SelectChangeEvent } from '@mui/material/Select';
 import { useAppSelector } from "../../redux/hooks";
 import { fetchCategories } from '../../redux/features/categorySlice';
 import Breadcrumbs from "@mui/material/Breadcrumbs";
+import { Snackbar } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 
 interface ProductError {
   name: string;
@@ -165,6 +167,7 @@ export function DashCreateProduct(): ReactElement {
   const [category, setCategory] = useState("");
   const [category_id, setCategoryID] = useState(0);
   const [errors, setErrors] = useState({});
+  const [showSuccestMsg, setShowSuccestMsg] = useState(false);
 
   const allCategories = useAppSelector((state: RootState) => state.categoryReducer.categories);
   
@@ -233,7 +236,7 @@ export function DashCreateProduct(): ReactElement {
     const newProduct: ProductCreate = { name, quantity, description, img, price, deleted,rating, Marca, category_id};
     console.log(newProduct)
     dispatch(createNewProduct(newProduct));
-    alert("Product has been created successfully!");
+    setShowSuccestMsg(true);
   };
   
   return (
@@ -398,6 +401,15 @@ export function DashCreateProduct(): ReactElement {
             <Button variant="contained" color="primary" type="submit">
               Create
             </Button>
+            <Snackbar
+            open={showSuccestMsg}
+            autoHideDuration={5000}
+            onClose={() => setShowSuccestMsg(false)}
+            >
+            <Alert severity="success" onClose={() => setShowSuccestMsg(false)}>
+              Product created!
+            </Alert>
+          </Snackbar>
           </form>
         </div>
       )}
