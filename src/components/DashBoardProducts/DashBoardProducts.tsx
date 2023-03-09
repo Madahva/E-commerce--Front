@@ -189,6 +189,7 @@ export function DashBoardProducts(): ReactElement {
       dispatch(updateProduct(updataProduct));
       setDeleted(deleted)
       setShowSuccestMsg(true);
+
       
     }
     else{
