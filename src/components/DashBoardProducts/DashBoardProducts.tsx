@@ -19,9 +19,9 @@ import editIcon from "../../assets/Icons/edit.jpg";
 import onIcon from "../../assets/Icons/on.jpg";
 import offIcon from "../../assets/Icons/off.jpg";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppSelector, useAppDispatch} from "../../redux/hooks";
 import { useEffect } from "react";
-import { useDispatch} from "react-redux";
+// import { useDispatch} from "react-redux";
 import { fetchProducts} from "../../redux/features/productSlice";
 import { RootState } from "../../redux/store";
 import { ThunkDispatch } from 'redux-thunk';
@@ -88,7 +88,7 @@ const StyledTableRow = withStyles(() =>
   }),
 )(TableRow);
 
-type AppDispatch = ThunkDispatch<RootState, void, AnyAction>;
+// type AppDispatch = ThunkDispatch<RootState, void, AnyAction>;
 
 export function DashBoardProducts(): ReactElement {
   const classes = useStyles();
@@ -102,7 +102,7 @@ export function DashBoardProducts(): ReactElement {
       user.email === process.env.REACT_APP_EMAIL_ADMIN_2);
 
   if (!isAdmind) navigate("/");
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
   
   useEffect(() => {
     dispatch(fetchProducts());
@@ -110,8 +110,9 @@ export function DashBoardProducts(): ReactElement {
   const [id, setID] = useState("");
   const [showTable, setShowTable] = useState(true);
   const [showPaginated, setshowPaginated] = useState(true);
-  const [status, setStatus] = useState(onIcon);
-  
+  const [status, setStatus]  = useState<boolean>();
+  // const [rows, setRows] = useState([]);
+
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState(0);
   const [description, setDescription] = useState("");
@@ -129,17 +130,15 @@ export function DashBoardProducts(): ReactElement {
 
   function createData(id: string, name: string, quantity: number, description: string, deleted: boolean,
                      price: any, rating: any, Marca: string, category_id: number, img: string,
-                     edit: string, delet: string) {
+                     edit: string, delet: boolean) {
     return { id, name, quantity, description, deleted, price, rating, Marca, category_id,img, edit, delet};
   }
   
   const rows = productDetaild.map((product) =>
   createData(product.id, product.name, product.quantity, product.description, product.deleted, product.price,
-             product.rating, product.Marca, product.category_id,product.img, "", "")
+             product.rating, product.Marca, product.category_id,product.img, "", true)
   );
-  console.log(rows)
   
-
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -174,38 +173,31 @@ export function DashBoardProducts(): ReactElement {
   }
 
   const handleDeletedLogicClick = (id: string,  name: string,
-    quantity: any, description: string, price: any, deleted: boolean, delet: string,
-    rating: any, Marca: string, category_id: any) => {
+    quantity: any, description: string, price: any, deleted: boolean, delet: boolean,
+    rating: any, Marca: string, img: string, category_id: any) => {
     
     if(deleted===false){
       // setDeleted(true)
+      // console.log(id)
       // dispatch(deleteProduct(id));
-      // console.log(dispatch(deleteProduct(id)))
-      const updataProduct: Product = { id, name, quantity, description, img, price, deleted: true,rating, Marca, category_id};
-      dispatch(fetchProducts())
-      console.log(currentProducts)
+      setStatus(!delet)
+      deleted = true;
+      console.log(deleted)
+      console.log("paso")
+      const updataProduct: Product = { id, name, quantity, description, img, price, deleted,rating, Marca, category_id};
       dispatch(updateProduct(updataProduct));
+      setDeleted(deleted)
       
     }
-    // else{
-    //   // setDeleted(false)
-    //   deleted = false;
-    //   const updataProduct: Product = { id, name, quantity, description, img, price, deleted,rating, Marca, category_id};
-    //   dispatch(updateProduct(updataProduct));
-    // }
-    
-    
-    // // const newStatus = status === onIcon ? offIcon : onIcon;
-    // // setStatus(newStatus);
-    // const stateDeleted = delet
-    // const newStatus = delet === onIcon ? offIcon : onIcon;
-    // const updatedRows = rows.map(r => {
-    //   if (r.id === id) {
-    //     return { ...r, delet: newStatus };
-    //   }
-    //   return r;
-    // });
-    // setStatus(updatedRows[0].delet);
+    else{
+      // setDeleted(false)
+      deleted = false;
+      console.log(deleted)
+      console.log("paso2")
+      const updataProduct: Product = { id, name, quantity, description, img, price, deleted,rating, Marca, category_id};
+      dispatch(updateProduct(updataProduct));
+      setDeleted(deleted)
+    }
     
   }
 
@@ -255,7 +247,7 @@ export function DashBoardProducts(): ReactElement {
               Admin: {user.given_name}
             </Typography>
           </div>
-          {/* <div style={{ marginLeft: "45px", marginTop: "10px", marginBottom: "-30px"}}>
+          <div style={{ marginLeft: "45px", marginTop: "10px", marginBottom: "-30px"}}>
           <Breadcrumbs aria-label="breadcrumb">
               <Link className={classes.link} to="/">
                 Home
@@ -264,7 +256,7 @@ export function DashBoardProducts(): ReactElement {
                 Dashboard
               </Link>
           </Breadcrumbs>
-          </div> */}
+          </div>
           {showTable ? (
           <TableContainer component={Paper} style={{ width: '95%', margin: '3%', maxHeight: '180vh' }}>
             <Table aria-label="customized table">
@@ -303,8 +295,8 @@ export function DashBoardProducts(): ReactElement {
                        row.description,row.price,row.Marca,row.img, row.category_id)}>
                       <img src={editIcon} width="35" height="35"/></Button></StyledTableCell>
                     <StyledTableCell align="right"><Button onClick={()=>handleDeletedLogicClick(row.id,row.name,
-                      row.quantity, row.description, row.price,row.deleted,row.delet,
-                      row.rating, row.Marca, row.category_id)}><img src={status} width="35" height="35"/></Button></StyledTableCell>
+                      row.quantity, row.description, row.price,deleted,status,
+                      row.rating, row.Marca, row.img, row.category_id)}><img src={status ? onIcon : offIcon} width="35" height="35"/></Button></StyledTableCell>
                   </StyledTableRow>
                 ))}
               </TableBody>
