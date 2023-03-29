@@ -1,5 +1,7 @@
 # Ecommerce Front-end
 
+This is a Full-stack web app, SPA and CRUD with certain features such as: Shopping cart, payment gateway (Mercado Pago), LocalStorage, Dashboard, Filter, Fetching Data, etc.
+
 ## Built with
 - [React: 18.2.0](https://beta.reactjs.org/)
 - [React-Router: 6.8.1](https://reactrouter.com/en/main/start/tutorial#tutorial)
